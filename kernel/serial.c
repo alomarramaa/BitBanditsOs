@@ -62,6 +62,21 @@ int serial_out(device dev, const char *buffer, size_t len)
 
 int serial_poll(device dev, char *buffer, size_t len)
 {
+	int bufferCount = 0;
+	int index = 0;
+
+	while (bufferCount < ((int)len-1)) {
+		if(inb(dev + LSR) & 1) {
+			char c = inb(COM1); /*read one byte*/
+			switch(c) {
+				case '\r':/*new line*/
+				case '\n':/*backspace*/
+				serial_out(COM1, "\n", 2);
+				buffer[bufferCount] = '\0';
+				return bufferCount;
+			}
+		}
+	}
 	// insert your code to gather keyboard input via the technique of polling.
 	// You must validate each key and handle special keys such as delete, back space, and
 	// arrow keys
