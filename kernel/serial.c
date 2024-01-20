@@ -78,7 +78,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 		}
 	}
 
-	//testing
+	//Testing
 	// insert your code to gather keyboard input via the technique of polling.
 	// You must validate each key and handle special keys such as delete, back space, and
 	// arrow keys
