@@ -78,16 +78,10 @@ int serial_poll(device dev, char *buffer, size_t len)
 		}
 	}
 
-	//Testing
 	// insert your code to gather keyboard input via the technique of polling.
 	// You must validate each key and handle special keys such as delete, back space, and
 	// arrow keys
-
-	// REMOVE THIS -- IT ONLY EXISTS TO AVOID UNUSED PARAMETER WARNINGS
-	// Failure to remove this comment and the following line *will* result in
-	// losing points for inattention to detail
-	(void)dev; (void)buffer;
-
+	
 	// THIS MUST BE CHANGED TO RETURN THE CORRECT VALUE
 	return (int)len;
 }
