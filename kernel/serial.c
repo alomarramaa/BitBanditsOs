@@ -74,10 +74,8 @@ int serial_poll(device dev, char *buffer, size_t len)
 				case 13: //Carriage returns (\r)
 					break;
 				case 10: //New line (\n)
-					buffer[bufferCount] = '\0';
 					break;
 				case 8: //Backspace
-					
 					if (index == 0) //Do nothing if no previous characters
 						break;
 					index--; //Traverse to character to be removed
@@ -109,10 +107,16 @@ int serial_poll(device dev, char *buffer, size_t len)
 					} while(++index < bufferCount); //Repeat for all remaining characters in the buffer
 					break;
 				case 37: //Left arrow
+					if (index == 0) //Do nothing if no characters to the left
+						break;	
+					index--; //Decrease the index (move left)
 					break;
 				case 38: //Up arrow
 					break;
 				case 39: //Right arrow
+					if(index == bufferCount) //Do nothing if no characters to the right
+						break;
+					index++; //Increase the index (move right)
 					break;
 				case 40: //Down arrow
 					break;
