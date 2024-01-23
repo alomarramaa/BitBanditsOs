@@ -64,24 +64,71 @@ int serial_poll(device dev, char *buffer, size_t len)
 {
 	int bufferCount = 0;
 	int index = 0;
+	int tempIndex;
+	char tempChar;
 
 	while (bufferCount < ((int)len-1)) {
 		if(inb(dev + LSR) & 1) {
-			char c = inb(COM1); /*read one byte*/
-			switch(c) {
-				case '\r':/*new line*/
-				case '\n':/*backspace*/
-				serial_out(COM1, "\n", 2);
-				buffer[bufferCount] = '\0';
-				return bufferCount;
+			char charIn = inb(dev); //Read one byte
+			switch(charIn) {
+				case 13: //Carriage returns (\r)
+					break;
+				case 10: //New line (\n)
+					buffer[bufferCount] = '\0';
+					break;
+				case 8: //Backspace
+					
+					if (index == 0) //Do nothing if no previous characters
+						break;
+					index--; //Traverse to character to be removed
+					tempIndex = index; //Save current index
+					do {
+						buffer[index] = buffer[index+1]; //Replace current character with next character in buffer
+					} while (++index < bufferCount); //Repeat for each remaining character in buffer
+					buffer[index] = '\0'; //Replace the ending character with a null terminator
+					bufferCount--; //Update bufferCount
+					break;
+				case 127: //Delete
+					if (index == bufferCount) //Do nothing if no future characters
+						break;
+					tempIndex = index; //Save current index
+					do {
+						buffer[index] = buffer[index+1]; //Replace current character with next character in buffer
+					} while(++index < bufferCount); //Repeat for each remaining character in buffer
+					buffer[index] = '\0'; //Replace the ending character with a null terminator
+					bufferCount--; //Update bufferCount
+					break;
+				case 32: //Space
+					charIn = ' '; //Make input character a blank space
+					bufferCount++; //Increase buffer size
+					tempIndex = index + 1; //Save next index
+					do {
+						tempChar = buffer[index]; //Save character at current index
+						buffer[index] = charIn; //Replace character at current index with charIn or previous tempChar
+						charIn = tempChar; //Set charIn to the replaced character
+					} while(++index < bufferCount); //Repeat for all remaining characters in the buffer
+					break;
+				case 37: //Left arrow
+					break;
+				case 38: //Up arrow
+					break;
+				case 39: //Right arrow
+					break;
+				case 40: //Down arrow
+					break;
+				default: //Basic character (A-Z, a-z, 0-9)
+					bufferCount++; //Increase buffer size
+					tempIndex = index + 1; //Save next index
+					do {
+						tempChar = buffer[index]; //Save character at current index
+						buffer[index] = charIn; //Replace character at current index with charIn or previous tempChar
+						charIn = tempChar; //Set charIn to the replaced character
+					} while(++index < bufferCount); //Repeat for all remaining characters in the buffer
 			}
+			serial_out(dev, buffer, bufferCount); //Display current buffer
+			index = tempIndex; //Restore index
 		}
 	}
-
-	// insert your code to gather keyboard input via the technique of polling.
-	// You must validate each key and handle special keys such as delete, back space, and
-	// arrow keys
 	
-	// THIS MUST BE CHANGED TO RETURN THE CORRECT VALUE
-	return (int)len;
+	return bufferCount;
 }
