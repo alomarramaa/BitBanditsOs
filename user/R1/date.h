@@ -9,4 +9,4 @@ void display_current_date();
 /// @param month 
 /// @param day
 /// @param year
-void set_time(int month, int day, int year);
+void set_date(int month, int day, int year);

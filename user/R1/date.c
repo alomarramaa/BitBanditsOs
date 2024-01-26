@@ -25,7 +25,7 @@ int bcd_to_binary(int bcd) {
 }
 
 
-int readTimeReg(char sect){
+int readDateReg(char sect){
     switch(sect){
         case 'm': return bcd_to_binary(read_rtc_register(RTC_MONTH));
         case 'd': return bcd_to_binary(read_rtc_register(RTC_DAY));
@@ -51,7 +51,7 @@ void display_current_date() {
 }
 
 // Function to set the date in RTC
-void set_time(int month, int day, int year) {
+void set_date(int month, int day, int year) {
     // Convert date values to BCD
     month = month % 12; // Ensure the month is within the range of 0-12
     day = day % 31; //Ensure the day is within the range of 0-31
