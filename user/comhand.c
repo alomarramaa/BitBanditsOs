@@ -7,7 +7,7 @@
 #define COM1 3
 
 // Prints version and compile date
-void printVersion()
+void version()
 {
     const char *version = "MPX Version R1";
     const char *compileDate = "Compiled on: ";
@@ -15,7 +15,7 @@ void printVersion()
     sys_req(WRITE, COM1, compileDate, strlen(compileDate));
 }
 
-void printHelp()
+void help()
 {
     const char *helpText = "Avaliable Commands: \n"
                            "1. Shutdown - Shut down the system"
@@ -29,7 +29,7 @@ void printHelp()
     sys_req(WRITE, COM1, helpText, strlen(helpText));
 }
 
-void confirmShutdown()
+void shutdown()
 {
     {
         // Confirmation to shut down
@@ -49,6 +49,22 @@ void confirmShutdown()
             sys_req(WRITE, COM1, "Shutdown canceled.\n");
         }
     }
+}
+
+void getDate(){
+
+}
+
+void setDate(){
+
+}
+
+void getTime(){
+
+}
+
+void setTime(){
+    
 }
 
 void comhand(void)
@@ -72,7 +88,7 @@ void comhand(void)
             // Must ask for confirmation
 
             sys_req(WRITE, COM1, "Shutdown confirmed.");
-            confirmShutdown();
+            shutdown();
             return 0;
         }
         // Version Command
@@ -80,7 +96,7 @@ void comhand(void)
 
         else if (strcmp(buf, "version" == 0))
         {
-            printVersion();
+            version();
         }
 
         // Help Command
@@ -89,7 +105,7 @@ void comhand(void)
 
         else if (strcmp(buf, "help") == 0)
         {
-            printHelp();
+            help();
         }
 
         // Get/Set Date Command
