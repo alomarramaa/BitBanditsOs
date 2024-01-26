@@ -18,25 +18,19 @@ enum uart_registers
 	SCR = 7, // Scratch
 };
 
-<<<<<<< Updated upstream
-static int initialized[4] = { 0 };
-=======
 typedef struct previous_buffers
 {
 	char *bufferText;
 	int bufferSize;
 	struct previous_buffers *nextBuffer;
 	struct previous_buffers *prevBuffer;
-}
-
-previous_buffers;
+} previous_buffers;
 
 previous_buffers *bufferHead = NULL;
 previous_buffers *bufferTail = NULL;
 int bufferListLength = 0;
 
 static int initialized[4] = {0};
->>>>>>> Stashed changes
 
 static int serial_devno(device dev)
 {
@@ -93,10 +87,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 	int index = 0;
 	int tempIndex;
 	char tempChar;
-<<<<<<< Updated upstream
-=======
 	previous_buffers *currBuffer = NULL;
->>>>>>> Stashed changes
 
 	while (bufferCount < ((int)len - 1))
 	{
@@ -176,36 +167,6 @@ int serial_poll(device dev, char *buffer, size_t len)
 			case 40: // Down arrow
 				if (currBuffer == NULL)
 					break;
-<<<<<<< Updated upstream
-				case 37: //Left arrow
-					if (index == 0) //Do nothing if no characters to the left
-						break;	
-					index--; //Decrease the index (move left)
-					break;
-				case 38: //Up arrow
-					break;
-				case 39: //Right arrow
-					if(index == bufferCount) //Do nothing if no characters to the right
-						break;
-					index++; //Increase the index (move right)
-					break;
-				case 40: //Down arrow
-					break;
-				default: //Basic character (A-Z, a-z, 0-9)
-					bufferCount++; //Increase buffer size
-					tempIndex = index + 1; //Save next index
-					do {
-						tempChar = buffer[index]; //Save character at current index
-						buffer[index] = charIn; //Replace character at current index with charIn or previous tempChar
-						charIn = tempChar; //Set charIn to the replaced character
-					} while(++index < bufferCount); //Repeat for all remaining characters in the buffer
-			}
-			serial_out(dev, buffer, bufferCount); //Display current buffer
-			index = tempIndex; //Restore index
-		}
-	}
-	
-=======
 				if (currBuffer->prevBuffer == NULL)
 				{
 					currBuffer = NULL;
@@ -252,19 +213,17 @@ int serial_poll(device dev, char *buffer, size_t len)
 		bufferTail = &newBuffer;
 		bufferListLength++;
 	}
-
 	else if (bufferListLength == 10)
 	{
-		//previous_buffers *tempBuffer = bufferTail;
+		previous_buffers *tempBuffer = bufferTail;
 		bufferTail = bufferTail->prevBuffer;
 		bufferTail->nextBuffer = NULL;
-		//clear(tempBuffer);
+		clear(tempBuffer);
 	}
 	else
 	{
 		bufferListLength++;
 	}
 
->>>>>>> Stashed changes
 	return bufferCount;
 }

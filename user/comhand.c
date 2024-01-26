@@ -1,5 +1,4 @@
 
-
 #include <string.h>
 #include <sys_req.h>
 
@@ -15,27 +14,18 @@ void version(void) // Prints version and compile date
     sys_req(WRITE, COM1, compileDate, strlen(compileDate));
 }
 
-void help(void) // prints all available commands
+void help(void) // Prints all available commands
 {
     const char *helpText = "Available Commands: \n"
                            "1. Shutdown - Shut down the system"
                            "2. Version - Display the current version & compilation date"
-<<<<<<< Updated upstream
-                           "3. Help - Display all avaliable commands"
+                           "3. Help - Display all available commands"
                            "4. Echo - Repeats previous message"
                            "5. Get Date - Display current date"
                            "6. Get Time -  Display current time"
                            "7. Set Date - Set date to desired month/day/year"
                            "8. Set Time -  Set time to desired hour/minute/second";
                            
-=======
-                           "3. Help - Display all available commands"
-                           "4. Get Date - Display current date"
-                           "5. Get Time -  Display current time"
-                           "6. Set Date - Set date to desired month/day/year"
-                           "7. Set Time -  Set time to desired hour/minute/second";
-
->>>>>>> Stashed changes
     sys_req(WRITE, COM1, helpText, strlen(helpText));
 }
 
@@ -50,7 +40,7 @@ int shutdown(void) // Shutdown the program
         sys_req(READ, COM1, confirm);
 
         if (strcmp(confirm, "y") == 0) // shutdown confirmed
-                                       // shutdown confirmed
+
         {
             sys_req(WRITE, COM1, "Shutdown confirmed.");
             return 1;
@@ -64,7 +54,6 @@ int shutdown(void) // Shutdown the program
     }
 }
 
-<<<<<<< Updated upstream
 void comhand(void)
 {
 /* THE BONUS THING FOR CREATIVE STATUP
@@ -81,17 +70,9 @@ void comhand(void)
 (_________________) 
  */        
 
-    sys_req(WRITE, COM1,"Comhand Initialized: Please write your prefered command\n",56);
+    sys_req(WRITE, COM1,"Comhand Initialized: Please write your preferred command\n",56);
     sys_req(WRITE, COM1,"Available commands: \n\techo\n\tget\n\thelp\n\tset\n\tshutdown\n\tversion\n",70);
     
-    // Basic command handler format
-    // Big if/else statement, split/check input, match and run method for command
-    // Delete and arrow keys use ANSI codes
-    // Menu style
-=======
-void comhand(void) // Command Handler
-{
->>>>>>> Stashed changes
     for (;;)
     {
         char buf[100] = {0};
