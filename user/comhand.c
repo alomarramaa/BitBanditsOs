@@ -20,8 +20,12 @@ void printHelp()
     const char *helpText = "Avaliable Commands: \n"
                            "1. Shutdown - Shut down the system"
                            "2. Version - Display the current version & compilation date"
-                           "3. Help - Display all avaliable commands";
-
+                           "3. Help - Display all avaliable commands"
+                           "4. Get Date - Display current date"
+                           "5. Get Time -  Display current time"
+                           "6. Set Date - Set date to desired month/day/year"
+                           "7. Set Time -  Set time to desired hour/minute/second";
+                           
     sys_req(WRITE, COM1, helpText, strlen(helpText));
 }
 
