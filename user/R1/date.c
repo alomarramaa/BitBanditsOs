@@ -27,46 +27,46 @@ int bcd_to_binary(int bcd) {
 
 int readTimeReg(char sect){
     switch(sect){
-        case 'h': return bcd_to_binary(read_rtc_register(RTC_HOURS));
-        case 'm': return bcd_to_binary(read_rtc_register(RTC_MINUTES));
-        case 's': return bcd_to_binary(read_rtc_register(RTC_SECONDS));
+        case 'm': return bcd_to_binary(read_rtc_register(RTC_MONTH));
+        case 'd': return bcd_to_binary(read_rtc_register(RTC_DAY));
+        case 'y': return bcd_to_binary(read_rtc_register(RTC_YEAR));
         default: return -1;
     }
 }
 
-// Function to get and display the current time
-void display_current_time() {
+// Function to get and display the current date
+void display_current_date() {
     char buffer[20];
-    sys_req(WRITE,COM1,"Current time: ",15);
-    itoa(bcd_to_binary(read_rtc_register(RTC_HOURS)), buffer);
+    sys_req(WRITE,COM1,"Current date: ",15);
+    itoa(bcd_to_binary(read_rtc_register(RTC_MONTH)), buffer);
     sys_req(WRITE,COM1,buffer,strlen(buffer));
     sys_req(WRITE,COM1,": ",3);
-    itoa(bcd_to_binary(read_rtc_register(RTC_MINUTES)), buffer);
+    itoa(bcd_to_binary(read_rtc_register(RTC_DAY)), buffer);
     sys_req(WRITE,COM1,buffer,strlen(buffer));
     sys_req(WRITE,COM1,": ",3);
-    itoa(bcd_to_binary(read_rtc_register(RTC_SECONDS)), buffer);
+    itoa(bcd_to_binary(read_rtc_register(RTC_YEAR)), buffer);
     sys_req(WRITE,COM1,buffer,strlen(buffer));
     sys_req(WRITE,COM1,"\n",2);
 
 }
 
-// Function to set the time in RTC
-void set_time(int hours, int minutes, int seconds) {
-    // Convert time values to BCD
-    hours = hours % 24; // Ensure hours are in the range 0-23
-    int hours_bcd = ((hours / 10) << 4) | (hours % 10);
-    int minutes_bcd = ((minutes / 10) << 4) | (minutes % 10);
-    int seconds_bcd = ((seconds / 10) << 4) | (seconds % 10);
+// Function to set the date in RTC
+void set_time(int month, int day, int year) {
+    // Convert date values to BCD
+    month = month % 12; // Ensure the month is within the range of 0-12
+    day = day % 31; //Ensure the day is within the range of 0-31
+    int month_bcd = ((month / 10) << 4) | (month % 10);
+    int day_bcd = ((day / 10) << 4) | (day % 10);
+    int year_bcd = ((year / 10) << 4) | (year % 10);
 
 
     // Set date in RTC
-    outb(0x70,RTC_SECONDS); // Select month register
-    outb(0x71,seconds_bcd); // Set month
+    outb(0x70,RTC_MONTH); // Select month register
+    outb(0x71,month_bcd); // Set month
 
-    outb(0x70,RTC_MINUTES); // Select day register
-    outb(0x71,minutes_bcd); // Set day
+    outb(0x70,RTC_DAY); // Select day register
+    outb(0x71,day_bcd); // Set day
 
-    outb(0x70,RTC_HOURS);   // Select year register
-    outb(0x71,hours_bcd);   // Set year
-
+    outb(0x70,RTC_YEAR); // Select year register
+    outb(0x71,year_bcd); // Set year
 }
