@@ -7,7 +7,7 @@
 #define COM1 3
 
 // Prints version and compile date
-void printVersion()
+void version()
 {
     const char *version = "MPX Version R1";
     const char *compileDate = "Compiled on: ";
@@ -15,21 +15,22 @@ void printVersion()
     sys_req(WRITE, COM1, compileDate, strlen(compileDate));
 }
 
-void printHelp()
+void help()
 {
     const char *helpText = "Avaliable Commands: \n"
                            "1. Shutdown - Shut down the system"
                            "2. Version - Display the current version & compilation date"
                            "3. Help - Display all avaliable commands"
-                           "4. Get Date - Display current date"
-                           "5. Get Time -  Display current time"
-                           "6. Set Date - Set date to desired month/day/year"
-                           "7. Set Time -  Set time to desired hour/minute/second";
+                           "4. Echo - Repeats previous message"
+                           "5. Get Date - Display current date"
+                           "6. Get Time -  Display current time"
+                           "7. Set Date - Set date to desired month/day/year"
+                           "8. Set Time -  Set time to desired hour/minute/second";
                            
     sys_req(WRITE, COM1, helpText, strlen(helpText));
 }
 
-void confirmShutdown()
+void shutdown()
 {
     {
         // Confirmation to shut down
@@ -50,10 +51,41 @@ void confirmShutdown()
         }
     }
 }
+void getDate(){
 
-void comhand(void)
-{
+}
 
+void setDate(){
+
+}
+
+void getTime(){
+
+}
+
+void setTime(){
+
+}
+
+void comhand(void) {
+   
+/* THE BONUS THING FOR CREATIVE STATUP
+     _________
+    / ======= \
+   / __________\
+  | ___________ |
+  | | -       | |
+  | |  CS450  | |
+  | |_________| |________________________
+  \=____________/   Bit Bandits          )
+  / """"""""""" \                       /
+ / ::::::::::::: \                  =D-'
+(_________________) 
+ */        
+
+    sys_req(WRITE, COM1,"Comhand Initialized: Please write your prefered command\n",56);
+    sys_req(WRITE, COM1,"Available commands: \n\techo\n\tget\n\thelp\n\tset\n\tshutdown\n\tversion\n",70);
+    
     // Basic command handler format
     // Big if/else statement, split/check input, match and run method for command
     // Delete and arrow keys use ANSI codes
@@ -72,7 +104,7 @@ void comhand(void)
             // Must ask for confirmation
 
             sys_req(WRITE, COM1, "Shutdown confirmed.");
-            confirmShutdown();
+            shutdown();
             return 0;
         }
         // Version Command
@@ -80,7 +112,7 @@ void comhand(void)
 
         else if (strcmp(buf, "version" == 0))
         {
-            printVersion();
+            version();
         }
 
         // Help Command
@@ -89,7 +121,7 @@ void comhand(void)
 
         else if (strcmp(buf, "help") == 0)
         {
-            printHelp();
+            help();
         }
 
         // Get/Set Date Command
