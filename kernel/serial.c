@@ -17,6 +17,18 @@ enum uart_registers {
 	SCR = 7,	// Scratch
 };
 
+typedef struct previous_buffers
+{
+	char* bufferText;
+	int bufferSize;
+	previous_buffers* nextBuffer;
+	previous_buffers* prevBuffer;
+} previous_buffers;
+
+previous_buffers* bufferHead = NULL;
+previous_buffers* bufferTail = NULL;
+int bufferListLength = 0;
+
 static int initialized[4] = { 0 };
 
 static int serial_devno(device dev)
@@ -66,6 +78,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 	int index = 0;
 	int tempIndex;
 	char tempChar;
+	previous_buffers* currBuffer = NULL;
 
 	while (bufferCount < ((int)len-1)) {
 		if(inb(dev + LSR) & 1) {
@@ -112,6 +125,22 @@ int serial_poll(device dev, char *buffer, size_t len)
 					index--; //Decrease the index (move left)
 					break;
 				case 38: //Up arrow
+					if (currBuffer == NULL) {
+						if (bufferHead == NULL)
+							break;
+						buffer = bufferHead->bufferText;
+						bufferCount = bufferHead->bufferSize;
+						index = bufferCount;
+						currBuffer = bufferHead;
+					}
+					else {
+						if (currBuffer->nextBuffer == NULL)
+							break;
+						currBuffer = currBuffer->nextBuffer;
+						buffer = currBuffer->bufferText;
+						bufferCount = currBuffer->bufferSize;
+						index = bufferCount;
+					}
 					break;
 				case 39: //Right arrow
 					if(index == bufferCount) //Do nothing if no characters to the right
@@ -119,6 +148,23 @@ int serial_poll(device dev, char *buffer, size_t len)
 					index++; //Increase the index (move right)
 					break;
 				case 40: //Down arrow
+					if (currBuffer == NULL)
+						break;
+					if (currBuffer->prevBuffer == NULL) {
+						currBuffer = NULL;
+						index = 0;
+						while (index < bufferCount) {
+							buffer[index] = '\0';
+							index++;
+						}
+						bufferCount = index = 0;
+					}
+					else {
+						currBuffer = currBuffer->prevBuffer;
+						buffer = currBuffer->bufferText;
+						bufferCount = currBuffer->bufferSize;
+						index = bufferCount;
+					}
 					break;
 				default: //Basic character (A-Z, a-z, 0-9)
 					bufferCount++; //Increase buffer size
@@ -129,10 +175,31 @@ int serial_poll(device dev, char *buffer, size_t len)
 						charIn = tempChar; //Set charIn to the replaced character
 					} while(++index < bufferCount); //Repeat for all remaining characters in the buffer
 			}
+			
 			serial_out(dev, buffer, bufferCount); //Display current buffer
 			index = tempIndex; //Restore index
 		}
 	}
-	
+	previous_buffers newBuffer;
+	newBuffer.bufferSize = bufferCount;
+	newBuffer.bufferText = buffer;
+	newBuffer.nextBuffer = bufferHead;
+	newBuffer.prevBuffer = NULL;
+	bufferHead->prevBuffer = &newBuffer;
+	bufferHead = &newBuffer;
+	if (bufferListLength == 0) {
+		bufferTail = &newBuffer;
+		bufferListLength++;
+	}
+	else if (bufferListLength == 10) {
+		previous_buffers* tempBuffer = bufferTail;
+		bufferTail = bufferTail->prevBuffer;
+		bufferTail->nextBuffer = NULL;
+		clear(tempBuffer);
+	}
+	else {
+		bufferListLength++;
+	}
+
 	return bufferCount;
 }
