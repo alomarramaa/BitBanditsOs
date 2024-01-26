@@ -18,8 +18,8 @@ void printVersion()
 void printHelp()
 {
     const char *helpText = "Avaliable Commands: \n"
-                           "1. Shutdown - Shut down the system"
-                           "2. Version - Display the current version & compilation date"
+                           "1. Shutdown - Shut down the system\n"
+                           "2. Version - Display the current version & compilation date\n"
                            "3. Help - Display all avaliable commands";
 
     sys_req(WRITE, COM1, helpText, strlen(helpText));
