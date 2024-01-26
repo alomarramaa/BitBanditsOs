@@ -51,41 +51,10 @@ void shutdown()
         }
     }
 }
-void getDate(){
 
-}
+void comhand(void)
+{
 
-void setDate(){
-
-}
-
-void getTime(){
-
-}
-
-void setTime(){
-
-}
-
-void comhand(void) {
-   
-/* THE BONUS THING FOR CREATIVE STATUP
-     _________
-    / ======= \
-   / __________\
-  | ___________ |
-  | | -       | |
-  | |  CS450  | |
-  | |_________| |________________________
-  \=____________/   Bit Bandits          )
-  / """"""""""" \                       /
- / ::::::::::::: \                  =D-'
-(_________________) 
- */        
-
-    sys_req(WRITE, COM1,"Comhand Initialized: Please write your prefered command\n",56);
-    sys_req(WRITE, COM1,"Available commands: \n\techo\n\tget\n\thelp\n\tset\n\tshutdown\n\tversion\n",70);
-    
     // Basic command handler format
     // Big if/else statement, split/check input, match and run method for command
     // Delete and arrow keys use ANSI codes
