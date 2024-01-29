@@ -25,54 +25,49 @@ void help(void) // Prints all available commands
                            "6. Get Time -  Display current time"
                            "7. Set Date - Set date to desired month/day/year"
                            "8. Set Time -  Set time to desired hour/minute/second";
-                           
+
     sys_req(WRITE, COM1, helpText, strlen(helpText));
 }
 
-int shutdown(void) // Shutdown the program
+int shutdown(void)
 {
+    sys_req(WRITE, COM1, "Are you sure you want to shut down? (y/n)"); // Confirmation to shut down
+
+    char confirm[50] = {0};
+    int nread = sys_req(READ, COM1, confirm, sizeof(confirm));
+
+    if (nread > 0 && confirm[0] == 'y') // shutdown confirmed
     {
-
-        sys_req(WRITE, COM1, "Are you sure you want to shut down? (y/n)"); // Confirmation to shut down
-
-        char confirm[50] = {0};
-       // int nread = sys_req(READ, COM1, confirm);
-        sys_req(READ, COM1, confirm);
-
-        if (strcmp(confirm, "y") == 0) // shutdown confirmed
-
-        {
-            sys_req(WRITE, COM1, "Shutdown confirmed.");
-            return 1;
-        }
-
-        else // Cancel shutdpwn
-        {
-            sys_req(WRITE, COM1, "Shutdown canceled.\n");
-            return 0;
-        }
+        sys_req(WRITE, COM1, "Shutdown confirmed.");
+        return 1;
+    }
+    else // Cancel shutdown
+    {
+        sys_req(WRITE, COM1, "Shutdown canceled.\n");
+        return 0;
     }
 }
 
+
 void comhand(void)
 {
-/* THE BONUS THING FOR CREATIVE STATUP
-     _________
-    / ======= \
-   / __________\
-  | ___________ |
-  | | -       | |
-  | |  CS450  | |
-  | |_________| |________________________
-  \=____________/   Bit Bandits          )
-  / """"""""""" \                       /
- / ::::::::::::: \                  =D-'
-(_________________) 
- */        
+    /* THE BONUS THING FOR CREATIVE STATUP
+         _________
+        / ======= \
+       / __________\
+      | ___________ |
+      | | -       | |
+      | |  CS450  | |
+      | |_________| |________________________
+      \=____________/   Bit Bandits          )
+      / """"""""""" \                       /
+     / ::::::::::::: \                  =D-'
+    (_________________)
+     */
 
-    sys_req(WRITE, COM1,"Comhand Initialized: Please write your preferred command\n",56);
-    sys_req(WRITE, COM1,"Available commands: \n\techo\n\tget\n\thelp\n\tset\n\tshutdown\n\tversion\n",70);
-    
+    sys_req(WRITE, COM1, "Comhand Initialized: Please write your preferred command\n", 56);
+    sys_req(WRITE, COM1, "Available commands: \n\techo\n\tget\n\thelp\n\tset\n\tshutdown\n\tversion\n", 70);
+
     for (;;)
     {
         char buf[100] = {0};
@@ -82,11 +77,13 @@ void comhand(void)
         if (strcmp(buf, "shutdown") == 0) // Shutdown Command
         {
             sys_req(WRITE, COM1, "Shutdown confirmed.");
-            shutdown();
+            if (shutdown() == 1)
+            {
+                break; // exit the loop if shutdown is confirmed
+            }
         }
 
         if (strcmp(buf, "version") == 0) // Version Command
-
         {
             version();
         }
@@ -95,6 +92,7 @@ void comhand(void)
         {
             help();
         }
+        // Add other commands here if needed
 
         /*
 
