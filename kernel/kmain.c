@@ -24,39 +24,46 @@ void kmain(void)
 	// via klogv(), or the message won't print. In all other cases, the
 	// output should come first as it describes what is about to happen.
 	klogv(COM1, "Initialized serial I/O on COM1 device...");
+	serial_init(COM1);
 
 	// 1) Global Descriptor Table (GDT) -- <mpx/gdt.h>
 	// Keeps track of the various memory segments (Code, Data, Stack, etc.)
 	// required by the x86 architecture. This needs to be initialized before
 	// interrupts can be configured.
 	klogv(COM1, "Initializing Global Descriptor Table...");
+	gdt_init();
 
 	// 2) Interrupt Descriptor Table (IDT) -- <mpx/interrupts.h>
 	// Keeps track of where the various Interrupt Vectors are stored. It
 	// needs to be initialized before Interrupt Service Routines (ISRs) can
 	// be installed.
 	klogv(COM1, "Initializing Interrupt Descriptor Table...");
+	idt_init();
 
 	// 3) Disable Interrupts -- <mpx/interrupts.h>
 	// You'll be modifying how interrupts work, so disable them to avoid
 	// crashing.
 	klogv(COM1, "Disabling interrupts...");
+	cli();
 
 	// 4) Interrupt Request (IRQ) -- <mpx/interrupts.h>
 	// The x86 architecture requires ISRs for at least the first 32
 	// Interrupt Request (IRQ) lines.
 	klogv(COM1, "Initializing Interrupt Request routines...");
+	irq_init();
 
 	// 5) Programmable Interrupt Controller (PIC) -- <mpx/interrupts.h>
 	// The x86 architecture uses a Programmable Interrupt Controller (PIC)
 	// to map hardware interrupts to software interrupts that the CPU can
 	// then handle via the IDT and its list of ISRs.
 	klogv(COM1, "Initializing Programmable Interrupt Controller...");
+	pic_init();
 
 	// 6) Reenable interrupts -- <mpx/interrupts.h>
 	// Now that interrupt routines are set up, allow interrupts to happen
 	// again.
 	klogv(COM1, "Enabling Interrupts...");
+	sti();
 
 	// 7) Virtual Memory (VM) -- <mpx/vm.h>
 	// Virtual Memory (VM) allows the CPU to map logical addresses used by
@@ -68,6 +75,7 @@ void kmain(void)
 	// Page Tables, data structures that describe the logical-to-physical
 	// mapping as well as manage permissions and other metadata.
 	klogv(COM1, "Initializing Virtual Memory...");
+	vm_init();
 
 	// 8) MPX Modules -- *headers vary*
 	// Module specific initialization -- not all modules require this.
