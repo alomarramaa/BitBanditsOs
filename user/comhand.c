@@ -2,9 +2,9 @@
 #include <string.h>
 #include <sys_req.h>
 
-#define READ 1
-#define WRITE 2
-#define COM1 3
+#include <user/comhand.h>
+
+
 
 void version(void) // Prints version and compile date
 {
@@ -25,6 +25,7 @@ void help(void) // Prints all available commands
                            "6. Get Time -  Display current time"
                            "7. Set Date - Set date to desired month/day/year"
                            "8. Set Time -  Set time to desired hour/minute/second";
+
 
     sys_req(WRITE, COM1, helpText, strlen(helpText));
 }
@@ -65,7 +66,8 @@ void comhand(void)
     (_________________)
      */
 
-    sys_req(WRITE, COM1, "Comhand Initialized: Please write your preferred command\n", 56);
+    const char* comhandInitializeStr = "Comhand Initialized: Please write your preferred command\n";
+    sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, "Available commands: \n\techo\n\tget\n\thelp\n\tset\n\tshutdown\n\tversion\n", 70);
 
     for (;;)

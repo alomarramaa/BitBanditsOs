@@ -5,8 +5,9 @@
 #include <sys_req.h>
 #include <string.h>
 #include <memory.h>
+#include <user/date.h>
 
-#include <comhand.h>
+#include <user/comhand.h>
 
 static void klogv(device dev, const char *msg)
 {
