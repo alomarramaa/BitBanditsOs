@@ -35,7 +35,7 @@ int readDateReg(char sect){
 }
 
 // Function to get and display the current date
-void display_current_date() {
+void get_date() {
     char buffer[20];
     sys_req(WRITE,COM1,"Current date: ",15);
     itoa(bcd_to_binary(read_rtc_register(RTC_MONTH)), buffer);
