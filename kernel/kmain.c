@@ -6,6 +6,8 @@
 #include <string.h>
 #include <memory.h>
 
+#include <comhand.h>
+
 static void klogv(device dev, const char *msg)
 {
 	char prefix[] = "klogv: ";
@@ -87,6 +89,7 @@ void kmain(void)
 	// Pass execution to your command handler so the user can interact with
 	// the system.
 	klogv(COM1, "Transferring control to commhand...");
+	comhand();
 	// R4: __asm__ volatile ("int $0x60" :: "a"(IDLE));
 
 	// 10) System Shutdown -- *headers to be determined by your design*
