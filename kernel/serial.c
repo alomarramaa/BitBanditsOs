@@ -251,8 +251,8 @@ int serial_poll(device dev, char *buffer, size_t len)
 					} while(++index < bufferCount); //Repeat for all remaining characters in the buffer
 			}
 
-			serial_out(dev, buffer, bufferCount); // Display current buffer
-			index = tempIndex;					  // Restore index
+			outb(dev, buffer); // Display current buffer
+			index = tempIndex;	// Restore index
 		}
 	}
 	// Creates a new node for the submitted command
