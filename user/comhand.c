@@ -17,14 +17,14 @@ void version(void) // Prints version and compile date
 void help(void) // Prints all available commands
 {
     const char *helpText = "Available Commands: \n"
-                           "1. Shutdown - Shut down the system"
-                           "2. Version - Display the current version & compilation date"
-                           "3. Help - Display all available commands"
-                           "4. Echo - Repeats previous message"
-                           "5. Get Date - Display current date"
-                           "6. Get Time -  Display current time"
-                           "7. Set Date - Set date to desired month/day/year"
-                           "8. Set Time -  Set time to desired hour/minute/second";
+                           "1. Shutdown - Shut down the system\n"
+                           "2. Version - Display the current version & compilation date\n"
+                           "3. Help - Display all available commands\n"
+                           "4. Echo - Repeats previous message\n"
+                           "5. Get Date - Display current date\n"
+                           "6. Get Time -  Display current time\n"
+                           "7. Set Date - Set date to desired month/day/year\n"
+                           "8. Set Time -  Set time to desired hour/minute/second\n";
 
 
     sys_req(WRITE, COM1, helpText, strlen(helpText));
@@ -32,7 +32,7 @@ void help(void) // Prints all available commands
 
 int shutdown(void)
 {
-    sys_req(WRITE, COM1, "Are you sure you want to shut down? (y/n)"); // Confirmation to shut down
+    sys_req(WRITE, COM1, "Are you sure you want to shut down? (y/n)\n"); // Confirmation to shut down
 
     char confirm[50] = {0};
     int nread = sys_req(READ, COM1, confirm, sizeof(confirm));
@@ -52,7 +52,7 @@ int shutdown(void)
 
 void comhand(void)
 {
-    /* THE BONUS THING FOR CREATIVE STATUP
+    /* THE BONUS THING FOR CREATIVE STARTUP
          _________
         / ======= \
        / __________\
@@ -66,9 +66,12 @@ void comhand(void)
     (_________________)
      */
 
+    //Constants
     const char* comhandInitializeStr = "Comhand Initialized: Please write your preferred command\n";
+    const char* avaliableCommandStr = "Available commands: \n\techo\n\tget\n\thelp\n\tset\n\tshutdown\n\tversion\n";
+
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
-    sys_req(WRITE, COM1, "Available commands: \n\techo\n\tget\n\thelp\n\tset\n\tshutdown\n\tversion\n", 70);
+    sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
     for (;;)
     {
