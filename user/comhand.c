@@ -52,23 +52,28 @@ int shutdown(void)
 
 void comhand(void)
 {
-    /* THE BONUS THING FOR CREATIVE STARTUP
-         _________
-        / ======= \
-       / __________\
-      | ___________ |
-      | | -       | |
-      | |  CS450  | |
-      | |_________| |________________________
-      \=____________/   Bit Bandits          )
-      / """"""""""" \                       /
-     / ::::::::::::: \                  =D-'
-    (_________________)
-     */
+
+    //Welcome message
+    const char* asciiArt = "Welcome to Bit Bandits' MPX!\n"
+                           "         _________\n"
+                           "        / ======= \\\n"
+                           "       / __________\\\n"
+                           "      | ___________ |\n"
+                           "      | | -       | |\n"
+                           "      | |  CS450  | |\n"
+                           "      | |_________| |________________________\n"
+                           "      \\=____________/   Bit Bandits          )\n"
+                           "      / \"\"\"\"\"\"\"\"\"\"\"\"\" \\\n"
+                           "     / ::::::::::::: \\\n"
+                           "    (_________________)\n"
+                           "    \n";
+
+    sys_req(WRITE, COM1, asciiArt, strlen(asciiArt));
 
     //Constants
-    const char* comhandInitializeStr = "Comhand Initialized: Please write your preferred command\n";
-    const char* avaliableCommandStr = "Available commands: \n\techo\n\tget\n\thelp\n\tset\n\tshutdown\n\tversion\n";
+    const char* comhandInitializeStr = " Comhand Initialized: Please write your preferred command\n";
+    const char* avaliableCommandStr = " Available commands: \n\techo\n\tget\n\thelp\n\tset\n\tshutdown\n\tversion\n";
+
 
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
@@ -121,5 +126,7 @@ void comhand(void)
                     setTime();
                 }
                 */
+
+
     }
 }
