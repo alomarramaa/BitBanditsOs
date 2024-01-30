@@ -1,11 +1,26 @@
 
 #include <string.h>
 #include <sys_req.h>
-
 #include <user/comhand.h>
 
+//Colors 
+#define RED     "\x1B[31m"
+#define GREEN   "\x1B[32m"
+#define YELLOW  "\x1B[33m"
+#define BLUE    "\x1B[34m"
+#define RESET   "\x1B[0m"
 
 
+// Clears the terminal
+void clear(void)
+{
+
+    /*
+    The “Clear” or “clear” command should simply blank the terminal, 
+    where the top of terminal is a new line for the user to enter their next command.
+     This functionality may prove useful for other features (both bonus and required) 
+     in the future.  If you have a menu interface, redisplay your menu*/
+}
 void version(void) // Prints version and compile date
 {
     const char *version = "MPX Version R1";
@@ -24,8 +39,8 @@ void help(void) // Prints all available commands
                            "5. Get Date - Display current date\n"
                            "6. Get Time -  Display current time\n"
                            "7. Set Date - Set date to desired month/day/year\n"
-                           "8. Set Time -  Set time to desired hour/minute/second\n";
-
+                           "8. Set Time -  Set time to desired hour/minute/second\n"
+                           "9. Clear - Clear the terminal & redisplay menu";
 
     sys_req(WRITE, COM1, helpText, strlen(helpText));
 }
@@ -49,31 +64,46 @@ int shutdown(void)
     }
 }
 
-
 void comhand(void)
 {
 
-    //Welcome message
-    const char* asciiArt = "Welcome to Bit Bandits' MPX!\n"
-                           "         _________\n"
-                           "        / ======= \\\n"
-                           "       / __________\\\n"
-                           "      | ___________ |\n"
-                           "      | | -       | |\n"
-                           "      | |  CS450  | |\n"
-                           "      | |_________| |________________________\n"
-                           "      \\=____________/   Bit Bandits          )\n"
-                           "      / \"\"\"\"\"\"\"\"\"\"\"\"\" \\\n"
-                           "     / ::::::::::::: \\\n"
-                           "    (_________________)\n"
-                           "    \n";
+
+  // Welcome message
+    const char *asciiArt =
+        RED     "Welcome to " RESET
+        GREEN   "Bit Bandits' MPX!\n" RESET
+        "         _________\n"
+        "        / ======= \\\n"
+        "       / __________\\\n"
+        "      | ___________ |\n"
+        "      | | -       | |\n"
+        "      | |  CS450  | |\n"
+        "      | |_________| |________________________\n"
+        "      \\=____________/   Bit Bandits          )\n"
+        YELLOW  "      / \"\"\"\"\"\"\"\"\"\"\"\"\" \\\n" RESET
+        BLUE    "     / ::::::::::::: \\\n" RESET
+        "    (_________________)\n"
+        "\n";
+    // // Welcome message
+    // const char *asciiArt = "Welcome to Bit Bandits' MPX!\n"
+    //                        "         _________\n"
+    //                        "        / ======= \\\n"
+    //                        "       / __________\\\n"
+    //                        "      | ___________ |\n"
+    //                        "      | | -       | |\n"
+    //                        "      | |  CS450  | |\n"
+    //                        "      | |_________| |________________________\n"
+    //                        "      \\=____________/   Bit Bandits          )\n"
+    //                        "      / \"\"\"\"\"\"\"\"\"\"\"\"\" \\\n"
+    //                        "     / ::::::::::::: \\\n"
+    //                        "    (_________________)\n"
+    //                        "    \n";
 
     sys_req(WRITE, COM1, asciiArt, strlen(asciiArt));
 
-    //Constants
-    const char* comhandInitializeStr = " Comhand Initialized: Please write your preferred command\n";
-    const char* avaliableCommandStr = " Available commands: \n\techo\n\tget\n\thelp\n\tset\n\tshutdown\n\tversion\n";
-
+    // Constants
+    const char *comhandInitializeStr = " Comhand Initialized: Please write your preferred command\n";
+    const char *avaliableCommandStr = " Available commands: \n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear";
 
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
@@ -126,7 +156,5 @@ void comhand(void)
                     setTime();
                 }
                 */
-
-
     }
 }
