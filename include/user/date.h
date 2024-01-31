@@ -4,7 +4,7 @@
 */
 int readDateReg(char sect);
 /// @brief Displays the system date
-void display_current_date(void);
+void get_date(void);
 /// @brief Changes the system date to a date inputed by the user with the given parameters
 /// @param month 
 /// @param day
