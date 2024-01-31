@@ -66,7 +66,8 @@ int shutdown(void)
 
 void comhand(void)
 {
-
+    //New line
+    const char* newLine = "\n";
 
   // Welcome message
     const char *asciiArt =
@@ -99,11 +100,12 @@ void comhand(void)
     //                        "    (_________________)\n"
     //                        "    \n";
 
+    sys_req(WRITE, COM1, newLine, strlen(newLine));
     sys_req(WRITE, COM1, asciiArt, strlen(asciiArt));
 
     // Constants
     const char *comhandInitializeStr = " Comhand Initialized: Please write your preferred command\n";
-    const char *avaliableCommandStr = " Available commands: \n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear";
+    const char *avaliableCommandStr = " Available Commands: \n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n";
 
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
