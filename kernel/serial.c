@@ -123,8 +123,10 @@ int serial_poll(device dev, char *buffer, size_t len)
 			char charIn = inb(dev); // Read one byte
 			switch (charIn)
 			{
-			case 13: // Carriage returns (\r)
-
+			case 13:
+				outb(dev, '\r');  // Carriage returns (\r)
+				stop = 1;
+				break;
 			case 10:
 				outb(dev, '\n'); // New line (\n)
 				stop = 1;
@@ -277,3 +279,4 @@ int serial_poll(device dev, char *buffer, size_t len)
 
 	return bufferCount;
 }
+
