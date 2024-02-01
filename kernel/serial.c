@@ -265,27 +265,29 @@ int serial_poll(device dev, char *buffer, size_t len)
 	newBuffer.bufferText = buffer;
 	newBuffer.nextBuffer = bufferHead;
 	newBuffer.prevBuffer = NULL;
-	// // Sets the new node to the head of the list
-	// bufferHead->prevBuffer = &newBuffer;
-	// bufferHead = &newBuffer;
-	// // If the list is empty, sets the new buffer as the tail of the list
-	// if (bufferListLength == 0)
-	// {
-	// 	bufferTail = &newBuffer;
-	// 	bufferListLength++; // Updates the size of the command list
-	// }
-	// // If the list is full, moves the tail back and clears the previous tail from memory
-	// else if (bufferListLength == BUFFER_LIST_MAX)
-	// {
-	// 	// previous_buffers* tempBuffer = bufferTail;
-	// 	bufferTail = bufferTail->prevBuffer;
-	// 	bufferTail->nextBuffer = NULL;
-	// 	// clear(tempBuffer);
-	// }
-	// else
-	// {
-	// 	bufferListLength++; // Updates the size of the command list
-	// }
+	// If the list is empty, sets the new buffer as the tail of the list
+	if (bufferListLength == 0)
+	{
+		bufferHead = &newBuffer;
+		bufferTail = &newBuffer;
+		bufferListLength++; // Updates the size of the command list
+	}
+	// If the list is full, moves the tail back and clears the previous tail from memory
+	else if (bufferListLength == BUFFER_LIST_MAX)
+	{
+		// previous_buffers* tempBuffer = bufferTail;
+		bufferTail = bufferTail->prevBuffer;
+		bufferTail->nextBuffer = NULL;
+		// clear(tempBuffer);
+		bufferHead->prevBuffer = &newBuffer;
+		bufferHead = &newBuffer;
+	}
+	else
+	{
+		bufferHead->prevBuffer = &newBuffer;
+		bufferHead = &newBuffer;
+		bufferListLength++; // Updates the size of the command list
+	}
 
 	return bufferCount;
 }
