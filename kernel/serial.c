@@ -137,12 +137,15 @@ int serial_poll(device dev, char *buffer, size_t len)
 					break;
 				else if (index == bufferCount)
 				{
-					buffer[index] = '\0';
+					buffer[index--] = '\0';
 					bufferCount--;
 					tempIndex--;
+					break;
 				}
+
 				index--;		   // Traverse to character to be removed
 				tempIndex = index; // Save current index
+				
 				do
 				{
 					buffer[index] = buffer[index + 1]; // Replace current character with next character in buffer
