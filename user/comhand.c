@@ -23,8 +23,8 @@ void clear(void)
 }
 void version(void) // Prints version and compile date
 {
-    const char *version = "MPX Version R1";
-    const char *compileDate = "Compiled on: ";
+    const char *version = "MPX Version R1\n";
+    const char *compileDate = "Compiled on: \n";
     sys_req(WRITE, COM1, version, strlen(version));
     sys_req(WRITE, COM1, compileDate, strlen(compileDate));
 }
@@ -40,7 +40,7 @@ void help(void) // Prints all available commands
                            "6. Get Time -  Display current time\n"
                            "7. Set Date - Set date to desired month/day/year\n"
                            "8. Set Time -  Set time to desired hour/minute/second\n"
-                           "9. Clear - Clear the terminal & redisplay menu";
+                           "9. Clear - Clear the terminal & redisplay menu\n";
 
     sys_req(WRITE, COM1, helpText, strlen(helpText));
 }
@@ -67,7 +67,7 @@ int shutdown(void)
 void getDate(void) // Gets the systems current date
 {
     const char* date = "Current date:";
-    sys_req(WRITE, COM1, date, strlen(date));
+    sys_req(WRITE, COM1, date, strlen(date), '\n');
 }
 
 void setDate(void) // Sets the systems current date
@@ -80,7 +80,7 @@ void setDate(void) // Sets the systems current date
 
     if (nread > 0) {
         const char* successMsg = "Date has been set successfully!\n";
-        sys_req(WRITE, COM1, successMsg, strlen(successMsg));
+        sys_req(WRITE, COM1, successMsg, strlen(successMsg), '\n');
     } else {
         const char* errorMsg = "Error reading the new date.\n";
         sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
@@ -90,7 +90,7 @@ void setDate(void) // Sets the systems current date
 void getTime(void) // Gets the systems current time
 {
     const char* time = "Current time:";
-    sys_req(WRITE, COM1, time, strlen(time));
+    sys_req(WRITE, COM1, time, strlen(time), '\n');
 }
 
 void setTime(void) // Sets the systems current time
@@ -103,7 +103,7 @@ void setTime(void) // Sets the systems current time
 
     if (nread > 0) {
         const char* successMsg = "Time has been set successfully!\n";
-        sys_req(WRITE, COM1, successMsg, strlen(successMsg));
+        sys_req(WRITE, COM1, successMsg, strlen(successMsg), '\n');
     } else {
         const char* errorMsg = "Error reading the new time.\n";
         sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
