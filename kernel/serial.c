@@ -135,6 +135,12 @@ int serial_poll(device dev, char *buffer, size_t len)
 			case 8:				// Backspace
 				if (index == 0) // Do nothing if no previous characters
 					break;
+				else if (index == bufferCount)
+				{
+					buffer[index] = '\0';
+					bufferCount--;
+					tempIndex--;
+				}
 				index--;		   // Traverse to character to be removed
 				tempIndex = index; // Save current index
 				do
@@ -172,7 +178,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 			case 37:			// Left arrow
 				if (index == 0) // Do nothing if no characters to the left
 					break;
-				index--; // Decrease the index (move left)
+				tempIndex--; // Decrease the index (move left)
 				break;
 
 			case 38: // Up arrow
@@ -183,7 +189,8 @@ int serial_poll(device dev, char *buffer, size_t len)
 					if (bufferHead == NULL)
 						break;
 					buffer = bufferHead->bufferText;			  // Set current buffer to the next command in the list
-					bufferCount = index = bufferHead->bufferSize; // Set the buffer count to the count of the new buffer
+					bufferCount = bufferHead->bufferSize; // Set the buffer count to the count of the new buffer
+					tempIndex = bufferCount;
 					currBuffer = bufferHead;					  // Set the current buffer pointer to the head of the list of previous commands
 				}
 				else
@@ -193,7 +200,8 @@ int serial_poll(device dev, char *buffer, size_t len)
 						break;
 					currBuffer = currBuffer->nextBuffer;		  // Set the current buffer pointer to the new command
 					buffer = currBuffer->bufferText;			  // Set current buffer to the next command in the list
-					bufferCount = index = currBuffer->bufferSize; // Set the buffer count to the count of the new buffer
+					bufferCount = currBuffer->bufferSize; // Set the buffer count to the count of the new buffer
+					tempIndex = bufferCount;
 				}
 				break;
 
@@ -213,19 +221,21 @@ int serial_poll(device dev, char *buffer, size_t len)
 				{
 					currBuffer = NULL; // Sets the current buffer pointer to null
 					index = 0;		   // Resets index for buffer traversal
+					tempIndex = 0;
 					// Traverses through the buffer and sets every character to the null terminator
 					while (index < bufferCount)
 					{
 						buffer[index] = '\0';
 						index++;
 					}
-					bufferCount = index = 0; // Resets the buffer count and index
+					bufferCount = 0; // Resets the buffer count and index
 				}
 				else
 				{
 					currBuffer = currBuffer->prevBuffer;		  // Set the current buffer pointer to the previous command node
 					buffer = currBuffer->bufferText;			  // Set current buffer to the previous command in the list
-					bufferCount = index = currBuffer->bufferSize; // Set the buffer count to the count of the new buffer
+					bufferCount = currBuffer->bufferSize; // Set the buffer count to the count of the new buffer
+					tempIndex = bufferCount;
 				}
 				break;
 
