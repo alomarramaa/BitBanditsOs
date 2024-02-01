@@ -2,7 +2,7 @@
 #include <string.h>
 #include <sys_req.h>
 #include <user/comhand.h>
-#include <time.h>
+//#include <time.h>
 
 //Colors 
 #define RED     "\x1B[31m"
