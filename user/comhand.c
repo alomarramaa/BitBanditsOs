@@ -2,6 +2,7 @@
 #include <string.h>
 #include <sys_req.h>
 #include <user/comhand.h>
+#include <time.h>
 
 //Colors 
 #define RED     "\x1B[31m"
@@ -47,7 +48,8 @@ void help(void) // Prints all available commands
 
 int shutdown(void)
 {
-    sys_req(WRITE, COM1, "Are you sure you want to shut down? (y/n)\n"); // Confirmation to shut down
+    char* shutdCheck = "Are you sure you want to shut down? (y/n)\n";
+    sys_req(WRITE, COM1, shutdCheck, strlen(shutdCheck)); // Confirmation to shut down
 
     char confirm[50] = {0};
     int nread = sys_req(READ, COM1, confirm, sizeof(confirm));
@@ -67,7 +69,7 @@ int shutdown(void)
 void getDate(void) // Gets the systems current date
 {
     const char* date = "Current date:";
-    sys_req(WRITE, COM1, date, strlen(date), '\n');
+    sys_req(WRITE, COM1, date, strlen(date));
 }
 
 void setDate(void) // Sets the systems current date
@@ -90,24 +92,32 @@ void setDate(void) // Sets the systems current date
 void getTime(void) // Gets the systems current time
 {
     const char* time = "Current time:";
-    sys_req(WRITE, COM1, time, strlen(time), '\n');
+    sys_req(WRITE, COM1, time, strlen(time));
 }
 
 void setTime(void) // Sets the systems current time
 {
-    const char* setTimeMsg = "Enter the new time: ";
+    const char* setTimeMsg = "Enter the new time (hhmmss): ";
     sys_req(WRITE, COM1, setTimeMsg, strlen(setTimeMsg));
 
     char newTime[5] = {0};
     int nread = sys_req(READ, COM1, newTime, sizeof(newTime));
 
+    
+
     if (nread > 0) {
         const char* successMsg = "Time has been set successfully!\n";
-        sys_req(WRITE, COM1, successMsg, strlen(successMsg), '\n');
+        sys_req(WRITE, COM1, successMsg, strlen(successMsg));
     } else {
         const char* errorMsg = "Error reading the new time.\n";
         sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
     }
+}
+
+void writeNewLine(void)
+{
+    const char* newLine = "\n";
+    sys_req(WRITE, COM1, newLine, strlen(newLine));
 }
 
 void comhand(void)
@@ -151,7 +161,8 @@ void comhand(void)
 
         if (strcmp(buf, "shutdown") == 0) // Shutdown Command
         {
-            sys_req(WRITE, COM1, "Shutdown confirmed.");
+            // char* shutdConf = "Shutdown confirmed.\n";
+            // sys_req(WRITE, COM1, shutdConf, strlen(shutdConf));
             if (shutdown() == 1)
             {
                 break; // exit the loop if shutdown is confirmed
