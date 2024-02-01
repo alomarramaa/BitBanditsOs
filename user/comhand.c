@@ -1,6 +1,6 @@
 
 /*
- * Brief description of the function's purpose.
+ * Interface users will use to interact with the operating system.
  */
 
 
@@ -41,7 +41,7 @@ void clear(void)
 void version(void) // Prints version and compile date
 {
     const char *version = "MPX Version R1\n";
-    const char *compileDate = "Compiled on: \n";
+    const char *compileDate = "Compiled on: 2/2/24 \n";
     sys_req(WRITE, COM1, version, strlen(version));
     sys_req(WRITE, COM1, compileDate, strlen(compileDate));
 }
