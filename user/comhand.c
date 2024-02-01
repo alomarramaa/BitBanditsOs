@@ -87,6 +87,29 @@ void setDate() // Sets the systems current date
     }
 }
 
+void getTime() // Gets the systems current time
+{
+    const char* time = "Current time:";
+    sys_req(WRITE, COM1, time, strlen(time));
+}
+
+void setTime() // Sets the systems current time
+{
+    const char* setTimeMsg = "Enter the new time: ";
+    sys_req(WRITE, COM1, setTimeMsg, strlen(setTimeMsg));
+
+    char newTime[5] = {0};
+    int nread = sys_req(READ, COM1, newTime, sizeof(newTime));
+
+    if (nread > 0) {
+        const char* successMsg = "Time has been set successfully!\n";
+        sys_req(WRITE, COM1, successMsg, strlen(successMsg));
+    } else {
+        const char* errorMsg = "Error reading the new time.\n";
+        sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
+    }
+}
+
 void comhand(void)
 {
     //New line
