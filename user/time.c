@@ -1,9 +1,9 @@
-#include "time.h"
+//#include "time.h"
 #include "sys_req.h"
 #include "string.h"
 #include <mpx/io.h>
 #include "stdlib.h"
-#include "rtc_util.h"
+#include <user/rtc_util.h>
 
 
 
@@ -11,20 +11,6 @@
 #define RTC_SECONDS 0x00
 #define RTC_MINUTES 0x02
 #define RTC_HOURS 0x04
-
-// Function to read a byte from RTC register
-int read_rtc_register(int reg) {
-    outb(0x70,reg); // Use 0x70 for RTC register selection
-    return inb(0x71); // Use 0x71 for RTC data port
-}
-
-// Function to convert BCD to binary
-int bcd_to_binary(int bcd) {
-    int tens = (bcd >> 4) & 0x0F; // Extract the tens column
-    int ones = bcd & 0x0F;       // Extract the ones column
-    return (tens * 10) + ones;    // Convert and combine tens and ones
-}
-
 
 int readTimeReg(char sect){
     switch(sect){
@@ -35,15 +21,16 @@ int readTimeReg(char sect){
     }
 }
 
-void get_time() {
+void get_time(void) {
     char buffer[20];
-    sys_req(WRITE, COM1, "Current time: ", 15);
+    const char* currentTime = "Current time: ";
+    sys_req(WRITE, COM1, currentTime, strlen(currentTime));
     itoa(bcd_to_binary(read_rtc_register(RTC_HOURS)), buffer);
     sys_req(WRITE, COM1, buffer, strlen(buffer));
-    sys_req(WRITE, COM1, ": ", 3);
+    sys_req(WRITE, COM1, ":", 2);
     itoa(bcd_to_binary(read_rtc_register(RTC_MINUTES)), buffer);
     sys_req(WRITE, COM1, buffer, strlen(buffer));
-    sys_req(WRITE, COM1, ": ", 3);
+    sys_req(WRITE, COM1, ":", 2);
     itoa(bcd_to_binary(read_rtc_register(RTC_SECONDS)), buffer);
     sys_req(WRITE, COM1, buffer, strlen(buffer));
     sys_req(WRITE, COM1, "\n", 2);

@@ -1,9 +1,9 @@
-#include "date.h"
+// #include <user/date.h>
 #include "sys_req.h"
 #include "string.h"
 #include <mpx/io.h>
 #include "stdlib.h"
-#include "rtc_util.h"
+#include <user/rtc_util.h>
 
 
 // RTC register addresses for time
@@ -35,18 +35,19 @@ int readDateReg(char sect){
 }
 
 // Function to get and display the current date
-void get_date() {
+void get_date(void) {
     char buffer[20];
-    sys_req(WRITE,COM1,"Current date: ",15);
+    const char* currentDate = "Current date: ";
+    sys_req(WRITE, COM1, currentDate, strlen(currentDate));
     itoa(bcd_to_binary(read_rtc_register(RTC_MONTH)), buffer);
-    sys_req(WRITE,COM1,buffer,strlen(buffer));
-    sys_req(WRITE,COM1,": ",3);
+    sys_req(WRITE, COM1, buffer, strlen(buffer));
+    sys_req(WRITE, COM1, "/", 2);
     itoa(bcd_to_binary(read_rtc_register(RTC_DAY)), buffer);
     sys_req(WRITE,COM1,buffer,strlen(buffer));
-    sys_req(WRITE,COM1,": ",3);
+    sys_req(WRITE, COM1, "/", 2);
     itoa(bcd_to_binary(read_rtc_register(RTC_YEAR)), buffer);
-    sys_req(WRITE,COM1,buffer,strlen(buffer));
-    sys_req(WRITE,COM1,"\n",2);
+    sys_req(WRITE, COM1, buffer, strlen(buffer));
+    sys_req(WRITE, COM1, "\n", 2);
 
 }
 
