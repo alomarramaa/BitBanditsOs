@@ -4,22 +4,20 @@
 #include <user/comhand.h>
 //#include <time.h>
 
-//Colors 
-#define RED     "\x1B[31m"
-#define GREEN   "\x1B[32m"
-#define YELLOW  "\x1B[33m"
-#define BLUE    "\x1B[34m"
-#define RESET   "\x1B[0m"
+// Colors
+#define RED "\x1B[31m"
+#define GREEN "\x1B[32m"
+#define YELLOW "\x1B[33m"
+#define BLUE "\x1B[34m"
+#define RESET "\x1B[0m"
 
 
 // Clears the terminal
 void clear(void)
 {
-
-    /*
-    The “Clear” or “clear” command should simply blank the terminal, 
+    /* The “Clear” or “clear” command should simply blank the terminal,
     where the top of terminal is a new line for the user to enter their next command.
-     This functionality may prove useful for other features (both bonus and required) 
+     This functionality may prove useful for other features (both bonus and required)
      in the future.  If you have a menu interface, redisplay your menu*/
 }
 void version(void) // Prints version and compile date
@@ -54,7 +52,7 @@ int shutdown(void)
     char confirm[50] = {0};
     int nread = sys_req(READ, COM1, confirm, sizeof(confirm));
 
-    if (nread > 0 && confirm[0] == 'y') // shutdown confirmed
+    if (nread > 0 && confirm[0] == 'y') // Shutdown confirmed
     {
         char* confMsg = "Shutdown confirmed.\n";
         sys_req(WRITE, COM1, confMsg, strlen(confMsg));
@@ -68,36 +66,39 @@ int shutdown(void)
     }
 }
 
-void getDate(void) // Gets the systems current date
+void getDate(void) // Gets the system's current date
 {
-    const char* date = "Current date:";
+    const char *date = "Current date:";
     sys_req(WRITE, COM1, date, strlen(date));
 }
 
-void setDate(void) // Sets the systems current date
+void setDate(void) // Sets the system's current date
 {
-    const char* setDateMsg = "Enter the new date (MM/DD/YYYY): ";
+    const char *setDateMsg = "Enter the new date (MM/DD/YYYY): ";
     sys_req(WRITE, COM1, setDateMsg, strlen(setDateMsg));
 
     char newDate[11] = {0};
     int nread = sys_req(READ, COM1, newDate, sizeof(newDate));
 
-    if (nread > 0) {
-        const char* successMsg = "Date has been set successfully!\n";
-        sys_req(WRITE, COM1, successMsg, strlen(successMsg), '\n');
-    } else {
-        const char* errorMsg = "Error reading the new date.\n";
+    if (nread > 0)
+    {
+        const char *successMsg = "Date has been set successfully!\n";
+        sys_req(WRITE, COM1, successMsg, strlen(successMsg));
+    }
+    else
+    {
+        const char *errorMsg = "Error reading the new date.\n";
         sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
     }
 }
 
-void getTime(void) // Gets the systems current time
+void getTime(void) // Gets the system's current time
 {
-    const char* time = "Current time:";
+    const char *time = "Current time:";
     sys_req(WRITE, COM1, time, strlen(time));
 }
 
-void setTime(void) // Sets the systems current time
+void setTime(void) // Sets the system's current time
 {
     const char* setTimeMsg = "Enter the new time (hhmmss): ";
     sys_req(WRITE, COM1, setTimeMsg, strlen(setTimeMsg));
@@ -105,13 +106,14 @@ void setTime(void) // Sets the systems current time
     char newTime[5] = {0};
     int nread = sys_req(READ, COM1, newTime, sizeof(newTime));
 
-    
-
-    if (nread > 0) {
-        const char* successMsg = "Time has been set successfully!\n";
+    if (nread > 0)
+    {
+        const char *successMsg = "Time has been set successfully!\n";
         sys_req(WRITE, COM1, successMsg, strlen(successMsg));
-    } else {
-        const char* errorMsg = "Error reading the new time.\n";
+    }
+    else
+    {
+        const char *errorMsg = "Error reading the new time.\n";
         sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
     }
 }
@@ -124,27 +126,23 @@ void writeNewLine(void)
 
 void comhand(void)
 {
-    //New line
-    const char* newLine = "\n";
 
-  // Welcome message
+    // Welcome message
     const char *asciiArt =
-        RED     "Welcome to " RESET
-        GREEN   "Bit Bandits' MPX!\n" RESET
-        "         _________\n"
-        "        / ======= \\\n"
-        "       / __________\\\n"
-        "      | ___________ |\n"
-        "      | | -       | |\n"
-        "      | |  CS450  | |\n"
-        "      | |_________| |________________________\n"
-        "      \\=____________/   Bit Bandits          )\n"
-        YELLOW  "      / \"\"\"\"\"\"\"\"\"\"\"\"\" \\\n" RESET
-        BLUE    "     / ::::::::::::: \\\n" RESET
-        "    (_________________)\n"
-        "\n";
+        RED "\nWelcome to " RESET
+            GREEN "Bit Bandits' MPX!\n" RESET
+            "         _________\n"
+            "        / ======= \\\n"
+            "       / __________\\\n"
+            "      | ___________ |\n"
+            "      | | -       | |\n"
+            "      | |  CS450  | |\n"
+            "      | |_________| |________________________\n"
+            "      \\=____________/   Bit Bandits          )\n" YELLOW "      / \"\"\"\"\"\"\"\"\"\"\"\"\" \\\n" RESET
+                BLUE "     / ::::::::::::: \\\n" RESET
+            "    (_________________)\n"
+            "\n";
 
-    sys_req(WRITE, COM1, newLine, strlen(newLine));
     sys_req(WRITE, COM1, asciiArt, strlen(asciiArt));
 
     // Constants
@@ -154,6 +152,7 @@ void comhand(void)
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
+    // Begin loop for command handler
     for (;;)
     {
         char buf[100] = {0};
