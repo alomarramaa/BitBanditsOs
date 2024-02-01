@@ -200,7 +200,8 @@ void comhand(void)
 
         else // Unrecognised command
         {
-            sys_req(WRITE, COM1, "Improper command entered. Please try again.\n");
+            char* errorMsg = "Improper command entered. Please try again.\n";
+            sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
         }
     }
 }
