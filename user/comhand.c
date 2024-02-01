@@ -1,8 +1,14 @@
 
+/*
+ * Brief description of the function's purpose.
+ */
+
+
+
 #include <string.h>
 #include <sys_req.h>
 #include <user/comhand.h>
-//#include <time.h>
+#include <user/time.h>
 
 // Colors
 #define RED "\x1B[31m"
@@ -12,7 +18,13 @@
 #define RESET "\x1B[0m"
 
 
-// Clears the terminal
+
+/*
+ * Clears the terminal by blanking it.
+ * Parameters: void
+ * Returns: void
+ */
+
 void clear(void)
 {
     /* The “Clear” or “clear” command should simply blank the terminal,
@@ -20,6 +32,12 @@ void clear(void)
      This functionality may prove useful for other features (both bonus and required)
      in the future.  If you have a menu interface, redisplay your menu*/
 }
+
+/*
+ * Prints the version of the MPX, as well as a compilation date.
+ * Parameters: void
+ * Returns: void
+ */
 void version(void) // Prints version and compile date
 {
     const char *version = "MPX Version R1\n";
@@ -27,6 +45,12 @@ void version(void) // Prints version and compile date
     sys_req(WRITE, COM1, version, strlen(version));
     sys_req(WRITE, COM1, compileDate, strlen(compileDate));
 }
+
+/*
+ * Prints all available commands as well as a description for the user.
+ * Parameters: void
+ * Returns: void
+ */
 
 void help(void) // Prints all available commands
 {
@@ -44,6 +68,12 @@ void help(void) // Prints all available commands
     sys_req(WRITE, COM1, helpText, strlen(helpText));
 }
 
+
+/*
+ * Shut down the MPX
+ * Parameters: void
+ * Returns: void
+ */
 int shutdown(void)
 {
     char* shutdCheck = "Are you sure you want to shut down? (y/n)\n";
@@ -66,13 +96,23 @@ int shutdown(void)
     }
 }
 
-void getDate(void) // Gets the system's current date
+/*
+ * Gets the system's current date
+ * Parameters: void
+ * Returns: void
+ */
+void getDate(void) 
 {
     const char *date = "Current date:";
     sys_req(WRITE, COM1, date, strlen(date));
 }
 
-void setDate(void) // Sets the system's current date
+/*
+ * Sets the current date of the system
+ * Parameters: void
+ * Returns: void
+ */
+void setDate(void) 
 {
     const char *setDateMsg = "Enter the new date (MM/DD/YYYY): ";
     sys_req(WRITE, COM1, setDateMsg, strlen(setDateMsg));
@@ -92,13 +132,24 @@ void setDate(void) // Sets the system's current date
     }
 }
 
-void getTime(void) // Gets the system's current time
+/*
+ * Get's the current time of the system
+ * Parameters: void
+ * Returns: void
+ */
+void getTime(void) 
 {
     const char *time = "Current time:";
     sys_req(WRITE, COM1, time, strlen(time));
 }
 
-void setTime(void) // Sets the system's current time
+
+/*
+ * Sets the current time of the system
+ * Parameters: void
+ * Returns: void
+ */
+void setTime(void) 
 {
     const char* setTimeMsg = "Enter the new time (hhmmss): ";
     sys_req(WRITE, COM1, setTimeMsg, strlen(setTimeMsg));
@@ -118,12 +169,23 @@ void setTime(void) // Sets the system's current time
     }
 }
 
+/*
+ * Writes a new line to ensure consistent formatting
+ * Parameters: void
+ * Returns: void
+ */
 void writeNewLine(void)
 {
     const char* newLine = "\n";
     sys_req(WRITE, COM1, newLine, strlen(newLine));
 }
 
+/*
+ * Takes in user input and evaluates what command it is, then executes the command by calling the relevant function.
+ Also, prints the welcome message to the MPX in color.
+ * Parameters: void
+ * Returns: void
+ */
 void comhand(void)
 {
 
