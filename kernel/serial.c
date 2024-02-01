@@ -264,6 +264,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 					tempChar = buffer[index];	 // Save character at current index
 					buffer[index] = charIn;		 // Replace character at current index with charIn or previous tempChar
 					outb(dev, charIn);
+					outb(dev, '\x1c[1C');
 					charIn = tempChar;			 // Set charIn to the replaced character
 				} while (++index < bufferCount); // Repeat for all remaining characters in the buffer
 			}
