@@ -64,6 +64,29 @@ int shutdown(void)
     }
 }
 
+void getDate() // Gets the systems current date
+{
+    const char* date = "Current date:";
+    sys_req(WRITE, COM1, date, strlen(date));
+}
+
+void setDate() // Sets the systems current date
+{
+    const char* setDateMsg = "Enter the new date (MM/DD/YYYY): ";
+    sys_req(WRITE, COM1, setDateMsg, strlen(setDateMsg));
+
+    char newDate[11] = {0};
+    int nread = sys_req(READ, COM1, newDate, sizeof(newDate));
+
+    if (nread > 0) {
+        const char* successMsg = "Date has been set successfully!\n";
+        sys_req(WRITE, COM1, successMsg, strlen(successMsg));
+    } else {
+        const char* errorMsg = "Error reading the new date.\n";
+        sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
+    }
+}
+
 void comhand(void)
 {
     //New line
