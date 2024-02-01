@@ -64,13 +64,13 @@ int shutdown(void)
     }
 }
 
-void getDate() // Gets the systems current date
+void getDate(void) // Gets the systems current date
 {
     const char* date = "Current date:";
     sys_req(WRITE, COM1, date, strlen(date));
 }
 
-void setDate() // Sets the systems current date
+void setDate(void) // Sets the systems current date
 {
     const char* setDateMsg = "Enter the new date (MM/DD/YYYY): ";
     sys_req(WRITE, COM1, setDateMsg, strlen(setDateMsg));
@@ -87,13 +87,13 @@ void setDate() // Sets the systems current date
     }
 }
 
-void getTime() // Gets the systems current time
+void getTime(void) // Gets the systems current time
 {
     const char* time = "Current time:";
     sys_req(WRITE, COM1, time, strlen(time));
 }
 
-void setTime() // Sets the systems current time
+void setTime(void) // Sets the systems current time
 {
     const char* setTimeMsg = "Enter the new time: ";
     sys_req(WRITE, COM1, setTimeMsg, strlen(setTimeMsg));
@@ -131,26 +131,12 @@ void comhand(void)
         BLUE    "     / ::::::::::::: \\\n" RESET
         "    (_________________)\n"
         "\n";
-    // // Welcome message
-    // const char *asciiArt = "Welcome to Bit Bandits' MPX!\n"
-    //                        "         _________\n"
-    //                        "        / ======= \\\n"
-    //                        "       / __________\\\n"
-    //                        "      | ___________ |\n"
-    //                        "      | | -       | |\n"
-    //                        "      | |  CS450  | |\n"
-    //                        "      | |_________| |________________________\n"
-    //                        "      \\=____________/   Bit Bandits          )\n"
-    //                        "      / \"\"\"\"\"\"\"\"\"\"\"\"\" \\\n"
-    //                        "     / ::::::::::::: \\\n"
-    //                        "    (_________________)\n"
-    //                        "    \n";
 
     sys_req(WRITE, COM1, newLine, strlen(newLine));
     sys_req(WRITE, COM1, asciiArt, strlen(asciiArt));
 
     // Constants
-    const char *comhandInitializeStr = " Comhand Initialized: Please write your preferred command\n";
+    const char *comhandInitializeStr = " Comhand Initialized: Please write your preferred command.\n";
     const char *avaliableCommandStr = " Available Commands: \n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n";
 
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));

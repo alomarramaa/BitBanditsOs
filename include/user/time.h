@@ -1,5 +1,5 @@
 // @brief Displays teh system time
-void get_time();
+void get_time(void);
 
 /// @brief Changes teh system time to a time inputed by the user witht hegiven parameters
 /// @param hours 
