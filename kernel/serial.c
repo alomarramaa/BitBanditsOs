@@ -2,8 +2,8 @@
 #include <mpx/serial.h>
 #include <sys_req.h>
 
-// Maximum buffer list size
-#define BUFFER_LIST_MAX 5
+// // Maximum buffer list size
+// #define BUFFER_LIST_MAX 5
 
 enum uart_registers
 {
@@ -21,40 +21,40 @@ enum uart_registers
 	SCR = 7, // Scratch
 };
 
-/*
- * @brief A struct to store the previous entered commands, acts as a node in a linked list
- */
-typedef struct previous_buffers
-{
-	/*
-	 * @brief Contents of the buffer
-	 */
-	char *bufferText;
+// /*
+//  * @brief A struct to store the previous entered commands, acts as a node in a linked list
+//  */
+// typedef struct previous_buffers
+// {
+// 	/*
+// 	 * @brief Contents of the buffer
+// 	 */
+// 	char *bufferText;
 
-	/*
-	 * @brief Size of the buffer
-	 */
-	int bufferSize;
+// 	/*
+// 	 * @brief Size of the buffer
+// 	 */
+// 	int bufferSize;
 
-	/*
-	 * @brief Pointer to the next buffer in the list
-	 */
-	struct previous_buffers *nextBuffer;
+// 	/*
+// 	 * @brief Pointer to the next buffer in the list
+// 	 */
+// 	struct previous_buffers *nextBuffer;
 
-	/*
-	 * @brief Pointer to the previous buffer in the list
-	 */
-	struct previous_buffers *prevBuffer;
-} previous_buffers;
+// 	/*
+// 	 * @brief Pointer to the previous buffer in the list
+// 	 */
+// 	struct previous_buffers *prevBuffer;
+// } previous_buffers;
 
-// Head of the linked list
-previous_buffers *bufferHead = NULL;
+// // Head of the linked list
+// previous_buffers *bufferHead = NULL;
 
-// Tail of the linked list
-previous_buffers *bufferTail = NULL;
+// // Tail of the linked list
+// previous_buffers *bufferTail = NULL;
 
-// List length to ensure limited memory use
-int bufferListLength = 0;
+// // List length to ensure limited memory use
+// int bufferListLength = 0;
 
 static int initialized[4] = {0};
 
@@ -113,7 +113,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 	int index = 0;		 // Current location within the buffer
 	int tempIndex;		 // Used when traversing through the buffer
 	char tempChar;
-	previous_buffers *currBuffer = NULL; // Used when traversing previous commands
+	// previous_buffers *currBuffer = NULL; // Used when traversing previous commands
 
 	int stop = 0;
 	while (bufferCount < ((int)len - 1) && !stop)
