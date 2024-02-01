@@ -140,9 +140,9 @@ int serial_poll(device dev, char *buffer, size_t len)
 					buffer[index--] = '\0';
 					bufferCount--;
 					tempIndex--;
-					outb(dev, 8);
+					outb(dev, '\0');
 					outb(dev, ' ');
-					outb(dev, 8);
+					outb(dev, '\0');
 					break;
 				}
 
