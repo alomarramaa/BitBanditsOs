@@ -56,12 +56,14 @@ int shutdown(void)
 
     if (nread > 0 && confirm[0] == 'y') // shutdown confirmed
     {
-        sys_req(WRITE, COM1, "Shutdown confirmed.");
+        char* confMsg = "Shutdown confirmed.";
+        sys_req(WRITE, COM1, confMsg, strlen(confMsg));
         return 1;
     }
     else // Cancel shutdown
     {
-        sys_req(WRITE, COM1, "Shutdown canceled.\n");
+        char* cancelMsg = "Shutdown canceled.\n";
+        sys_req(WRITE, COM1, cancelMsg, strlen(cancelMsg));
         return 0;
     }
 }
