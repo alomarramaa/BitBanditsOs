@@ -159,6 +159,9 @@ int serial_poll(device dev, char *buffer, size_t len)
 				} while (++index < bufferCount);	   // Repeat for each remaining character in buffer
 				buffer[index] = '\0';				   // Replace the ending character with a null terminator
 				bufferCount--;						   // Update bufferCount
+				outb(dev, '\b');
+				outb(dev, ' ');
+				outb(dev, '\b');
 				break;
 
 			case 127:					  // Delete
