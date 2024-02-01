@@ -157,7 +157,8 @@ void comhand(void)
         char buf[100] = {0};
         int nread = sys_req(READ, COM1, buf, sizeof(buf));
         sys_req(WRITE, COM1, buf, nread);
-        sys_req(WRITE, COM1, "\n");
+        
+        writeNewLine();
 
         if (strcmp(buf, "shutdown") == 0) // Shutdown Command
         {
