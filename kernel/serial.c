@@ -260,11 +260,11 @@ int serial_poll(device dev, char *buffer, size_t len)
 	}
 	// Creates a new node for the submitted command
 	// and initializes its values
-	// previous_buffers newBuffer;
-	// newBuffer.bufferSize = bufferCount;
-	// newBuffer.bufferText = buffer;
-	// newBuffer.nextBuffer = bufferHead;
-	// newBuffer.prevBuffer = NULL;
+	previous_buffers newBuffer;
+	newBuffer.bufferSize = bufferCount;
+	newBuffer.bufferText = buffer;
+	newBuffer.nextBuffer = bufferHead;
+	newBuffer.prevBuffer = NULL;
 	// // Sets the new node to the head of the list
 	// bufferHead->prevBuffer = &newBuffer;
 	// bufferHead = &newBuffer;
