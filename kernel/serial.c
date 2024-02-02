@@ -140,15 +140,11 @@ int serial_poll(device dev, char *buffer, size_t len)
 					buffer[index--] = '\0';
 					bufferCount--;
 					tempIndex--;
-					outb(dev, '\b');
-					outb(dev, ' ');
-					outb(dev, '\b');
+					// outb(dev, '\b');
+					// outb(dev, ' ');
+					// outb(dev, '\b');
 					break;
 				}
-
-				outb(dev, '\b');
-				outb(dev, ' ');
-				outb(dev, '\b');
 
 				index--;		   // Traverse to character to be removed
 				tempIndex = index; // Save current index
@@ -185,7 +181,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 				{
 					tempChar = buffer[index];	 // Save character at current index
 					buffer[index] = charIn;		 // Replace character at current index with charIn or previous tempChar
-					outb(dev, charIn);
+					// outb(dev, charIn);
 					charIn = tempChar;			 // Set charIn to the replaced character
 				} while (++index < bufferCount); // Repeat for all remaining characters in the buffer
 				break;
@@ -193,7 +189,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 			case 37:			// Left arrow
 				if (index == 0) // Do nothing if no characters to the left
 					break;
-				outb(dev, '\b');
+				// outb(dev, '\b');
 				tempIndex--; // Decrease the index (move left)
 				break;
 
@@ -224,7 +220,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 			case 39:					  // Right arrow
 				if (index == bufferCount) // Do nothing if no characters to the right
 					break;
-				outb(dev, '\t');
+				// outb(dev, '\t');
 				index++; // Increase the index (move right)
 				break;
 
@@ -263,8 +259,8 @@ int serial_poll(device dev, char *buffer, size_t len)
 				{
 					tempChar = buffer[index];	 // Save character at current index
 					buffer[index] = charIn;		 // Replace character at current index with charIn or previous tempChar
-					outb(dev, charIn);
-					outb(dev, '\t');
+					// outb(dev, charIn);
+					// outb(dev, '\t');
 					charIn = tempChar;			 // Set charIn to the replaced character
 				} while (++index < bufferCount); // Repeat for all remaining characters in the buffer
 			}
@@ -273,7 +269,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 				break;
 			}
 			serial_out(dev, "\x1b[2k\r", 5);
-			//serial_out(dev, buffer, bufferCount); // Display current buffer
+			serial_out(dev, buffer, bufferCount); // Display current buffer
 			index = tempIndex;					  // Restore index
 		}
 	}
