@@ -256,9 +256,8 @@ int serial_poll(device dev, char *buffer, size_t len)
 					} while (++index < bufferCount); // Repeat for all remaining characters in the buffer
 				}
 				else{
-					if (index > 0) {
-						serial_out(COM1, "\b \b", 4);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
-						index--;
+					if (index < bufferCount) {
+						serial_out(COM1, " \b", 3);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
 						tempIndex = index;
 						for (int i = index; i < bufferCount; i++) {
 							buffer[i] = buffer[i + 1];      // Shift each character in the buffer one position to the left
@@ -268,7 +267,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 						bufferCount--;
 					}
 					else {
-						tempIndex = 0;
+						tempIndex = bufferCount;
 					}
 				}
 			}
