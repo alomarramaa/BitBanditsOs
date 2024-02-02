@@ -110,9 +110,9 @@ int serial_out(device dev, const char *buffer, size_t len)
 int serial_poll(device dev, char *buffer, size_t len)
 {
 	int bufferCount = 0; // Size of the buffer to be returned
-	int index = 0;		 // Current location within the buffer
-	int tempIndex;		 // Used when traversing through the buffer
-	char tempChar;
+	// int index = 0;		 // Current location within the buffer
+	// int tempIndex;		 // Used when traversing through the buffer
+	// char tempChar;
 	// previous_buffers *currBuffer = NULL; // Used when traversing previous commands
 	buffer = NULL;
 	int stop = 0;
@@ -519,7 +519,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 			}
 			//serial_out(dev, "\x1b[2k\r", 5);
 			//serial_out(dev, buffer, bufferCount); // Display current buffer
-			index = tempIndex;					  // Restore index
+			// index = tempIndex;					  // Restore index
 		}
 	}
 	// Creates a new node for the submitted command
@@ -552,7 +552,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 	// 	bufferHead = &newBuffer;
 	// 	bufferListLength++; // Updates the size of the command list
 	// }
-
+	buffer[1] = 'P';
 	return bufferCount;
 }
 
