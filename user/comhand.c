@@ -10,6 +10,8 @@
 #include <mpx/io.h>
 #include <mpx/serial.h>
 #include <user/date.h>
+#include <stdlib.h>
+#include <ctype.h>
 
 
 // Colors
@@ -18,6 +20,89 @@
 #define YELLOW "\x1B[33m"
 #define BLUE "\x1B[34m"
 #define RESET "\x1B[0m"
+
+/*
+ * Retrieves and displays values based on the provided resource ("date" or "time").
+ * Calls corresponding functions to display the requested information.
+ * Parameters: char* resource
+ * Returns: void
+ */
+void getval(char* resource) {
+    if (strcmp(resource, "date") == 0) get_date();
+    else if (strcmp(resource, "time") == 0) get_time();
+}
+/*
+ * Checks if a given string consists of numeric digits only.
+ * Iterates through each character in the string and validates if it's a digit.
+ * Parameters: const char* str 
+ * Returns: int - 1 if all characters are digits, 0 otherwise.
+ */
+int is_number(const char* str) {  //Function to check if a string is made of numbers
+    while (*str) {
+        if (*str < '0' || *str > '9') { // Checks to see if the current character is not a number. 
+            return 0;  // Not a digit
+        }
+        str++;
+    }
+    return 1;  // All characters are digits
+}
+
+/*
+ * Sets values based on the provided resource ("date" or "time").
+ * Reads user input, validates and processes it accordingly.
+ * Parameters: char* resource 
+ * Returns: int - 0 on success, -1 on failure.
+ */
+
+int setval(char* resource) {
+    
+    if (strcmp(resource, "date") == 0 || strcmp(resource, "time") == 0) { // Check if the resource is "date" or "time"
+        char buff[100];
+
+        if (sys_req(READ, COM1, buff, sizeof(buff)) <= 0) {  // Read input 
+            sys_req(WRITE, COM1, "Error reading input\n", 21);
+            return -1; // Indicate failure
+        }
+
+        
+        char* token = strtok(buff, " "); // Tokenize the input using space (' ') 
+        int m_h = (token != NULL && is_number(token)) ? atoi(token) : -1;
+
+        token = strtok(NULL, " ");
+        int d_m = (token != NULL && is_number(token)) ? atoi(token) : -1;
+
+        token = strtok(NULL, " ");
+        int y_s = (token != NULL && is_number(token)) ? atoi(token) : -1;
+
+        if (strcmp(resource, "date") == 0) {  // Check if the resource is "date"
+
+            if (m_h == -1 || d_m == -1 || y_s == -1) { // Check for invalid format
+                sys_req(WRITE, COM1, "Invalid format. Use 'mm dd yyyy'\n", 31);
+                return -1; // Indicate failure
+            }
+
+            
+            set_date(m_h, d_m, y_s); // Set the date using set_date function
+            get_date(); // Display the updated date
+        } else if (strcmp(resource, "time") == 0) { // Check if the resource is "time"
+            
+            if (m_h == -1 || d_m == -1 || y_s == -1) { // Check for invalid format
+                sys_req(WRITE, COM1, "Invalid format. Use 'hh mm ss'\n", 27);
+                return -1; // Indicate failure
+            }
+
+            // Set the time using set_time function
+            set_time(m_h, d_m, y_s);
+            get_time(); // Display the updated time
+        }
+
+        return 0; // Indicate success
+    } else {
+        sys_req(WRITE, COM1, "Invalid request\n", 17);
+        return -1; // Indicate failure
+    }
+}
+
 
 /*
  * Clears the terminal by blanking it.
@@ -97,78 +182,6 @@ int shutdown(void)
 }
 
 /*
- * Gets the system's current date
- * Parameters: void
- * Returns: void
- */
-void getDate(void)
-{
-    const char *date = "Current date:";
-    sys_req(WRITE, COM1, date, strlen(date));
-}
-
-/*
- * Sets the current date of the system
- * Parameters: void
- * Returns: void
- */
-void setDate(void)
-{
-    const char *setDateMsg = "Enter the new date (MM/DD/YYYY): ";
-    sys_req(WRITE, COM1, setDateMsg, strlen(setDateMsg));
-
-    char newDate[11] = {0};
-    int nread = sys_req(READ, COM1, newDate, sizeof(newDate));
-
-    if (nread > 0)
-    {
-        const char *successMsg = "Date has been set successfully!\n";
-        sys_req(WRITE, COM1, successMsg, strlen(successMsg));
-    }
-    else
-    {
-        const char *errorMsg = "Error reading the new date.\n";
-        sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
-    }
-}
-
-/*
- * Get's the current time of the system
- * Parameters: void
- * Returns: void
- */
-void getTime(void)
-{
-    const char *time = "Current time:";
-    sys_req(WRITE, COM1, time, strlen(time));
-}
-
-/*
- * Sets the current time of the system
- * Parameters: void
- * Returns: void
- */
-void setTime(void)
-{
-    const char *setTimeMsg = "Enter the new time (hhmmss): ";
-    sys_req(WRITE, COM1, setTimeMsg, strlen(setTimeMsg));
-
-    char newTime[5] = {0};
-    int nread = sys_req(READ, COM1, newTime, sizeof(newTime));
-
-    if (nread > 0)
-    {
-        const char *successMsg = "Time has been set successfully!\n";
-        sys_req(WRITE, COM1, successMsg, strlen(successMsg));
-    }
-    else
-    {
-        const char *errorMsg = "Error reading the new time.\n";
-        sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
-    }
-}
-
-/*
  * Writes a new line to ensure consistent formatting
  * Parameters: void
  * Returns: void
@@ -243,23 +256,23 @@ void comhand(void)
         else if (strcmp(buf, "get date") == 0) // Get Date Command
         {
             //getDate();
-           get_date();
+            getval("date");
         }
 
         else if (strcmp(buf, "set date") == 0) // Set Date Command
         {
-            setDate();
+            setval("date");
         }
 
         else if (strcmp(buf, "get time") == 0) // Set Date Command
         {
             // getTime();
-            get_time();
+            getval("time");
         }
 
         else if (strcmp(buf, "set time") == 0) // Set Date Command
         {
-            setTime();
+            setval("time");
         }
         else if (strcmp(buf, "clear") == 0)
         {

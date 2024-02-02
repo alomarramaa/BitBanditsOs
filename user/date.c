@@ -28,7 +28,12 @@ int bcd_to_binary(int bcd) {
     int ones = bcd & 0x0F;       // Extract the ones column
     return (tens * 10) + ones;    // Convert and combine tens and ones
 }
-
+//Function to convert Binary to BCD
+int binary_to_bcd(int binary) {
+    int tens = binary / 10;
+    int ones = binary % 10;
+    return (tens << 4) | ones;
+}
 
 int readDateReg(char sect){
     switch(sect){
@@ -59,20 +64,22 @@ void get_date(void) {
 // Function to set the date in RTC
 void set_date(int month, int day, int year) {
     // Convert date values to BCD
-    month = month % 12; // Ensure the month is within the range of 0-12
-    day = day % 31; //Ensure the day is within the range of 0-31
+    month = bcd_to_binary(month) % 12; // Ensure the month is within the range of 0-12
+    day = bcd_to_binary(day) % 31;     // Ensure the day is within the range of 0-31
     int month_bcd = ((month / 10) << 4) | (month % 10);
     int day_bcd = ((day / 10) << 4) | (day % 10);
-    int year_bcd = ((year / 10) << 4) | (year % 10);
-
+    
+    // Convert year to BCD and ensure it's a 4-digit year
+    year = year % 100;  // Assuming the RTC uses a two-digit year representation
+    int year_bcd = binary_to_bcd(year);
 
     // Set date in RTC
-    outb(0x70,RTC_MONTH); // Select month register
-    outb(0x71,month_bcd); // Set month
+    outb(0x70, RTC_MONTH); // Select month register
+    outb(0x71, month_bcd); // Set month
 
-    outb(0x70,RTC_DAY); // Select day register
-    outb(0x71,day_bcd); // Set day
+    outb(0x70, RTC_DAY);   // Select day register
+    outb(0x71, day_bcd);   // Set day
 
-    outb(0x70,RTC_YEAR); // Select year register
-    outb(0x71,year_bcd); // Set year
+    outb(0x70, RTC_YEAR);  // Select year register
+    outb(0x71, year_bcd);  // Set year
 }
