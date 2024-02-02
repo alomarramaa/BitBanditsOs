@@ -11,7 +11,7 @@
 #include <mpx/serial.h>
 #include <user/date.h>
 #include <stdlib.h>
-#include <ctype.h>
+
 
 
 // Colors
