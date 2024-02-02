@@ -1,3 +1,7 @@
+#ifndef USER_DATE_H
+#define USER_DATE_H
+
+
 /**
  @file date.h
  @brief File used for date related commands
@@ -10,3 +14,5 @@ void get_date(void);
 /// @param day
 /// @param year
 void set_date(int month, int day, int year);
+
+#endif

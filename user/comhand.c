@@ -3,12 +3,14 @@
  * Interface users will use to interact with the operating system.
  */
 
-
-
 #include <string.h>
 #include <sys_req.h>
 #include <user/comhand.h>
 #include <user/time.h>
+#include <mpx/io.h>
+#include <mpx/serial.h>
+#include <user/date.h>
+
 
 // Colors
 #define RED "\x1B[31m"
@@ -17,18 +19,17 @@
 #define BLUE "\x1B[34m"
 #define RESET "\x1B[0m"
 
-
-
 /*
  * Clears the terminal by blanking it.
  * Parameters: void
  * Returns: void
  */
 
-void clear(void)
+void clear(device dev)
 {
+    outb(dev, "\033[2J");
     /* The “Clear” or “clear” command should simply blank the terminal,
-    where the top of terminal is a new line for the user to enter their next command.
+    where the top of the terminal is a new line for the user to enter their next command.
      This functionality may prove useful for other features (both bonus and required)
      in the future.  If you have a menu interface, redisplay your menu*/
 }
@@ -68,7 +69,6 @@ void help(void) // Prints all available commands
     sys_req(WRITE, COM1, helpText, strlen(helpText));
 }
 
-
 /*
  * Shut down the MPX
  * Parameters: void
@@ -76,7 +76,7 @@ void help(void) // Prints all available commands
  */
 int shutdown(void)
 {
-    char* shutdCheck = "Are you sure you want to shut down? (y/n)\n";
+    char *shutdCheck = "Are you sure you want to shut down? (y/n)\n";
     sys_req(WRITE, COM1, shutdCheck, strlen(shutdCheck)); // Confirmation to shut down
 
     char confirm[50] = {0};
@@ -84,13 +84,13 @@ int shutdown(void)
 
     if (nread > 0 && confirm[0] == 'y') // Shutdown confirmed
     {
-        char* confMsg = "Shutdown confirmed.\n";
+        char *confMsg = "Shutdown confirmed.\n";
         sys_req(WRITE, COM1, confMsg, strlen(confMsg));
         return 1;
     }
     else // Cancel shutdown
     {
-        char* cancelMsg = "Shutdown canceled.\n";
+        char *cancelMsg = "Shutdown canceled.\n";
         sys_req(WRITE, COM1, cancelMsg, strlen(cancelMsg));
         return 0;
     }
@@ -101,7 +101,7 @@ int shutdown(void)
  * Parameters: void
  * Returns: void
  */
-void getDate(void) 
+void getDate(void)
 {
     const char *date = "Current date:";
     sys_req(WRITE, COM1, date, strlen(date));
@@ -112,7 +112,7 @@ void getDate(void)
  * Parameters: void
  * Returns: void
  */
-void setDate(void) 
+void setDate(void)
 {
     const char *setDateMsg = "Enter the new date (MM/DD/YYYY): ";
     sys_req(WRITE, COM1, setDateMsg, strlen(setDateMsg));
@@ -137,21 +137,20 @@ void setDate(void)
  * Parameters: void
  * Returns: void
  */
-void getTime(void) 
+void getTime(void)
 {
     const char *time = "Current time:";
     sys_req(WRITE, COM1, time, strlen(time));
 }
-
 
 /*
  * Sets the current time of the system
  * Parameters: void
  * Returns: void
  */
-void setTime(void) 
+void setTime(void)
 {
-    const char* setTimeMsg = "Enter the new time (hhmmss): ";
+    const char *setTimeMsg = "Enter the new time (hhmmss): ";
     sys_req(WRITE, COM1, setTimeMsg, strlen(setTimeMsg));
 
     char newTime[5] = {0};
@@ -176,7 +175,7 @@ void setTime(void)
  */
 void writeNewLine(void)
 {
-    const char* newLine = "\n";
+    const char *newLine = "\n";
     sys_req(WRITE, COM1, newLine, strlen(newLine));
 }
 
@@ -188,7 +187,6 @@ void writeNewLine(void)
  */
 void comhand(void)
 {
-
     // Welcome message
     const char *asciiArt =
         RED "\nWelcome to " RESET
@@ -220,7 +218,7 @@ void comhand(void)
         char buf[100] = {0};
         int nread = sys_req(READ, COM1, buf, sizeof(buf));
         sys_req(WRITE, COM1, buf, nread);
-        
+
         writeNewLine();
 
         if (strcmp(buf, "shutdown") == 0) // Shutdown Command
@@ -244,7 +242,8 @@ void comhand(void)
         }
         else if (strcmp(buf, "get date") == 0) // Get Date Command
         {
-            getDate();
+            //getDate();
+           get_date();
         }
 
         else if (strcmp(buf, "set date") == 0) // Set Date Command
@@ -254,17 +253,22 @@ void comhand(void)
 
         else if (strcmp(buf, "get time") == 0) // Set Date Command
         {
-            getTime();
+            // getTime();
+            get_time();
         }
 
         else if (strcmp(buf, "set time") == 0) // Set Date Command
         {
             setTime();
         }
+        else if (strcmp(buf, "clear") == 0)
+        {
+            clear(COM1);
+        }
 
         else // Unrecognised command
         {
-            char* errorMsg = "Improper command entered. Please try again.\n";
+            char *errorMsg = "Improper command entered. Please try again.\n";
             sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
         }
     }

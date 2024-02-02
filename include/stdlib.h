@@ -1,6 +1,8 @@
 #ifndef MPX_STDLIB_H
 #define MPX_STDLIB_H
 
+#include "string.h"
+
 /**
  @file stdlib.h
  @brief A subset of standard C library functions.
@@ -12,5 +14,7 @@
  @return The value of the string converted to an integer
 */
 int atoi(const char *s);
+
+void itoa(int n, char s[]);
 
 #endif
