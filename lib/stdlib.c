@@ -29,7 +29,7 @@ int atoi(const char *s)
 }
 
 // A utility function to reverse a string
- void reverse(char s[])
+ void reverse(char* s)
  {
      int i, j;
      char c;
@@ -41,7 +41,8 @@ int atoi(const char *s)
      }
 }  
 
-void itoa(int n, char s[])
+// Convert a string to an integer
+void itoa(int n, char* s)
 {
     int i, sign;
     if ((sign = n) < 0)        /* record sign */
