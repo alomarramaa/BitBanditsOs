@@ -148,10 +148,6 @@ int serial_poll(device dev, char *buffer, size_t len)
 
 				index--;		   // Traverse to character to be removed
 				tempIndex = index; // Save current index
-				// outb backspace character
-				//outb space
-				// outb backspace character
-				// this will update the screen
 				
 				do
 				{
@@ -161,16 +157,17 @@ int serial_poll(device dev, char *buffer, size_t len)
 				bufferCount--;						   // Update bufferCount
 				break;
 
-			case 127:					  // Delete
-				// if (index == bufferCount) // Do nothing if no future characters
-				// 	break;
-				// tempIndex = index; // Save current index
-				// do
-				// {
-				// 	buffer[index] = buffer[index + 1]; // Replace current character with next character in buffer
-				// } while (++index < bufferCount);	   // Repeat for each remaining character in buffer
-				// buffer[index] = '\0';				   // Replace the ending character with a null terminator
-				// bufferCount--;						   // Update bufferCount
+			case 127:	// Delete
+				 if (index > 0) {
+					serial_out(COM1, "\b \b", 4);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
+					bufferCount--;
+					index--;
+					for (int i = index; i < bufferCount; i++) {
+						buffer[i] = buffer[i + 1];      // Shift each character in the buffer one position to the left
+						serial_out(COM1, &buffer[i], 1);
+					}
+					buffer[bufferCount] = '\0';      // The new end of the string
+				}
 				break;
 
 			case 32:				   // Space
