@@ -132,7 +132,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 				stop = 1;
 				break;
 
-			case 3:				// Backspace
+			case 3:				// ??
 				if (index > 0) {
 					serial_out(COM1, "\b \b", 4);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
 					index--;
@@ -244,14 +244,33 @@ int serial_poll(device dev, char *buffer, size_t len)
 				break;
 
 			default:				   // Basic character (A-Z, a-z, 0-9)
-				bufferCount++;		   // Increase buffer size
-				tempIndex = index + 1; // Save next index
-				do
+				if ((charIn >= 48 && charIn <= 57) || (charIn >= 65 && charIn <= 90) || (charIn >= 97 && charIn <= 122))
 				{
-					tempChar = buffer[index];	 // Save character at current index
-					buffer[index] = charIn;		 // Replace character at current index with charIn or previous tempChar
-					charIn = tempChar;			 // Set charIn to the replaced character
-				} while (++index < bufferCount); // Repeat for all remaining characters in the buffer
+					bufferCount++;		   // Increase buffer size
+					tempIndex = index + 1; // Save next index
+					do
+					{
+						tempChar = buffer[index];	 // Save character at current index
+						buffer[index] = charIn;		 // Replace character at current index with charIn or previous tempChar
+						charIn = tempChar;			 // Set charIn to the replaced character
+					} while (++index < bufferCount); // Repeat for all remaining characters in the buffer
+				}
+				else{
+					if (index > 0) {
+						serial_out(COM1, "\b \b", 4);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
+						index--;
+						tempIndex = index;
+						for (int i = index; i < bufferCount; i++) {
+							buffer[i] = buffer[i + 1];      // Shift each character in the buffer one position to the left
+							//serial_out(COM1, &buffer[i], 1);
+						}
+						buffer[bufferCount] = '\0';      // The new end of the string
+						bufferCount--;
+					}
+					else {
+						tempIndex = 0;
+					}
+				}
 			}
 			if (stop)
 			{
