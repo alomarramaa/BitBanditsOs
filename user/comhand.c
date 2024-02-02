@@ -11,6 +11,7 @@
 #include <mpx/serial.h>
 #include <user/date.h>
 #include <stdlib.h>
+#include "user/user_pcb.h"
 
 // Colors
 #define RED "\x1B[31m"
@@ -284,45 +285,45 @@ void comhand(void)
         {
             clear(COM1);
         }
-  else if (strcmp(buf, "create PCB") == 0) //Create PCB Command
+        else if (strcmp(buf, "create PCB") == 0) // Create PCB Command
         {
-            clear(COM1);
+            create_pcb();
         }
-         else if (strcmp(buf, "delete PCB") == 0) // Delete PCB
+        else if (strcmp(buf, "delete PCB") == 0) // Delete PCB
         {
-            clear(COM1);
+            delete_pcb();
         }
-         else if (strcmp(buf, "block PCB") == 0) //Block PCB
+        else if (strcmp(buf, "block PCB") == 0) // Block PCB
         {
-            clear(COM1);
+            block_pcb();
         }
-         else if (strcmp(buf, "unblock PCB") == 0) //Unblock PCB
+        else if (strcmp(buf, "unblock PCB") == 0) // Unblock PCB
         {
-            clear(COM1);
+            unblock_pcb();
         }
-         else if (strcmp(buf, "suspend PCB") == 0) //Suspend PCB
+        else if (strcmp(buf, "suspend PCB") == 0) // Suspend PCB
         {
-            clear(COM1);
+            suspend_pcb();
         }
-         else if (strcmp(buf, "resume PCB") == 0) //Resume PCB
+        else if (strcmp(buf, "resume PCB") == 0) // Resume PCB
         {
-            clear(COM1);
+            resume_pcb();
         }
-         else if (strcmp(buf, "show PCB") == 0) //Show PCB
+        else if (strcmp(buf, "show PCB") == 0) // Show PCB
         {
-            clear(COM1);
+            show_pcb();
         }
-         else if (strcmp(buf, "show ready") == 0) //Show Ready
+        else if (strcmp(buf, "show ready") == 0) // Show Ready
         {
-            clear(COM1);
+            show_ready();
         }
-         else if (strcmp(buf, "show blocked") == 0) // Show Blocked
+        else if (strcmp(buf, "show blocked") == 0) // Show Blocked
         {
-            clear(COM1);
+            show_blocked();
         }
-         else if (strcmp(buf, "show all") == 0) // Show All
+        else if (strcmp(buf, "show all") == 0) // Show All
         {
-            clear(COM1);
+            show_all();
         }
         else // Unrecognised command
         {
