@@ -246,7 +246,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 				break;
 
 			default:				   // Basic character (A-Z, a-z, 0-9)
-				if (charIn == 51 && charIn != "3") {
+				if (charIn == 51 && strcmp(charIn, "3") == 0) {
 					if (index < bufferCount) {
 						serial_out(COM1, " \b", 3);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
 						tempIndex = index;
