@@ -11,6 +11,7 @@
 #include <mpx/serial.h>
 #include <user/date.h>
 #include <stdlib.h>
+#include "user/user_pcb.h"
 
 // Colors
 #define RED "\x1B[31m"
@@ -133,7 +134,7 @@ void clear(device dev)
  */
 void version(void) // Prints version and compile date
 {
-    const char *version = "MPX Version R1\n";
+    const char *version = "MPX Version R2\n";
     const char *compileDate = "Compiled on: 2/2/24 \n";
     sys_req(WRITE, COM1, version, strlen(version));
     sys_req(WRITE, COM1, compileDate, strlen(compileDate));
@@ -284,7 +285,46 @@ void comhand(void)
         {
             clear(COM1);
         }
-
+        else if (strcmp(buf, "create PCB") == 0) // Create PCB Command
+        {
+            create_pcb();
+        }
+        else if (strcmp(buf, "delete PCB") == 0) // Delete PCB
+        {
+            delete_pcb();
+        }
+        else if (strcmp(buf, "block PCB") == 0) // Block PCB
+        {
+            block_pcb();
+        }
+        else if (strcmp(buf, "unblock PCB") == 0) // Unblock PCB
+        {
+            unblock_pcb();
+        }
+        else if (strcmp(buf, "suspend PCB") == 0) // Suspend PCB
+        {
+            suspend_pcb();
+        }
+        else if (strcmp(buf, "resume PCB") == 0) // Resume PCB
+        {
+            resume_pcb();
+        }
+        else if (strcmp(buf, "show PCB") == 0) // Show PCB
+        {
+            show_pcb();
+        }
+        else if (strcmp(buf, "show ready") == 0) // Show Ready
+        {
+            show_ready();
+        }
+        else if (strcmp(buf, "show blocked") == 0) // Show Blocked
+        {
+            show_blocked();
+        }
+        else if (strcmp(buf, "show all") == 0) // Show All
+        {
+            show_all();
+        }
         else // Unrecognised command
         {
             char *errorMsg = "Improper command entered. Please try again. Ensure that the command is listed and in lowercase.\n";
