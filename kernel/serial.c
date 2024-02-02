@@ -165,6 +165,9 @@ int serial_poll(device dev, char *buffer, size_t len)
 					buffer[bufferCount] = '\0';      // The new end of the string
 					bufferCount--;
 				}
+				else {
+					serial_out(COM1, "\a", 1); // Beep sound to indicate no further backspace at the beginning
+				}
 				break;
 
 			case 32:				   // Space
