@@ -160,7 +160,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 					index--;
 					for (int i = index; i < bufferCount; i++) {
 						buffer[i] = buffer[i + 1];      // Shift each character in the buffer one position to the left
-						serial_out(COM1, &buffer[i], 1);
+						//serial_out(COM1, &buffer[i], 1);
 					}
 					buffer[bufferCount] = '\0';      // The new end of the string
 					bufferCount--;
