@@ -256,7 +256,6 @@ int serial_poll(device dev, char *buffer, size_t len)
 						charIn = tempChar;			 // Set charIn to the replaced character
 					} while (++index < bufferCount); // Repeat for all remaining characters in the buffer
 			}
-			stop = 1;
 			if (stop)
 			{
 				break;
