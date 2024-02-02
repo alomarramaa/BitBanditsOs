@@ -133,7 +133,7 @@ void clear(device dev)
  */
 void version(void) // Prints version and compile date
 {
-    const char *version = "MPX Version R1\n";
+    const char *version = "MPX Version R2\n";
     const char *compileDate = "Compiled on: 2/2/24 \n";
     sys_req(WRITE, COM1, version, strlen(version));
     sys_req(WRITE, COM1, compileDate, strlen(compileDate));
@@ -280,7 +280,11 @@ void comhand(void)
         {
             setval("time");
         }
-        else if (strcmp(buf, "create PCB") == 0) //Create PCB Command
+        else if (strcmp(buf, "clear") == 0)
+        {
+            clear(COM1);
+        }
+  else if (strcmp(buf, "create PCB") == 0) //Create PCB Command
         {
             clear(COM1);
         }
@@ -320,11 +324,6 @@ void comhand(void)
         {
             clear(COM1);
         }
-         else if (strcmp(buf, "clear") == 0)
-        {
-            clear(COM1);
-        }
-
         else // Unrecognised command
         {
             char *errorMsg = "Improper command entered. Please try again. Ensure that the command is listed and in lowercase.\n";
