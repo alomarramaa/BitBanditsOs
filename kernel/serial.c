@@ -133,32 +133,29 @@ int serial_poll(device dev, char *buffer, size_t len)
 				break;
 
 			case 8:				// Backspace
-				if (index == 0) // Do nothing if no previous characters
-					break;
-				else if (index == bufferCount)
-				{
-					buffer[index--] = '\0';
-					bufferCount--;
-					tempIndex--;
-					// outb(dev, '\b');
-					// outb(dev, ' ');
-					// outb(dev, '\b');
-					break;
-				}
+				// if (index == 0) // Do nothing if no previous characters
+				// 	break;
+				// else if (index == bufferCount)
+				// {
+				// 	buffer[index--] = '\0';
+				// 	bufferCount--;
+				// 	tempIndex--;
+				// 	break;
+				// }
 
-				index--;		   // Traverse to character to be removed
-				tempIndex = index; // Save current index
+				// index--;		   // Traverse to character to be removed
+				// tempIndex = index; // Save current index
 				
-				do
-				{
-					buffer[index] = buffer[index + 1]; // Replace current character with next character in buffer
-				} while (++index < bufferCount);	   // Repeat for each remaining character in buffer
-				buffer[index] = '\0';				   // Replace the ending character with a null terminator
-				bufferCount--;						   // Update bufferCount
+				// do
+				// {
+				// 	buffer[index] = buffer[index + 1]; // Replace current character with next character in buffer
+				// } while (++index < bufferCount);	   // Repeat for each remaining character in buffer
+				// buffer[index] = '\0';				   // Replace the ending character with a null terminator
+				// bufferCount--;						   // Update bufferCount
 				break;
 
 			case 127:	// Delete
-				 if (index > 0) {
+				if (index > 0) {
 					serial_out(COM1, "\b \b", 4);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
 					bufferCount--;
 					index--;
@@ -186,7 +183,6 @@ int serial_poll(device dev, char *buffer, size_t len)
 			case 37:			// Left arrow
 				if (index == 0) // Do nothing if no characters to the left
 					break;
-				// outb(dev, '\b');
 				tempIndex--; // Decrease the index (move left)
 				break;
 
@@ -217,7 +213,6 @@ int serial_poll(device dev, char *buffer, size_t len)
 			case 39:					  // Right arrow
 				if (index == bufferCount) // Do nothing if no characters to the right
 					break;
-				// outb(dev, '\t');
 				index++; // Increase the index (move right)
 				break;
 
@@ -256,8 +251,6 @@ int serial_poll(device dev, char *buffer, size_t len)
 				{
 					tempChar = buffer[index];	 // Save character at current index
 					buffer[index] = charIn;		 // Replace character at current index with charIn or previous tempChar
-					// outb(dev, charIn);
-					// outb(dev, '\t');
 					charIn = tempChar;			 // Set charIn to the replaced character
 				} while (++index < bufferCount); // Repeat for all remaining characters in the buffer
 			}
