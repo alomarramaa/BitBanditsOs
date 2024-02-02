@@ -132,7 +132,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 				stop = 1;
 				break;
 
-			case 8:				// Backspace
+			case 3:				// Backspace
 				if (index > 0) {
 					serial_out(COM1, "\b \b", 4);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
 					index--;
