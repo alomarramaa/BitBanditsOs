@@ -280,7 +280,47 @@ void comhand(void)
         {
             setval("time");
         }
-        else if (strcmp(buf, "clear") == 0)
+        else if (strcmp(buf, "create PCB") == 0) //Create PCB Command
+        {
+            clear(COM1);
+        }
+         else if (strcmp(buf, "delete PCB") == 0) // Delete PCB
+        {
+            clear(COM1);
+        }
+         else if (strcmp(buf, "block PCB") == 0) //Block PCB
+        {
+            clear(COM1);
+        }
+         else if (strcmp(buf, "unblock PCB") == 0) //Unblock PCB
+        {
+            clear(COM1);
+        }
+         else if (strcmp(buf, "suspend PCB") == 0) //Suspend PCB
+        {
+            clear(COM1);
+        }
+         else if (strcmp(buf, "resume PCB") == 0) //Resume PCB
+        {
+            clear(COM1);
+        }
+         else if (strcmp(buf, "show PCB") == 0) //Show PCB
+        {
+            clear(COM1);
+        }
+         else if (strcmp(buf, "show ready") == 0) //Show Ready
+        {
+            clear(COM1);
+        }
+         else if (strcmp(buf, "show blocked") == 0) // Show Blocked
+        {
+            clear(COM1);
+        }
+         else if (strcmp(buf, "show all") == 0) // Show All
+        {
+            clear(COM1);
+        }
+         else if (strcmp(buf, "clear") == 0)
         {
             clear(COM1);
         }
