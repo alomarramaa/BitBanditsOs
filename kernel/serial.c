@@ -121,7 +121,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 		if (inb(dev + LSR) & 1)
 		{
 			char charIn = inb(dev); // Read one byte			
-			switch (charIn)
+			switch ( (int) charIn)
 			{
 			case 13:
 				outb(dev, '\r');  // Carriage returns (\r)
@@ -132,12 +132,12 @@ int serial_poll(device dev, char *buffer, size_t len)
 				stop = 1;
 				break;
 
-			case 8:				// Backspace
-				if (index > 0) {
-					serial_out(COM1, "\b \b", 4);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
-					index--;
+			case 126:				// Delete
+				if (index < bufferCount) {
+					serial_out(COM1, " \b", 3);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
 					tempIndex = index;
-					for (int i = index; i < bufferCount; i++) {
+					for (int i = index; i < bufferCount; i++) 
+					{
 						buffer[i] = buffer[i + 1];      // Shift each character in the buffer one position to the left
 						//serial_out(COM1, &buffer[i], 1);
 					}
@@ -145,14 +145,11 @@ int serial_poll(device dev, char *buffer, size_t len)
 					bufferCount--;
 				}
 				else {
-					tempIndex = 0;
+					tempIndex = index;
 				}
 				break;
 
-			case 127:	// Backspace ?? (Delete?)
-			// For some reason, when I press backspace on my keyboard it enters this case, so I put the backspace code here
-			// I thought this was the delete function?
-			// Delete and the arrow keys are being detected as other ascii values for some reason
+			case 127:	// Backspace
 				if (index > 0) {
 					serial_out(COM1, "\b \b", 4);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
 					index--;
@@ -182,13 +179,14 @@ int serial_poll(device dev, char *buffer, size_t len)
 				} while (++index < bufferCount); // Repeat for all remaining characters in the buffer
 				break;
 
-			case 37:			// Left arrow
+			case 68:			// Left arrow
 				if (index == 0) // Do nothing if no characters to the left
 					break;
 				tempIndex--; // Decrease the index (move left)
+				serial_out(COM1, "\b", 2);
 				break;
 
-			case 38: // Up arrow
+			case 65: // Up arrow
 				// If not already looking at a previous command
 				// if (currBuffer == NULL)
 				// {
@@ -212,13 +210,13 @@ int serial_poll(device dev, char *buffer, size_t len)
 				// }
 				break;
 
-			case 39:					  // Right arrow
+			case 67:					  // Right arrow
 				if (index == bufferCount) // Do nothing if no characters to the right
 					break;
 				tempIndex++; // Increase the index (move right)
 				break;
 
-			case 40: // Down arrow
+			case 66: // Down arrow
 				// // If not currently looking at a previous command, do nothing
 				// if (currBuffer == NULL)
 				// 	break;
