@@ -502,22 +502,23 @@ int serial_poll(device dev, char *buffer, size_t len)
 			// 	// }
 			// 	break;
 
-			default:				   // Basic character (A-Z, a-z, 0-9)
-					bufferCount++;		   // Increase buffer size
-					tempIndex = index + 1; // Save next index
-					do
-					{
-						tempChar = buffer[index];	 // Save character at current index
-						buffer[index] = charIn;		 // Replace character at current index with charIn or previous tempChar
-						charIn = tempChar;			 // Set charIn to the replaced character
-					} while (++index < bufferCount); // Repeat for all remaining characters in the buffer
-			}
+			// default:				   // Basic character (A-Z, a-z, 0-9)
+			// 		bufferCount++;		   // Increase buffer size
+			// 		tempIndex = index + 1; // Save next index
+			// 		do
+			// 		{
+			// 			tempChar = buffer[index];	 // Save character at current index
+			// 			buffer[index] = charIn;		 // Replace character at current index with charIn or previous tempChar
+			// 			charIn = tempChar;			 // Set charIn to the replaced character
+			// 		} while (++index < bufferCount); // Repeat for all remaining characters in the buffer
+			// }
+			stop = 1;
 			if (stop)
 			{
 				break;
 			}
-			serial_out(dev, "\x1b[2k\r", 5);
-			serial_out(dev, buffer, bufferCount); // Display current buffer
+			//serial_out(dev, "\x1b[2k\r", 5);
+			//serial_out(dev, buffer, bufferCount); // Display current buffer
 			index = tempIndex;					  // Restore index
 		}
 	}
