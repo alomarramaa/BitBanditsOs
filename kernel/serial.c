@@ -152,6 +152,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 			case 127:	// Backspace ?? (Delete?)
 			// For some reason, when I press backspace on my keyboard it enters this case, so I put the backspace code here
 			// I thought this was the delete function?
+			// Delete and the arrow keys are being detected as other ascii values for some reason
 				if (index > 0) {
 					serial_out(COM1, "\b \b", 4);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
 					index--;
@@ -246,22 +247,6 @@ int serial_poll(device dev, char *buffer, size_t len)
 				break;
 
 			default:				   // Basic character (A-Z, a-z, 0-9)
-				if (charIn == 51 && strcmp(charIn, "3") == 0) {
-					if (index < bufferCount) {
-						serial_out(COM1, " \b", 3);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
-						tempIndex = index;
-						for (int i = index; i < bufferCount; i++) {
-							buffer[i] = buffer[i + 1];      // Shift each character in the buffer one position to the left
-							//serial_out(COM1, &buffer[i], 1);
-						}
-						buffer[bufferCount] = '\0';      // The new end of the string
-						bufferCount--;
-					}
-					else {
-						tempIndex = bufferCount;
-					}
-				}
-				else {
 					bufferCount++;		   // Increase buffer size
 					tempIndex = index + 1; // Save next index
 					do
@@ -270,7 +255,6 @@ int serial_poll(device dev, char *buffer, size_t len)
 						buffer[index] = charIn;		 // Replace character at current index with charIn or previous tempChar
 						charIn = tempChar;			 // Set charIn to the replaced character
 					} while (++index < bufferCount); // Repeat for all remaining characters in the buffer
-				}	
 			}
 			if (stop)
 			{
