@@ -1,3 +1,8 @@
+
+/*
+ * Get and set the date for the operating system
+ */
+
 // #include <user/date.h>
 #include "sys_req.h"
 #include "string.h"

@@ -1,3 +1,8 @@
+
+/*
+ * Get and set the time for the operating system
+ */
+
 //#include "time.h"
 #include "sys_req.h"
 #include "string.h"
@@ -21,6 +26,12 @@ int readTimeReg(char sect){
     }
 }
 
+
+/*
+ * Gets the current time
+ * Parameters: void
+ * Returns: void
+ */
 void get_time(void) {
     char buffer[20];
     const char* currentTime = "Current time: ";
@@ -36,7 +47,12 @@ void get_time(void) {
     sys_req(WRITE, COM1, "\n", 2);
 }
 
-// Function to set the time in RTC
+/*
+ * Sets the time in RTC
+ * Parameters: void
+ * Returns: void
+ */
+
 void set_time(int hours, int minutes, int seconds) {
     // Convert time values to BCD
     hours = hours % 24; // Ensure hours are in the range 0-23

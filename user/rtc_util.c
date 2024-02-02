@@ -1,9 +1,18 @@
-// Function to read a byte from RTC register
+
+/*
+ * Reads a byte from the RTC register
+ * Parameters: int reg
+ */
 int read_rtc_register(int reg) {
     outb(0x70,reg); // Use 0x70 for RTC register selection
     return inb(0x71); // Use 0x71 for RTC data port
 }
 
+
+/*
+ * Converts BCD to binary
+ * Parameters: int bcd
+ */
 // Function to convert BCD to binary
 int bcd_to_binary(int bcd) {
     int tens = (bcd >> 4) & 0x0F; // Extract the tens column
