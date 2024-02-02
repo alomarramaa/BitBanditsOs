@@ -226,8 +226,8 @@ void comhand(void)
     sys_req(WRITE, COM1, asciiArt, strlen(asciiArt));
 
     // Constants
-    const char *comhandInitializeStr = " Comhand Initialized: Please write your preferred command.\n";
-    const char *avaliableCommandStr = " Available Commands: \n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n";
+    const char *comhandInitializeStr = " Comhand Initialized: Please write your preferred command in all lowercase.\n";
+    const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n";
 
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
@@ -287,7 +287,7 @@ void comhand(void)
 
         else // Unrecognised command
         {
-            char *errorMsg = "Improper command entered. Please try again.\n";
+            char *errorMsg = "Improper command entered. Please try again. Ensure that the command is listed and in lowercase.\n";
             sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
         }
     }
