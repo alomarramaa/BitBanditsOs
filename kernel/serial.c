@@ -158,15 +158,13 @@ int serial_poll(device dev, char *buffer, size_t len)
 				if (index > 0) {
 					serial_out(COM1, "\b \b", 4);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
 					index--;
+					tempIndex = index;
 					for (int i = index; i < bufferCount; i++) {
 						buffer[i] = buffer[i + 1];      // Shift each character in the buffer one position to the left
 						//serial_out(COM1, &buffer[i], 1);
 					}
 					buffer[bufferCount] = '\0';      // The new end of the string
 					bufferCount--;
-				}
-				else {
-					serial_out(COM1, "\a", 1); // Beep sound to indicate no further backspace at the beginning
 				}
 				break;
 
