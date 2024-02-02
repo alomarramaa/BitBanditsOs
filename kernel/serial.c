@@ -121,7 +121,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 		if (inb(dev + LSR) & 1)
 		{
 			char charIn = inb(dev); // Read one byte			
-			switch (charIn)
+			switch ( (int) charIn)
 			{
 				case 1: 
 					serial_out(COM1, "1", 2);
