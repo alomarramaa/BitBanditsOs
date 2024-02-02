@@ -12,8 +12,6 @@
 #include <user/date.h>
 #include <stdlib.h>
 
-
-
 // Colors
 #define RED "\x1B[31m"
 #define GREEN "\x1B[32m"
@@ -27,45 +25,53 @@
  * Parameters: char* resource
  * Returns: void
  */
-void getval(char* resource) {
-    if (strcmp(resource, "date") == 0) get_date();
-    else if (strcmp(resource, "time") == 0) get_time();
+void getval(char *resource)
+{
+    if (strcmp(resource, "date") == 0)
+        get_date();
+    else if (strcmp(resource, "time") == 0)
+        get_time();
 }
 /*
  * Checks if a given string consists of numeric digits only.
  * Iterates through each character in the string and validates if it's a digit.
- * Parameters: const char* str 
+ * Parameters: const char* str
  * Returns: int - 1 if all characters are digits, 0 otherwise.
  */
-int is_number(const char* str) {  //Function to check if a string is made of numbers
-    while (*str) {
-        if (*str < '0' || *str > '9') { // Checks to see if the current character is not a number. 
-            return 0;  // Not a digit
+int is_number(const char *str)
+{ // Function to check if a string is made of numbers
+    while (*str)
+    {
+        if (*str < '0' || *str > '9')
+        {             // Checks to see if the current character is not a number.
+            return 0; // Not a digit
         }
         str++;
     }
-    return 1;  // All characters are digits
+    return 1; // All characters are digits
 }
 
 /*
  * Sets values based on the provided resource ("date" or "time").
  * Reads user input, validates and processes it accordingly.
- * Parameters: char* resource 
+ * Parameters: char* resource
  * Returns: int - 0 on success, -1 on failure.
  */
 
-int setval(char* resource) {
-    
-    if (strcmp(resource, "date") == 0 || strcmp(resource, "time") == 0) { // Check if the resource is "date" or "time"
+int setval(char *resource)
+{
+
+    if (strcmp(resource, "date") == 0 || strcmp(resource, "time") == 0)
+    { // Check if the resource is "date" or "time"
         char buff[100];
 
-        if (sys_req(READ, COM1, buff, sizeof(buff)) <= 0) {  // Read input 
+        if (sys_req(READ, COM1, buff, sizeof(buff)) <= 0)
+        { // Read input
             sys_req(WRITE, COM1, "Error reading input\n", 21);
             return -1; // Indicate failure
         }
 
-        
-        char* token = strtok(buff, " "); // Tokenize the input using space (' ') 
+        char *token = strtok(buff, " "); // Tokenize the input using space (' ')
         int m_h = (token != NULL && is_number(token)) ? atoi(token) : -1;
 
         token = strtok(NULL, " ");
@@ -74,19 +80,23 @@ int setval(char* resource) {
         token = strtok(NULL, " ");
         int y_s = (token != NULL && is_number(token)) ? atoi(token) : -1;
 
-        if (strcmp(resource, "date") == 0) {  // Check if the resource is "date"
+        if (strcmp(resource, "date") == 0)
+        { // Check if the resource is "date"
 
-            if (m_h == -1 || d_m == -1 || y_s == -1) { // Check for invalid format
+            if (m_h == -1 || d_m == -1 || y_s == -1)
+            { // Check for invalid format
                 sys_req(WRITE, COM1, "Invalid format. Use 'mm dd yyyy'\n", 31);
                 return -1; // Indicate failure
             }
 
-            
             set_date(m_h, d_m, y_s); // Set the date using set_date function
-            get_date(); // Display the updated date
-        } else if (strcmp(resource, "time") == 0) { // Check if the resource is "time"
-            
-            if (m_h == -1 || d_m == -1 || y_s == -1) { // Check for invalid format
+            get_date();              // Display the updated date
+        }
+        else if (strcmp(resource, "time") == 0)
+        { // Check if the resource is "time"
+
+            if (m_h == -1 || d_m == -1 || y_s == -1)
+            { // Check for invalid format
                 sys_req(WRITE, COM1, "Invalid format. Use 'hh mm ss'\n", 27);
                 return -1; // Indicate failure
             }
@@ -97,12 +107,13 @@ int setval(char* resource) {
         }
 
         return 0; // Indicate success
-    } else {
+    }
+    else
+    {
         sys_req(WRITE, COM1, "Invalid request\n", 17);
         return -1; // Indicate failure
     }
 }
-
 
 /*
  * Clears the terminal by blanking it.
@@ -113,10 +124,6 @@ int setval(char* resource) {
 void clear(device dev)
 {
     outb(dev, "\033[2J");
-    /* The “Clear” or “clear” command should simply blank the terminal,
-    where the top of the terminal is a new line for the user to enter their next command.
-     This functionality may prove useful for other features (both bonus and required)
-     in the future.  If you have a menu interface, redisplay your menu*/
 }
 
 /*
@@ -140,7 +147,7 @@ void version(void) // Prints version and compile date
 
 void help(void) // Prints all available commands
 {
-    const char *helpText = "Available Commands: \n"
+    const char *helpText = "The following are all the commands available to use: \n"
                            "1. Shutdown - Shut down the system\n"
                            "2. Version - Display the current version & compilation date\n"
                            "3. Help - Display all available commands\n"
@@ -155,7 +162,7 @@ void help(void) // Prints all available commands
 }
 
 /*
- * Shut down the MPX
+ * Shut down the operating system, and asks for confirmation
  * Parameters: void
  * Returns: void
  */
@@ -236,8 +243,7 @@ void comhand(void)
 
         if (strcmp(buf, "shutdown") == 0) // Shutdown Command
         {
-            // char* shutdConf = "Shutdown confirmed.\n";
-            // sys_req(WRITE, COM1, shutdConf, strlen(shutdConf));
+
             if (shutdown() == 1)
             {
                 break; // exit the loop if shutdown is confirmed
@@ -255,7 +261,7 @@ void comhand(void)
         }
         else if (strcmp(buf, "get date") == 0) // Get Date Command
         {
-            //getDate();
+
             getval("date");
         }
 
@@ -266,7 +272,7 @@ void comhand(void)
 
         else if (strcmp(buf, "get time") == 0) // Set Date Command
         {
-            // getTime();
+
             getval("time");
         }
 
