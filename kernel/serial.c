@@ -521,9 +521,9 @@ int serial_poll(device dev, char *buffer, size_t len)
 			{
 				break;
 			}
-			//serial_out(dev, "\x1b[2k\r", 5);
-			//serial_out(dev, buffer, bufferCount); // Display current buffer
-			// index = tempIndex;					  // Restore index
+			serial_out(dev, "\x1b[2k\r", 5);
+			serial_out(dev, buffer, bufferCount); // Display current buffer
+			index = tempIndex;					  // Restore index
 		}
 	}
 	// Creates a new node for the submitted command
