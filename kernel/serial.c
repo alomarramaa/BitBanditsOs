@@ -114,7 +114,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 	int tempIndex;		 // Used when traversing through the buffer
 	char tempChar;
 	// previous_buffers *currBuffer = NULL; // Used when traversing previous commands
-
+	buffer = NULL;
 	int stop = 0;
 	while (bufferCount < ((int)len - 1) && !stop)
 	{
