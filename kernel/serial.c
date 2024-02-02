@@ -183,6 +183,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 				if (index == 0) // Do nothing if no characters to the left
 					break;
 				tempIndex--; // Decrease the index (move left)
+				serial_out(COM1, "\b", 2);
 				break;
 
 			case 65: // Up arrow
