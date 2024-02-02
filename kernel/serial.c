@@ -166,6 +166,9 @@ int serial_poll(device dev, char *buffer, size_t len)
 					buffer[bufferCount] = '\0';      // The new end of the string
 					bufferCount--;
 				}
+				else {
+					tempIndex = 0;
+				}
 				break;
 
 			case 32:				   // Space
