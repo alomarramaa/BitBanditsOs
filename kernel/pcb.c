@@ -22,7 +22,8 @@ typedef struct pcb
     int process_priority;
     execution_state exe_state;
     dispatching_state disp_state;
-    // Stack
+    // Stack - array all initialized to 0, at least 1024 bytes
+    
     // Stack pointer
     pcb* next_pcbPtr;
     pcb* prev_pcbPtr;
