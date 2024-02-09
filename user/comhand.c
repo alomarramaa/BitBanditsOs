@@ -287,43 +287,43 @@ void comhand(void)
         }
         else if (strcmp(buf, "create PCB") == 0) // Create PCB Command
         {
-            create_pcb();
+            //create_pcb();
         }
         else if (strcmp(buf, "delete PCB") == 0) // Delete PCB
         {
-            delete_pcb();
+            //delete_pcb();
         }
         else if (strcmp(buf, "block PCB") == 0) // Block PCB
         {
-            block_pcb();
+            //block_pcb();
         }
         else if (strcmp(buf, "unblock PCB") == 0) // Unblock PCB
         {
-            unblock_pcb();
+            //unblock_pcb();
         }
         else if (strcmp(buf, "suspend PCB") == 0) // Suspend PCB
         {
-            suspend_pcb();
+            //suspend_pcb();
         }
         else if (strcmp(buf, "resume PCB") == 0) // Resume PCB
         {
-            resume_pcb();
+            //resume_pcb();
         }
         else if (strcmp(buf, "show PCB") == 0) // Show PCB
         {
-            show_pcb();
+            //show_pcb();
         }
         else if (strcmp(buf, "show ready") == 0) // Show Ready
         {
-            show_ready();
+            //show_ready();
         }
         else if (strcmp(buf, "show blocked") == 0) // Show Blocked
         {
-            show_blocked();
+            //show_blocked();
         }
         else if (strcmp(buf, "show all") == 0) // Show All
         {
-            show_all();
+            //show_all();
         }
         else // Unrecognised command
         {
