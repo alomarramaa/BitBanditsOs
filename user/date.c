@@ -46,26 +46,27 @@ int readDateReg(char sect){
 
 // Function to get and display the current date
 void get_date(void) {
-    char buffer[20];
+    char* mbuffer;
+    char* dbuffer;
+    char* ybuffer;
     const char* currentDate = "Current date: ";
     sys_req(WRITE, COM1, currentDate, strlen(currentDate));
-    itoa(bcd_to_binary(read_rtc_register(RTC_MONTH)), buffer);
-    sys_req(WRITE, COM1, buffer, strlen(buffer));
+    itoa(readDateReg('m'), mbuffer, 3);
+    sys_req(WRITE, COM1, mbuffer, strlen(mbuffer));
     sys_req(WRITE, COM1, "/", 2);
-    itoa(bcd_to_binary(read_rtc_register(RTC_DAY)), buffer);
-    sys_req(WRITE,COM1,buffer,strlen(buffer));
+    itoa(readDateReg('d'), dbuffer, 3);
+    sys_req(WRITE,COM1, dbuffer, strlen(dbuffer));
     sys_req(WRITE, COM1, "/", 2);
-    itoa(bcd_to_binary(read_rtc_register(RTC_YEAR)), buffer);
-    sys_req(WRITE, COM1, buffer, strlen(buffer));
+    itoa(readDateReg('y'), ybuffer, 5);
+    sys_req(WRITE, COM1, ybuffer, strlen(ybuffer));
     sys_req(WRITE, COM1, "\n", 2);
-
 }
 
 // Function to set the date in RTC
 void set_date(int month, int day, int year) {
     // Convert date values to BCD
-    month = bcd_to_binary(month) % 12; // Ensure the month is within the range of 0-12
-    day = bcd_to_binary(day) % 31;     // Ensure the day is within the range of 0-31
+    month = month % 12; // Ensure the month is within the range of 0-12
+    day = day % 31;     // Ensure the day is within the range of 0-31
     int month_bcd = ((month / 10) << 4) | (month % 10);
     int day_bcd = ((day / 10) << 4) | (day % 10);
     

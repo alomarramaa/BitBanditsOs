@@ -99,7 +99,6 @@ int setval(char *resource)
             }
 
             set_date(m_h, d_m, y_s); // Set the date using set_date function
-            sys_req(WRITE, COM1, "The new date is: ", 18);
             get_date();              // Display the updated date
         }
         else if (strcmp(resource, "time") == 0)
