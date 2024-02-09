@@ -61,6 +61,14 @@ int is_number(const char *str)
 
 int setval(char *resource)
 {
+    if (strcmp(resource, "date") == 0)
+    {
+        sys_req(WRITE, COM1, "Please input the new date (mm dd yyyy): \n", 42);
+    }
+    else if (strcmp(resource, "time") == 0)
+    {
+        sys_req(WRITE, COM1, "Please input the new time (hh mm ss): \n", 40);
+    }
 
     if (strcmp(resource, "date") == 0 || strcmp(resource, "time") == 0)
     { // Check if the resource is "date" or "time"
@@ -86,11 +94,12 @@ int setval(char *resource)
 
             if (m_h == -1 || d_m == -1 || y_s == -1)
             { // Check for invalid format
-                sys_req(WRITE, COM1, "Invalid format. Use 'mm dd yyyy'\n", 31);
+                sys_req(WRITE, COM1, "Invalid format. Use 'mm dd yyyy'\n", 34);
                 return -1; // Indicate failure
             }
 
             set_date(m_h, d_m, y_s); // Set the date using set_date function
+            sys_req(WRITE, COM1, "The new date is: ", 18);
             get_date();              // Display the updated date
         }
         else if (strcmp(resource, "time") == 0)
@@ -98,7 +107,7 @@ int setval(char *resource)
 
             if (m_h == -1 || d_m == -1 || y_s == -1)
             { // Check for invalid format
-                sys_req(WRITE, COM1, "Invalid format. Use 'hh mm ss'\n", 27);
+                sys_req(WRITE, COM1, "Invalid format. Use 'hh mm ss'\n", 32);
                 return -1; // Indicate failure
             }
 
