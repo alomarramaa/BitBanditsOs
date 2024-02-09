@@ -51,13 +51,13 @@ void get_date(void) {
     char* ybuffer;
     const char* currentDate = "Current date: ";
     sys_req(WRITE, COM1, currentDate, strlen(currentDate));
-    itoa(readDateReg('m'), mbuffer, 3);
+    itoa(readDateReg('m'), mbuffer);
     sys_req(WRITE, COM1, mbuffer, strlen(mbuffer));
     sys_req(WRITE, COM1, "/", 2);
-    itoa(readDateReg('d'), dbuffer, 3);
+    itoa(readDateReg('d'), dbuffer);
     sys_req(WRITE,COM1, dbuffer, strlen(dbuffer));
     sys_req(WRITE, COM1, "/", 2);
-    itoa(readDateReg('y'), ybuffer, 5);
+    itoa(readDateReg('y'), ybuffer);
     sys_req(WRITE, COM1, ybuffer, strlen(ybuffer));
     sys_req(WRITE, COM1, "\n", 2);
 }

@@ -13,5 +13,6 @@
         "system_error": "c",
         "unordered_map": "c",
         "vector": "c"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
