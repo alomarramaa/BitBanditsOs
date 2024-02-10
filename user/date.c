@@ -47,8 +47,8 @@ int readDateReg(char sect){
 // Function to get and display the current date
 void get_date(void) {
     char mbuffer[20];
-    char* dbuffer[20];
-    char* ybuffer[20];
+    char dbuffer[20];
+    char ybuffer[20];
     const char* currentDate = "Current date: ";
     sys_req(WRITE, COM1, currentDate, strlen(currentDate));
     itoa(readDateReg('m'), mbuffer);
