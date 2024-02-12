@@ -9,6 +9,7 @@
 #include <mpx/io.h>
 #include "stdlib.h"
 #include <user/rtc_util.h>
+#include <mpx/interrupts.h>
 
 
 // RTC register addresses for time
