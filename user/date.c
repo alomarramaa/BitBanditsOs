@@ -67,8 +67,11 @@ void set_date(int month, int day, int year) {
     // Convert date values to BCD
     month = month % 12; // Ensure the month is within the range of 0-12
     day = day % 31;     // Ensure the day is within the range of 0-31
-    int month_bcd = ((month / 10) << 4) | (month % 10);
-    int day_bcd = ((day / 10) << 4) | (day % 10);
+    //int month_bcd = ((month / 10) << 4) | (month % 10);
+    //int day_bcd = ((day / 10) << 4) | (day % 10);
+
+    int month_bcd = binary_to_bcd(month);
+    int day_bcd = binary_to_bcd(day);
     
     // Convert year to BCD and ensure it's a 4-digit year
     year = year % 100;  // Assuming the RTC uses a two-digit year representation
