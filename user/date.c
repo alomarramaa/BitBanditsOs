@@ -18,7 +18,7 @@
 
 // Function to read a byte from RTC register
 int read_rtc_register(int reg) {
-    outb(0x70,reg); // Use 0x70 for RTC register selection
+    outb(0x70, reg); // Use 0x70 for RTC register selection
     return inb(0x71); // Use 0x71 for RTC data port
 }
 
@@ -77,6 +77,9 @@ void set_date(int month, int day, int year) {
     year = year % 100;  // Assuming the RTC uses a two-digit year representation
     int year_bcd = binary_to_bcd(year);
 
+    // Disable interrupts
+    cli();
+
     // Set date in RTC
     outb(0x70, RTC_MONTH); // Select month register
     outb(0x71, month_bcd); // Set month
@@ -86,4 +89,7 @@ void set_date(int month, int day, int year) {
 
     outb(0x70, RTC_YEAR);  // Select year register
     outb(0x71, year_bcd);  // Set year
+
+    // Enable interrupts
+    sti();
 }
