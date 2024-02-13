@@ -157,8 +157,18 @@ void help(void) // Prints all available commands
                            "6. Get Time -  Display current time\n"
                            "7. Set Date - Set date to desired month/day/year\n"
                            "8. Set Time -  Set time to desired hour/minute/second\n"
-                           "9. Clear - Clear the terminal & redisplay menu\n";
-
+                           "9. Clear - Clear the terminal & redisplay menu\n"
+                           "10. Creat PCB - Creates a PCB and puts it in queue\n"
+                           "11. Delete PCB - Removes the requested process from queue\n"
+                           "12. Block PCB - Puts the process in blocked state\n"
+                           "13. Unblock PCB - Puts the process in the unblocked state\n"
+                           "14. Suspend PCB - Puts the process in the suspend state\n"
+                           "15. Resume PCB - Puts the process in the not suspened state\n"
+                           "16. Set Priority - Changes a processes priority\n"
+                           "17. Show PCB - Displays the process's info\n"
+                           "18. Show Ready - Displays all process's info in ready queue\n"
+                           "19. Show Blocked - Displays all process's info in blocked queue\n"
+                           "20. Show All - Displays all process's info\n";
     sys_req(WRITE, COM1, helpText, strlen(helpText));
 }
 
