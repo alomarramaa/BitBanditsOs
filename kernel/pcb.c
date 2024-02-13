@@ -56,7 +56,7 @@ process_queue sus_ready_queue;
 
 process_queue sus_blocked_queue;
 
-struct pcb* search_queue(char* to_find, queue_tag queue_sel)
+struct pcb* search_queue(char* to_find, enum queue_tag queue_sel)
 {
     process_queue* selected_queue;
     if (queue_sel == SUS_READY_QUEUE_TAG)
@@ -108,7 +108,7 @@ struct pcb* search_queue(char* to_find, queue_tag queue_sel)
     return NULL;
 }
 
-void enqueue(pcb* to_add, queue_tag queue_sel)
+void enqueue(pcb* to_add, enum queue_tag queue_sel)
 {
     process_queue* selected_queue;
     if (queue_sel == SUS_READY_QUEUE_TAG)
@@ -210,7 +210,7 @@ void enqueue(pcb* to_add, queue_tag queue_sel)
     return;
 }
 
-int dequeue(pcb* to_remove, queue_tag queue_sel)
+int dequeue(pcb* to_remove, enum queue_tag queue_sel)
 {
     process_queue* selected_queue;
     if (queue_sel == SUS_READY_QUEUE_TAG)
