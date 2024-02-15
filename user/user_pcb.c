@@ -317,7 +317,7 @@ int show_pcb(char *process_name)
     // Not necessary, dummy line to use input so I can run the mpx
     if (process_name == NULL)
     {
-        return;
+        return -1;
     }
 
 
