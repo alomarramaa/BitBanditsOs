@@ -312,7 +312,7 @@ int set_pcb_priority(char *process_name)
 int show_pcb(char *process_name)
 {
 
- // Find the PCB with the given name
+ // Find the PCB with the given name.
     struct pcb *pcb = pcb_find(process_name);
 
     // Check if the PCB exists
