@@ -244,7 +244,7 @@ struct pcb* pcb_allocate(void)
 
     // Initialize PCB
     new_pcbPtr->process_name = NULL;
-    new_pcbPtr->process_class = NULL;
+    new_pcbPtr->process_class = USER;
     new_pcbPtr->process_priority = -1;
     new_pcbPtr->exe_state = BLOCKED;
     new_pcbPtr->disp_state = SUSPENDED;
@@ -264,7 +264,7 @@ int pcb_free(struct pcb* to_freePtr)
     return sys_free_mem(to_freePtr);
 }
 
-struct pcb* pcb_setup(const char* process_name, int process_class, int process_priority)
+struct pcb* pcb_setup(char* process_name, class_type process_class, int process_priority)
 {
     // Ensure a legal priority input
     if ((process_priority < 0 || process_priority > 9) ||
@@ -290,7 +290,7 @@ struct pcb* pcb_setup(const char* process_name, int process_class, int process_p
     return new_pcbPtr;
 }
 
-struct pcb* pcb_find(const char* to_find)
+struct pcb* pcb_find(char* to_find)
 {
     // Ensure given a valid name
     if (to_find == NULL)

@@ -172,7 +172,7 @@ void help(void) // Prints all available commands
                            "12. Block PCB - Puts the process in blocked state\n"
                            "13. Unblock PCB - Puts the process in the unblocked state\n"
                            "14. Suspend PCB - Puts the process in the suspend state\n"
-                           "15. Resume PCB - Puts the process in the not suspened state\n"
+                           "15. Resume PCB - Puts the process in the not suspended state\n"
                            "16. Set Priority - Changes a processes priority\n"
                            "17. Show PCB - Displays the process's info\n"
                            "18. Show Ready - Displays all process's info in ready queue\n"
