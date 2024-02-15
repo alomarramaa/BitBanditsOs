@@ -24,8 +24,10 @@ int create_pcb(void)
     //Prompt user for priority
     const char *priorityPrompt = "Please enter a priority (0-9) for your PCB.";
     sys_req(WRITE, COM1, priorityPrompt, strlen(priorityPrompt));
-    int inputPriority;
-    sys_req(READ, COM1, inputPriority, sizeof(inputPriority));
+    char priorityBuffer[50];
+    sys_req(READ, COM1, priorityBuffer, sizeof(priorityBuffer));
+    int inputPriority = atoi(priorityBuffer);
+
 
     // Validate the input parameters
     if ((strlen(inputName) > 0 && strlen(inputName) <= 8) && (strcmp(inputClass, "0") == 0 || strcmp(inputClass, "1") == 0) && (inputPriority >= 0 && inputPriority <= 9))
@@ -67,7 +69,7 @@ int create_pcb(void)
     }
 }
 
-int delete_pcb(char *process_name)
+int delete_pcb(void)
 {
     // Prompt user for the name of the PCB to delete
     const char *namePrompt = "Please enter the name of the PCB that you wish to delete.";
@@ -107,7 +109,7 @@ int delete_pcb(char *process_name)
     }
 }
 
-int block_pcb(char *process_name)
+int block_pcb(void)
 {
      // Prompt user for the name of the PCB to block
     const char *prompt = "Please enter the name of the PCB that you wish to block.";
@@ -143,7 +145,7 @@ int block_pcb(char *process_name)
     }
 }
 
-int unblock_pcb(char *process_name)
+int unblock_pcb(void)
 {
    // Prompt user for the name of the PCB to unblock
     const char *prompt = "Please enter the name of the PCB that you wish to block.";
@@ -179,7 +181,7 @@ int unblock_pcb(char *process_name)
     }
 }
 
-int suspend_pcb(char *process_name)
+int suspend_pcb(void)
 {
      // Prompt user for the name of the PCB to suspend
     const char *prompt = "Please enter the name of the PCB that you wish to suspend.";
@@ -220,7 +222,7 @@ int suspend_pcb(char *process_name)
     }
 }
 
-int resume_pcb(char *process_name)
+int resume_pcb(void)
 {
     // Prompt user for the name of the PCB to resume
     const char *prompt = "Please enter the name of the PCB that you wish to resume.";
@@ -253,7 +255,7 @@ int resume_pcb(char *process_name)
     }
 }
 
-int set_pcb_priority(char *process_name, int new_priority)
+int set_pcb_priority(void)
 {
     // Prompt user for the name of the PCB and the new priority
     const char *prompt_name = "Please enter the name of the PCB you wish to set the priority for: ";
@@ -269,7 +271,7 @@ int set_pcb_priority(char *process_name, int new_priority)
     sys_req(READ, COM1, user_input_priority, sizeof(user_input_priority));
 
     // Convert user input for new priority to integer
-    int new_priorityy = atoi(user_input_priority);
+    int new_priority = atoi(user_input_priority);
 
     // Find the PCB with the given name
     struct pcb *pcb_to_set_priority = pcb_find(user_input_name);
@@ -312,6 +314,12 @@ int set_pcb_priority(char *process_name, int new_priority)
 
 int show_pcb(char *process_name)
 {
+    // Not necessary, dummy line to use input so I can run the mpx
+    if (process_name == NULL)
+    {
+        return;
+    }
+
 
     /*
     Displays a process’s: • Name
@@ -322,6 +330,8 @@ int show_pcb(char *process_name)
 • Process Name
 • Error Checking:
 • Name must be valid*/
+
+    return 0;
 }
 
 void show_ready(void)

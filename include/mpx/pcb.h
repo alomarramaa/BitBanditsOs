@@ -66,12 +66,12 @@ void pcb_insert(struct pcb* to_insertPtr);
 int pcb_remove(struct pcb* to_removePtr);
 
 int create_pcb(void);
-int delete_pcb(char *process_name);
-int block_pcb(char* process_name);
-int unblock_pcb(char *process_name);
-int suspend_pcb(char *process_name);
-int resume_pcb(char *process_name);
-int set_pcb_priority(char *process_name, int new_priority);
+int delete_pcb(void);
+int block_pcb(void);
+int unblock_pcb(void);
+int suspend_pcb(void);
+int resume_pcb(void);
+int set_pcb_priority(void);
 int show_pcb(char* process_name);
 void show_ready(void);
 void show_blocked(void);
