@@ -268,7 +268,7 @@ struct pcb* pcb_setup(const char* process_name, int process_class, int process_p
 {
     // Ensure a legal priority input
     if ((process_priority < 0 || process_priority > 9) ||
-        (process_priority == 0 && strcmp(process_class, "system") != 0))
+        (process_priority == 0 && process_class == SYSTEM))
     {
         return NULL;
     }

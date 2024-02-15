@@ -24,10 +24,16 @@ typedef enum dispatching_state
     NOT_SUSPENDED = 1,
 } dispatching_state;
 
+typedef enum class_type
+{
+    SYSTEM = 0,
+    USER = 1,
+} class_type;
+
 typedef struct pcb 
 {
     char* process_name;
-    char* process_class;
+    class_type process_class;
     int process_priority;
     execution_state exe_state;
     dispatching_state disp_state;
@@ -65,7 +71,7 @@ int block_pcb(char* process_name);
 int unblock_pcb(char *process_name);
 int suspend_pcb(char *process_name);
 int resume_pcb(char *process_name);
-int set_pcb_priority(char *process_name);
+int set_pcb_priority(char *process_name, int new_priority);
 int show_pcb(char* process_name);
 void show_ready(void);
 void show_blocked(void);
