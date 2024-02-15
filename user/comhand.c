@@ -253,19 +253,19 @@ void comhand(void)
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
-    struct process_queue* main_queue = sys_alloc_mem(sizeof(process_queue));
-    struct pcb* new_pcb = sys_alloc_mem(sizeof(pcb));
+    // struct process_queue* main_queue = sys_alloc_mem(sizeof(process_queue));
+    // struct pcb* new_pcb = sys_alloc_mem(sizeof(pcb));
     
-    // Adding a PCB to main queue (fighting for my life im ngl pookie)
-    if (main_queue->queue_head == NULL) {
-        main_queue->queue_head = new_pcb;
-    } else {
-        struct pcb* current_pcb = main_queue->queue_head;
-        while (current_pcb->next_pcbPtr != NULL) {
-            current_pcb = current_pcb->next_pcbPtr;
-        }
-        current_pcb->next_pcbPtr = new_pcb;
-    }
+    // // Adding a PCB to main queue (fighting for my life im ngl pookie)
+    // if (main_queue->queue_head == NULL) {
+    //     main_queue->queue_head = new_pcb;
+    // } else {
+    //     struct pcb* current_pcb = main_queue->queue_head;
+    //     while (current_pcb->next_pcbPtr != NULL) {
+    //         current_pcb = current_pcb->next_pcbPtr;
+    //     }
+    //     current_pcb->next_pcbPtr = new_pcb;
+    // }
 
     // Begin loop for command handler
     for (;;)
