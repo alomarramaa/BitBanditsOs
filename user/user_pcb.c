@@ -312,15 +312,53 @@ int set_pcb_priority(char *process_name)
 int show_pcb(char *process_name)
 {
 
-    /*
-    Displays a process’s: • Name
-• Class
-• State
-• Suspended Status • Priority
-• Parameters:
-• Process Name
-• Error Checking:
-• Name must be valid*/
+ // Find the PCB with the given name
+    struct pcb *pcb = pcb_find(process_name);
+
+    // Check if the PCB exists
+    if (pcb != NULL)
+    {
+        // Display PCB information
+        char buffer[50]; 
+
+        // Display Name
+        const char *name_prompt = "\nName: ";
+        sys_req(WRITE, COM1, name_prompt, strlen(name_prompt));
+        sys_req(WRITE, COM1, pcb->process_name, strlen(pcb->process_name));
+
+        // Display Class
+        const char *class_prompt = "\nClass: ";
+        sys_req(WRITE, COM1, class_prompt, strlen(class_prompt));
+        itoa(pcb->process_class, buffer, 10); 
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+
+        // Display Priority
+        const char *priority_prompt = "\nPriority: ";
+        sys_req(WRITE, COM1, priority_prompt, strlen(priority_prompt));
+        itoa(pcb->process_priority, buffer, 10); 
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+
+        // Display State
+        const char *state_prompt = "\nState: ";
+        sys_req(WRITE, COM1, state_prompt, strlen(state_prompt));
+        itoa(pcb->exe_state, buffer, 10); 
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+
+        // Display Suspended state
+        const char *suspended_prompt = "\nSuspended state: ";
+        sys_req(WRITE, COM1, suspended_prompt, strlen(suspended_prompt));
+        itoa(pcb->disp_state, buffer, 10); 
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+
+        const char *newline = "\n";
+        sys_req(WRITE, COM1, newline, strlen(newline)); 
+
+        return;
+    }
+
+    // PCB with the given name does not exist
+    const char *not_found_error = "\nProcess not found.\n";
+    sys_req(WRITE, COM1, not_found_error, strlen(not_found_error));
 }
 
 void show_ready(void)
