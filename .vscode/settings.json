@@ -12,7 +12,13 @@
         "string": "c",
         "system_error": "c",
         "unordered_map": "c",
-        "vector": "c"
-    },
-    "C_Cpp.errorSquiggles": "enabled"
+        "vector": "c",
+        "pcb.h": "c",
+        "stddef.h": "c",
+        "user_pcb.h": "c",
+        "device.h": "c",
+        "cstring": "c",
+        "sys_req.h": "c",
+        "help.h": "c"
+    }
 }

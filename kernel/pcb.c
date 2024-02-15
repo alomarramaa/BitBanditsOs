@@ -3,50 +3,7 @@
 #include <sys_req.h>
 #include <memory.h>
 #include <string.h>
-
-typedef enum execution_state 
-{
-    READY = 0,
-    RUNNING = 1,
-    BLOCKED = 2,
-}execution_state;
-
-typedef enum dispatching_state 
-{
-    SUSPENDED = 0,
-    NOTSUS = 1,
-}dispatching_state;
-
-typedef enum queue_tag
-{
-    SUS_READY_QUEUE_TAG = 0,
-    READY_QUEUE_TAG = 1,
-    SUS_BLOCKED_QUEUE_TAG = 2,
-    BLOCKED_QUEUE_TAG = 3,
-}queue_tag;
-
-typedef struct pcb 
-{
-    char* process_name;
-    char* process_class;
-    int process_priority;
-    execution_state exe_state;
-    dispatching_state disp_state;
-    // Stack - array all initialized to 0, at least 1024 byte
-    // Not sure if I'm doing this right
-    int pcb_stack[1024];
-    // Stack pointer
-    // Or this
-    int* stackPtr;
-    pcb* next_pcbPtr;
-    pcb* prev_pcbPtr;
-} pcb;
-
-typedef struct process_queue 
-{
-    pcb* queue_head;
-    pcb* queue_tail;
-} process_queue;
+#include <mpx/pcb.h>
 
 process_queue ready_queue;
 
@@ -56,7 +13,7 @@ process_queue sus_ready_queue;
 
 process_queue sus_blocked_queue;
 
-struct pcb* search_queue(char* to_find, queue_tag queue_sel)
+struct pcb* search_queue(char* to_find, enum queue_tag queue_sel)
 {
     process_queue* selected_queue;
     if (queue_sel == SUS_READY_QUEUE_TAG)
@@ -108,7 +65,7 @@ struct pcb* search_queue(char* to_find, queue_tag queue_sel)
     return NULL;
 }
 
-void enqueue(pcb* to_add, queue_tag queue_sel)
+void enqueue(pcb* to_add, enum queue_tag queue_sel)
 {
     process_queue* selected_queue;
     if (queue_sel == SUS_READY_QUEUE_TAG)
@@ -210,7 +167,7 @@ void enqueue(pcb* to_add, queue_tag queue_sel)
     return;
 }
 
-int dequeue(pcb* to_remove, queue_tag queue_sel)
+int dequeue(pcb* to_remove, enum queue_tag queue_sel)
 {
     process_queue* selected_queue;
     if (queue_sel == SUS_READY_QUEUE_TAG)
@@ -328,7 +285,7 @@ struct pcb* pcb_setup(const char* process_name, int process_class, int process_p
     new_pcbPtr->process_class = process_class;
     new_pcbPtr->process_priority = process_priority;
     new_pcbPtr->exe_state = READY;
-    new_pcbPtr->disp_state = NOTSUS;
+    new_pcbPtr->disp_state = NOT_SUSPENDED;
 
     return new_pcbPtr;
 }

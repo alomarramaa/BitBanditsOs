@@ -11,7 +11,7 @@
 #include <mpx/serial.h>
 #include <user/date.h>
 #include <stdlib.h>
-#include "user/user_pcb.h"
+#include <mpx/pcb.h>
 
 // Colors
 #define RED "\x1B[31m"
@@ -143,7 +143,7 @@ void clear(device dev)
 void version(void) // Prints version and compile date
 {
     const char *version = "MPX Version R2\n";
-    const char *compileDate = "Compiled on: 2/2/24 \n";
+    const char *compileDate = "Compiled on: 2/23/24 \n";
     sys_req(WRITE, COM1, version, strlen(version));
     sys_req(WRITE, COM1, compileDate, strlen(compileDate));
 }
@@ -156,6 +156,7 @@ void version(void) // Prints version and compile date
 
 void help(void) // Prints all available commands
 {
+
     const char *helpText = "The following are all the commands available to use: \n"
                            "1. Shutdown - Shut down the system\n"
                            "2. Version - Display the current version & compilation date\n"
@@ -165,9 +166,20 @@ void help(void) // Prints all available commands
                            "6. Get Time -  Display current time\n"
                            "7. Set Date - Set date to desired month/day/year\n"
                            "8. Set Time -  Set time to desired hour/minute/second\n"
-                           "9. Clear - Clear the terminal & redisplay menu\n";
-
+                           "9. Clear - Clear the terminal & redisplay menu\n"
+                           "10. Create PCB - Creates a PCB and puts it in queue\n"
+                           "11. Delete PCB - Removes the requested process from queue\n"
+                           "12. Block PCB - Puts the process in blocked state\n"
+                           "13. Unblock PCB - Puts the process in the unblocked state\n"
+                           "14. Suspend PCB - Puts the process in the suspend state\n"
+                           "15. Resume PCB - Puts the process in the not suspened state\n"
+                           "16. Set Priority - Changes a processes priority\n"
+                           "17. Show PCB - Displays the process's info\n"
+                           "18. Show Ready - Displays all process's info in ready queue\n"
+                           "19. Show Blocked - Displays all process's info in blocked queue\n"
+                           "20. Show All - Displays all process's info\n";
     sys_req(WRITE, COM1, helpText, strlen(helpText));
+  //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
 }
 
 /*
@@ -241,6 +253,20 @@ void comhand(void)
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
+    struct process_queue* main_queue = sys_alloc_mem(sizeof(process_queue));
+    struct pcb* new_pcb = sys_alloc_mem(sizeof(pcb));
+    
+    // Adding a PCB to main queue (fighting for my life im ngl pookie)
+    if (main_queue->queue_head == NULL) {
+        main_queue->queue_head = new_pcb;
+    } else {
+        struct pcb* current_pcb = main_queue->queue_head;
+        while (current_pcb->next_pcbPtr != NULL) {
+            current_pcb = current_pcb->next_pcbPtr;
+        }
+        current_pcb->next_pcbPtr = new_pcb;
+    }
+
     // Begin loop for command handler
     for (;;)
     {
@@ -299,27 +325,27 @@ void comhand(void)
         }
         else if (strcmp(buf, "delete PCB") == 0) // Delete PCB
         {
-            //delete_pcb();
+            // delete_pcb();
         }
         else if (strcmp(buf, "block PCB") == 0) // Block PCB
         {
-            //block_pcb();
+            // block_pcb();
         }
         else if (strcmp(buf, "unblock PCB") == 0) // Unblock PCB
         {
-            //unblock_pcb();
+            // unblock_pcb();
         }
         else if (strcmp(buf, "suspend PCB") == 0) // Suspend PCB
         {
-            //suspend_pcb();
+            // suspend_pcb();
         }
         else if (strcmp(buf, "resume PCB") == 0) // Resume PCB
         {
-            //resume_pcb();
+            // resume_pcb();
         }
         else if (strcmp(buf, "show PCB") == 0) // Show PCB
         {
-            //show_pcb();
+            // show_pcb();
         }
         else if (strcmp(buf, "show ready") == 0) // Show Ready
         {
