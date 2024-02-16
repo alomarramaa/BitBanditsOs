@@ -101,7 +101,7 @@ int setval(char *resource)
 
             if (m_h == -1 || d_m == -1 || y_s == -1)
             { // Check for invalid format
-                sys_req(WRITE, COM1, "Invalid format. Use 'mm dd yy'\n", 34);
+                sys_req(WRITE, COM1, "Invalid format. Use 'mm dd yy'\n", 32);
                 return -1; // Indicate failure
             }
 
