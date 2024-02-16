@@ -362,31 +362,31 @@ int show_pcb(char *process_name)
         // Display Class
         const char *class_prompt = "\nClass: ";
         sys_req(WRITE, COM1, class_prompt, strlen(class_prompt));
-        itoa(pcb->process_class, buffer, 10); 
+        itoa(pcb->process_class, buffer); 
         sys_req(WRITE, COM1, buffer, strlen(buffer));
 
         // Display Priority
         const char *priority_prompt = "\nPriority: ";
         sys_req(WRITE, COM1, priority_prompt, strlen(priority_prompt));
-        itoa(pcb->process_priority, buffer, 10); 
+        itoa(pcb->process_priority, buffer); 
         sys_req(WRITE, COM1, buffer, strlen(buffer));
 
         // Display State
         const char *state_prompt = "\nState: ";
         sys_req(WRITE, COM1, state_prompt, strlen(state_prompt));
-        itoa(pcb->exe_state, buffer, 10); 
+        itoa(pcb->exe_state, buffer); 
         sys_req(WRITE, COM1, buffer, strlen(buffer));
 
         // Display Suspended state
         const char *suspended_prompt = "\nSuspended state: ";
         sys_req(WRITE, COM1, suspended_prompt, strlen(suspended_prompt));
-        itoa(pcb->disp_state, buffer, 10); 
+        itoa(pcb->disp_state, buffer); 
         sys_req(WRITE, COM1, buffer, strlen(buffer));
 
         const char *newline = "\n";
         sys_req(WRITE, COM1, newline, strlen(newline)); 
 
-        return;
+        return 0;
     }
 
     // PCB with the given name does not exist
