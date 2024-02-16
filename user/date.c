@@ -9,6 +9,7 @@
 #include <mpx/io.h>
 #include "stdlib.h"
 #include <user/rtc_util.h>
+#include <mpx/interrupts.h>
 
 
 // RTC register addresses for time
@@ -18,7 +19,7 @@
 
 // Function to read a byte from RTC register
 int read_rtc_register(int reg) {
-    outb(0x70,reg); // Use 0x70 for RTC register selection
+    outb(0x70, reg); // Use 0x70 for RTC register selection
     return inb(0x71); // Use 0x71 for RTC data port
 }
 
@@ -46,32 +47,39 @@ int readDateReg(char sect){
 
 // Function to get and display the current date
 void get_date(void) {
-    char buffer[20];
+    char mbuffer[20];
+    char dbuffer[20];
+    char ybuffer[20];
     const char* currentDate = "Current date: ";
     sys_req(WRITE, COM1, currentDate, strlen(currentDate));
-    itoa(bcd_to_binary(read_rtc_register(RTC_MONTH)), buffer);
-    sys_req(WRITE, COM1, buffer, strlen(buffer));
+    itoa(readDateReg('m'), mbuffer);
+    sys_req(WRITE, COM1, mbuffer, strlen(mbuffer));
     sys_req(WRITE, COM1, "/", 2);
-    itoa(bcd_to_binary(read_rtc_register(RTC_DAY)), buffer);
-    sys_req(WRITE,COM1,buffer,strlen(buffer));
+    itoa(readDateReg('d'), dbuffer);
+    sys_req(WRITE,COM1, dbuffer, strlen(dbuffer));
     sys_req(WRITE, COM1, "/", 2);
-    itoa(bcd_to_binary(read_rtc_register(RTC_YEAR)), buffer);
-    sys_req(WRITE, COM1, buffer, strlen(buffer));
+    itoa(readDateReg('y'), ybuffer);
+    sys_req(WRITE, COM1, ybuffer, strlen(ybuffer));
     sys_req(WRITE, COM1, "\n", 2);
-
 }
 
 // Function to set the date in RTC
 void set_date(int month, int day, int year) {
     // Convert date values to BCD
-    month = bcd_to_binary(month) % 12; // Ensure the month is within the range of 0-12
-    day = bcd_to_binary(day) % 31;     // Ensure the day is within the range of 0-31
-    int month_bcd = ((month / 10) << 4) | (month % 10);
-    int day_bcd = ((day / 10) << 4) | (day % 10);
+    month = month % 12; // Ensure the month is within the range of 0-12
+    day = day % 31;     // Ensure the day is within the range of 0-31
+    //int month_bcd = ((month / 10) << 4) | (month % 10);
+    //int day_bcd = ((day / 10) << 4) | (day % 10);
+
+    int month_bcd = binary_to_bcd(month);
+    int day_bcd = binary_to_bcd(day);
     
     // Convert year to BCD and ensure it's a 4-digit year
     year = year % 100;  // Assuming the RTC uses a two-digit year representation
     int year_bcd = binary_to_bcd(year);
+
+    // Disable interrupts
+    cli();
 
     // Set date in RTC
     outb(0x70, RTC_MONTH); // Select month register
@@ -82,4 +90,7 @@ void set_date(int month, int day, int year) {
 
     outb(0x70, RTC_YEAR);  // Select year register
     outb(0x71, year_bcd);  // Set year
+
+    // Enable interrupts
+    sti();
 }

@@ -9,12 +9,15 @@ user/time.o: user/time.c include/user/time.h include/stdlib.h include/user/rtc_u
 
 user/comhand.o: user/comhand.c include/user/comhand.h
 
-user/user_pcb.o: user/user_pcb.c include/mpx/pcb.h
+kernel/pcb.o: kernel/pcb.c include/mpx/pcb.h
+
+user/user_pcb.o: user/user_pcb.c
 
 USER_OBJECTS=\
 	user/core.o \
 	user/date.o \
 	user/time.o \
 	user/comhand.o \
+	kernel/pcb.o \
 	user/user_pcb.o
 

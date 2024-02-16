@@ -188,12 +188,16 @@ int dequeue(pcb* to_remove, enum queue_tag queue_sel)
     }
     else
     {
+        const char* queueMessage = "Dequeue: Invalid queue selection";
+        sys_req(WRITE, COM1, queueMessage, strlen(queueMessage));
         return 1;
     }
 
     // PCB Not in the Queue
     if (search_queue(to_remove->process_name, queue_sel) == NULL)
     {
+        const char* searchMessage = "Dequeue: PCB not in the queue";
+        sys_req(WRITE, COM1, searchMessage, strlen(searchMessage));
         return 1;
     }
 
@@ -244,7 +248,7 @@ struct pcb* pcb_allocate(void)
 
     // Initialize PCB
     new_pcbPtr->process_name = NULL;
-    new_pcbPtr->process_class = NULL;
+    new_pcbPtr->process_class = USER;
     new_pcbPtr->process_priority = -1;
     new_pcbPtr->exe_state = BLOCKED;
     new_pcbPtr->disp_state = SUSPENDED;
@@ -264,11 +268,11 @@ int pcb_free(struct pcb* to_freePtr)
     return sys_free_mem(to_freePtr);
 }
 
-struct pcb* pcb_setup(const char* process_name, int process_class, int process_priority)
+struct pcb* pcb_setup(char* process_name, class_type process_class, int process_priority)
 {
     // Ensure a legal priority input
     if ((process_priority < 0 || process_priority > 9) ||
-        (process_priority == 0 && strcmp(process_class, "system") != 0))
+        (process_priority == 0 && process_class == SYSTEM))
     {
         return NULL;
     }
@@ -290,7 +294,7 @@ struct pcb* pcb_setup(const char* process_name, int process_class, int process_p
     return new_pcbPtr;
 }
 
-struct pcb* pcb_find(const char* to_find)
+struct pcb* pcb_find(char* to_find)
 {
     // Ensure given a valid name
     if (to_find == NULL)
@@ -315,12 +319,12 @@ struct pcb* pcb_find(const char* to_find)
     return NULL;
 }
 
-void pcb_insert(struct pcb* to_insertPtr)
+int pcb_insert(struct pcb* to_insertPtr)
 {
     // Ensure given valid PCB
     if (to_insertPtr == NULL)
     {
-        return;
+        return 1;
     }
 
     // Check which queue to add to
@@ -329,7 +333,7 @@ void pcb_insert(struct pcb* to_insertPtr)
     // Add to appropriate queue
     enqueue(to_insertPtr, queue_sel);
     
-    return;
+    return 0;
 }
 
 int pcb_remove(struct pcb* to_removePtr)
