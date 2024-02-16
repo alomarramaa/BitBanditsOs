@@ -6,28 +6,34 @@
 #include <string.h>
 #include <stdlib.h>
 
-int create_pcb(void)
+void log_info(char *message)
+{
+    sys_req(WRITE, COM1, message, strlen(message));
+}
 
+int create_pcb(void)
 {
     // Prompt user for a name
-    const char *namePrompt = "Please enter a name (8 characters max) for your PCB";
+    const char *namePrompt = "Please enter a name (8 characters max) for your PCB: \n";
     sys_req(WRITE, COM1, namePrompt, strlen(namePrompt));
     char inputName[50];
-    sys_req(READ, COM1, inputName, sizeof(inputName));
+    int nread = sys_req(READ, COM1, inputName, sizeof(inputName));
+    sys_req(WRITE, COM1, inputName, nread);
 
-    //Prompt user for class
-    const char *classPrompt = "Please enter a class for your PCB. (0 for system, 1 for user)";
+    // Prompt user for class
+    const char *classPrompt = "\nPlease enter a class for your PCB. (0 for system, 1 for user): \n";
     sys_req(WRITE, COM1, classPrompt, strlen(classPrompt));
     char inputClass[50];
-    sys_req(READ, COM1, inputClass, sizeof(inputClass));
+    nread = sys_req(READ, COM1, inputClass, sizeof(inputClass));
+    sys_req(WRITE, COM1, inputClass, nread);
 
-    //Prompt user for priority
-    const char *priorityPrompt = "Please enter a priority (0-9) for your PCB.";
+    // Prompt user for priority
+    const char *priorityPrompt = "\nPlease enter a priority (0-9) for your PCB: \n";
     sys_req(WRITE, COM1, priorityPrompt, strlen(priorityPrompt));
     char priorityBuffer[50];
-    sys_req(READ, COM1, priorityBuffer, sizeof(priorityBuffer));
+    nread = sys_req(READ, COM1, priorityBuffer, sizeof(priorityBuffer));
+    sys_req(WRITE, COM1, priorityBuffer, nread);
     int inputPriority = atoi(priorityBuffer);
-
 
     // Validate the input parameters
     if ((strlen(inputName) > 0 && strlen(inputName) <= 8) && (strcmp(inputClass, "0") == 0 || strcmp(inputClass, "1") == 0) && (inputPriority >= 0 && inputPriority <= 9))
@@ -35,8 +41,7 @@ int create_pcb(void)
         // Check if the name is unique
         if (pcb_find(inputName) != NULL)
         {
-            const char *error = "Error: PCB name must be unique.";
-            sys_req(WRITE, COM1, error, strlen(error));
+            log_info("\nError: PCB name must be unique.");
             return -2; // Error code for non-unique name
         }
 
@@ -57,6 +62,7 @@ int create_pcb(void)
 
         pcb_insert(new_pcb);
 
+        log_info("\nPCB created successfully.\n");
         // Return success
         return 0;
     }
@@ -72,10 +78,11 @@ int create_pcb(void)
 int delete_pcb(void)
 {
     // Prompt user for the name of the PCB to delete
-    const char *namePrompt = "Please enter the name of the PCB that you wish to delete.";
+    const char *namePrompt = "Please enter the name of the PCB that you wish to delete.\n";
     sys_req(WRITE, COM1, namePrompt, strlen(namePrompt));
     char pcbToDelete[50];
-    sys_req(READ, COM1, pcbToDelete, sizeof(pcbToDelete));
+    int nread = sys_req(READ, COM1, pcbToDelete, sizeof(pcbToDelete));
+    sys_req(WRITE, COM1, pcbToDelete, nread);
 
     // Find the PCB with the given name
     struct pcb *delete_pcb = pcb_find(pcbToDelete);
@@ -86,17 +93,23 @@ int delete_pcb(void)
         // Check if the PCB is a system process (system processes cannot be deleted)
         if (delete_pcb->process_class == SYSTEM)
         {
-            const char *error = "Error: System processes cannot be deleted.";
+            const char *error = "Error: System processes cannot be deleted.\n";
             sys_req(WRITE, COM1, error, strlen(error));
             return -1; // Error code for attempting to delete a system process
         }
 
         // Remove the PCB from the queue
-        pcb_remove(delete_pcb);
+        int retval = pcb_remove(delete_pcb);
+        if (retval != 0)
+        {
+            log_info("\nError: PCB could not be removed from queue.\n");
+            return 2;
+        }
 
         // Free the associated memory
         pcb_free(delete_pcb);
 
+        log_info("\nPCB deleted successfully.\n");
         // Return success
         return 0;
     }
@@ -111,11 +124,12 @@ int delete_pcb(void)
 
 int block_pcb(void)
 {
-     // Prompt user for the name of the PCB to block
-    const char *prompt = "Please enter the name of the PCB that you wish to block.";
+    // Prompt user for the name of the PCB to block
+    const char *prompt = "Please enter the name of the PCB that you wish to block.\n";
     sys_req(WRITE, COM1, prompt, strlen(prompt));
     char pcbToBlock[50];
-    sys_req(READ, COM1, pcbToBlock, sizeof(pcbToBlock));
+    int nread = sys_req(READ, COM1, pcbToBlock, sizeof(pcbToBlock));
+    sys_req(WRITE, COM1, pcbToBlock, nread);
 
     // Find the PCB with the given name
     struct pcb *pcb_to_block = pcb_find(pcbToBlock);
@@ -124,16 +138,28 @@ int block_pcb(void)
     if (pcb_to_block != NULL && pcb_to_block->exe_state != BLOCKED)
     {
         // Call kernel function to block the PCB
-        //block_process(pcb_to_block); // need to replace with kernel function
-
-        // Set pcb's execution state
-        pcb_to_block->exe_state = BLOCKED;
 
         // Remove pcb from previous queue and insert it into the appropriate queue
-        pcb_remove(pcb_to_block);
-        pcb_insert(pcb_to_block);
+        int retval = pcb_remove(pcb_to_block);
+        if (retval != 0)
+        {
+            log_info("\nError: PCB could not be removed from queue.\n");
+            return 2;
+        }
+        
+        // Set pcb's execution state
+        pcb_to_block->exe_state = BLOCKED;
+        pcb_to_block->disp_state = SUSPENDED;
+
+        retval = pcb_insert(pcb_to_block);
+        if (retval != 0)
+        {
+            log_info("\nError: PCB could not be inserted into queue.\n");
+            return 3;
+        }
 
         // Return success
+        log_info("\nPCB blocked successfully.\n");
         return 0;
     }
     else
@@ -147,12 +173,11 @@ int block_pcb(void)
 
 int unblock_pcb(void)
 {
-   // Prompt user for the name of the PCB to unblock
+    // Prompt user for the name of the PCB to unblock
     const char *prompt = "Please enter the name of the PCB that you wish to block.";
     sys_req(WRITE, COM1, prompt, strlen(prompt));
     char pcbToUnblock[50];
     sys_req(READ, COM1, pcbToUnblock, sizeof(pcbToUnblock));
-
 
     // Find the PCB with the given name
     struct pcb *pcb_to_unblock = pcb_find(pcbToUnblock);
@@ -183,7 +208,7 @@ int unblock_pcb(void)
 
 int suspend_pcb(void)
 {
-     // Prompt user for the name of the PCB to suspend
+    // Prompt user for the name of the PCB to suspend
     const char *prompt = "Please enter the name of the PCB that you wish to suspend.";
     sys_req(WRITE, COM1, prompt, strlen(prompt));
     char pcbToSuspend[50];
@@ -205,7 +230,7 @@ int suspend_pcb(void)
 
         // Suspend the PCB
         pcb_to_suspend->disp_state = SUSPENDED;
-        
+
         // Remove PCB from prev queue and reinsert into appropriate queue
         pcb_remove(pcb_to_suspend);
         pcb_insert(pcb_to_suspend);
@@ -319,7 +344,6 @@ int show_pcb(char *process_name)
     {
         return -1;
     }
-
 
     /*
     Displays a process’s: • Name

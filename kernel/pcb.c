@@ -188,12 +188,16 @@ int dequeue(pcb* to_remove, enum queue_tag queue_sel)
     }
     else
     {
+        const char* queueMessage = "Dequeue: Invalid queue selection";
+        sys_req(WRITE, COM1, queueMessage, strlen(queueMessage));
         return 1;
     }
 
     // PCB Not in the Queue
     if (search_queue(to_remove->process_name, queue_sel) == NULL)
     {
+        const char* searchMessage = "Dequeue: PCB not in the queue";
+        sys_req(WRITE, COM1, searchMessage, strlen(searchMessage));
         return 1;
     }
 
@@ -315,12 +319,12 @@ struct pcb* pcb_find(char* to_find)
     return NULL;
 }
 
-void pcb_insert(struct pcb* to_insertPtr)
+int pcb_insert(struct pcb* to_insertPtr)
 {
     // Ensure given valid PCB
     if (to_insertPtr == NULL)
     {
-        return;
+        return 1;
     }
 
     // Check which queue to add to
@@ -329,7 +333,7 @@ void pcb_insert(struct pcb* to_insertPtr)
     // Add to appropriate queue
     enqueue(to_insertPtr, queue_sel);
     
-    return;
+    return 0;
 }
 
 int pcb_remove(struct pcb* to_removePtr)

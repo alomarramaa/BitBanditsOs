@@ -256,16 +256,7 @@ void comhand(void)
     // struct process_queue* main_queue = sys_alloc_mem(sizeof(process_queue));
     // struct pcb* new_pcb = sys_alloc_mem(sizeof(pcb));
     
-    // // Adding a PCB to main queue (fighting for my life im ngl pookie)
-    // if (main_queue->queue_head == NULL) {
-    //     main_queue->queue_head = new_pcb;
-    // } else {
-    //     struct pcb* current_pcb = main_queue->queue_head;
-    //     while (current_pcb->next_pcbPtr != NULL) {
-    //         current_pcb = current_pcb->next_pcbPtr;
-    //     }
-    //     current_pcb->next_pcbPtr = new_pcb;
-    // }
+
 
     // Begin loop for command handler
     for (;;)
@@ -319,17 +310,17 @@ void comhand(void)
         {
             clear(COM1);
         }
-        else if (strcmp(buf, "create PCB") == 0) // Create PCB Command
+        else if (strcmp(buf, "createpcb") == 0) // Create PCB Command
         {
-            //create_pcb();
+            create_pcb();
         }
-        else if (strcmp(buf, "delete PCB") == 0) // Delete PCB
+        else if (strcmp(buf, "deletepcb") == 0) // Delete PCB
         {
-            // delete_pcb();
+            delete_pcb();
         }
-        else if (strcmp(buf, "block PCB") == 0) // Block PCB
+        else if (strcmp(buf, "blockpcb") == 0) // Block PCB
         {
-            // block_pcb();
+            block_pcb();
         }
         else if (strcmp(buf, "unblock PCB") == 0) // Unblock PCB
         {
