@@ -81,20 +81,20 @@ int setval(char *resource)
         }
 
         char *token = strtok(buff, " "); // Tokenize the input using space (' ')
-        int m_h = (token != NULL && is_number(token)) ? atoi(token) : -1;
+        int m_h = (token != NULL && strlen(token) == 2) ? atoi(token) : -1;
 
         token = strtok(NULL, " ");
-        int d_m = (token != NULL && is_number(token)) ? atoi(token) : -1;
+        int d_m = (token != NULL && strlen(token) == 2) ? atoi(token) : -1;
 
         token = strtok(NULL, " ");
-        int y_s = (token != NULL && is_number(token)) ? atoi(token) : -1;
+        int y_s = (token != NULL && strlen(token) == 2) ? atoi(token) : -1; //&& is_number(token)
 
         if (strcmp(resource, "date") == 0)
         { // Check if the resource is "date"
 
             if (m_h == -1 || d_m == -1 || y_s == -1)
             { // Check for invalid format
-                sys_req(WRITE, COM1, "Invalid format. Use 'mm dd yyyy'\n", 34);
+                sys_req(WRITE, COM1, "Invalid format. Use 'mm dd yy'\n", 34);
                 return -1; // Indicate failure
             }
 
