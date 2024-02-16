@@ -66,6 +66,11 @@ void get_date(void) {
     sys_req(WRITE,COM1, dbuffer, strlen(dbuffer));
     sys_req(WRITE, COM1, "/", 2);
     itoa(readDateReg('y'), ybuffer);
+    // Ensures consistent output for years ending in 00 to 09
+    if (atoi(ybuffer) < 10)
+    {
+        sys_req(WRITE, COM1, "0", strlen("0"));
+    }
     sys_req(WRITE, COM1, ybuffer, strlen(ybuffer));
     sys_req(WRITE, COM1, "\n", 2);
 }
