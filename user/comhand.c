@@ -92,10 +92,10 @@ int setval(char *resource)
         // Remove newline character if present
         if (token != NULL)
         {
-            char *newline = strchr(token, '\n');
+            char *newline = strchr(token, 0);
             if (newline != NULL)
             {
-                *newline = '\0';
+                newline = '\0';
             }
         }
 
