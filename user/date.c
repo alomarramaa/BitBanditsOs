@@ -13,8 +13,8 @@
 
 
 // RTC register addresses for time
-#define RTC_MONTH 0x07
-#define RTC_DAY 0x08
+#define RTC_DAY 0x07
+#define RTC_MONTH 0x08
 #define RTC_YEAR 0x09
 
 // Function to read a byte from RTC register
