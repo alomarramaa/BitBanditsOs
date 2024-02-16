@@ -89,6 +89,16 @@ int setval(char *resource)
         token = strtok(NULL, " ");
         int y_s = (token != NULL && strlen(token) == 2) ? atoi(token) : -1; //&& is_number(token)
 
+        // Remove newline character if present
+        if (token != NULL)
+        {
+            char *newline = strchr(token, '\n');
+            if (newline != NULL)
+            {
+                *newline = '\0';
+            }
+        }
+
         if (strcmp(resource, "date") == 0)
         { // Check if the resource is "date"
 
