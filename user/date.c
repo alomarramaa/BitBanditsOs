@@ -25,15 +25,22 @@ int read_rtc_register(int reg) {
 
 // Function to convert BCD to binary
 int bcd_to_binary(int bcd) {
-    int tens = (bcd >> 4) & 0x0F; // Extract the tens column
-    int ones = bcd & 0x0F;       // Extract the ones column
-    return (tens * 10) + ones;    // Convert and combine tens and ones
+    int thousands = (bcd >> 12) & 0x0F; // Extract the thousands column
+    int hundreds = (bcd >> 8) & 0x0F;   // Extract the hundreds column
+    int tens = (bcd >> 4) & 0x0F;       // Extract the tens column
+    int ones = bcd & 0x0F;              // Extract the ones column
+
+    return thousands * 1000 + hundreds * 100 + tens * 10 + ones;
 }
-//Function to convert Binary to BCD
+
+// Function to convert Binary to BCD
 int binary_to_bcd(int binary) {
-    int tens = binary / 10;
+    int thousands = binary / 1000;
+    int hundreds = (binary / 100) % 10;
+    int tens = (binary / 10) % 10;
     int ones = binary % 10;
-    return (tens << 4) | ones;
+
+    return (thousands << 12) | (hundreds << 8) | (tens << 4) | ones;
 }
 
 int readDateReg(char sect){
@@ -75,7 +82,7 @@ void set_date(int month, int day, int year) {
     int day_bcd = binary_to_bcd(day);
     
     // Convert year to BCD and ensure it's a 4-digit year
-    year = year % 99;  // Assuming the RTC uses a two-digit year representation
+    year = year % 9999;  // Assuming the RTC uses a two-digit year representation
     int year_bcd = binary_to_bcd(year);
 
     // Disable interrupts

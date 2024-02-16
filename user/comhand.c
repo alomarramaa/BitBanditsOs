@@ -87,7 +87,7 @@ int setval(char *resource)
         int d_m = (token != NULL && strlen(token) == 2) ? atoi(token) : -1;
 
         token = strtok(NULL, " ");
-        int y_s = (token != NULL && strlen(token) == 2) ? atoi(token) : -1; //&& is_number(token)
+        int y_s = (token != NULL && strlen(token) == 4) ? atoi(token) : -1; //&& is_number(token)
 
         // Remove newline character if present
         int len = strlen(token);
