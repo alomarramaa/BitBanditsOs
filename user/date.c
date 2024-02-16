@@ -75,7 +75,7 @@ void set_date(int month, int day, int year) {
     int day_bcd = binary_to_bcd(day);
     
     // Convert year to BCD and ensure it's a 4-digit year
-    year = year % 100;  // Assuming the RTC uses a two-digit year representation
+    year = year % 9999;  // Assuming the RTC uses a two-digit year representation
     int year_bcd = binary_to_bcd(year);
 
     // Disable interrupts
