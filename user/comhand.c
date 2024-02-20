@@ -260,11 +260,6 @@ void comhand(void)
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
-    // struct process_queue* main_queue = sys_alloc_mem(sizeof(process_queue));
-    // struct pcb* new_pcb = sys_alloc_mem(sizeof(pcb));
-    
-
-
     // Begin loop for command handler
     for (;;)
     {
@@ -329,31 +324,35 @@ void comhand(void)
         {
             block_pcb();
         }
-        else if (strcmp(buf, "unblock PCB") == 0) // Unblock PCB
+        else if (strcmp(buf, "unblockpcb") == 0) // Unblock PCB
         {
-            // unblock_pcb();
+            unblock_pcb();
         }
-        else if (strcmp(buf, "suspend PCB") == 0) // Suspend PCB
+        else if (strcmp(buf, "suspendpcb") == 0) // Suspend PCB
         {
-            // suspend_pcb();
+            suspend_pcb();
         }
-        else if (strcmp(buf, "resume PCB") == 0) // Resume PCB
+        else if (strcmp(buf, "resumepcb") == 0) // Resume PCB
         {
-            // resume_pcb();
+            resume_pcb();
         }
-        else if (strcmp(buf, "show PCB") == 0) // Show PCB
+         else if (strcmp(buf, "setpcbpriority") == 0) // Resume PCB
+        {
+            set_pcb_priority();
+        }
+        else if (strcmp(buf, "showpcb") == 0) // Show PCB
         {
             // show_pcb();
         }
-        else if (strcmp(buf, "show ready") == 0) // Show Ready
+        else if (strcmp(buf, "showready") == 0) // Show Ready
         {
             //show_ready();
         }
-        else if (strcmp(buf, "show blocked") == 0) // Show Blocked
+        else if (strcmp(buf, "showblocked") == 0) // Show Blocked
         {
             //show_blocked();
         }
-        else if (strcmp(buf, "show all") == 0) // Show All
+        else if (strcmp(buf, "showall") == 0) // Show All
         {
             //show_all();
         }
