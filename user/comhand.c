@@ -80,19 +80,24 @@ int setval(char *resource)
             return -1; // Indicate failure
         }
 
+        strcat(buff, " ");
+
         char *token = strtok(buff, " "); // Tokenize the input using space (' ')
         int m_h = (token != NULL && strlen(token) == 2) ? atoi(token) : -1;
         sys_req(WRITE, COM1, token, strlen(token));
+        writeNewLine();
 
         token = strtok(NULL, " ");
         int d_m = (token != NULL && strlen(token) == 2) ? atoi(token) : -1;
         sys_req(WRITE, COM1, token, strlen(token));
+        writeNewLine();
 
 
         token = strtok(NULL, " ");
         int y_s = (strcmp(resource, "date") == 0) ? ((token != NULL && strlen(token) == 4) ? atoi(token) : -1) : 
                     ((token != NULL && strlen(token) == 2) ? atoi(token) : -1); //If date requires 4 chars, time requires 2
         sys_req(WRITE, COM1, token, strlen(token));
+        writeNewLine();
 
 
         // Remove newline character if present
