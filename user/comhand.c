@@ -87,7 +87,8 @@ int setval(char *resource)
         int d_m = (token != NULL && strlen(token) == 2) ? atoi(token) : -1;
 
         token = strtok(NULL, " ");
-        int y_s = (token != NULL && strlen(token) == 4) ? atoi(token) : -1; //&& is_number(token)
+        int y_s = (strcmp(resource, "date") == 0) ? ((token != NULL && strlen(token) == 4) ? atoi(token) : -1) : 
+                    ((token != NULL && strlen(token) == 2) ? atoi(token) : -1); //If date requires 4 chars, time requires 2
 
         // Remove newline character if present
         int len = strlen(token);
@@ -101,7 +102,7 @@ int setval(char *resource)
 
             if (m_h == -1 || d_m == -1 || y_s == -1)
             { // Check for invalid format
-                sys_req(WRITE, COM1, "Invalid format. Use 'mm dd yy'\n", 32);
+                sys_req(WRITE, COM1, "Invalid format. Use 'mm dd yyyy'\n", 32);
                 return -1; // Indicate failure
             }
 

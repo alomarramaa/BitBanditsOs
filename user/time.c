@@ -56,6 +56,8 @@ void get_time(void) {
 void set_time(int hours, int minutes, int seconds) {
     // Convert time values to BCD
     hours = hours % 24; // Ensure hours are in the range 0-23
+    minutes = minutes % 60; // Ensure minutes are in the range 0-60
+    seconds = seconds % 60; // Ensures seconds are in the range 0-60
     int hours_bcd = ((hours / 10) << 4) | (hours % 10);
     int minutes_bcd = ((minutes / 10) << 4) | (minutes % 10);
     int seconds_bcd = ((seconds / 10) << 4) | (seconds % 10);
