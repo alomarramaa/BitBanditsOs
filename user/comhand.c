@@ -80,7 +80,13 @@ int setval(char *resource)
             return -1; // Indicate failure
         }
 
-        strcat(buff, " ");
+        int i = 0;
+        while (buff[i] != '\0')
+        {
+            i++;
+        }
+        buff[i] = ' ';
+        buff[i+1] = '\0';
 
         char *token = strtok(buff, " "); // Tokenize the input using space (' ')
         int m_h = (token != NULL && strlen(token) == 2) ? atoi(token) : -1;
