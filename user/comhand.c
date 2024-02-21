@@ -321,47 +321,47 @@ void comhand(void)
         {
             clear(COM1);
         }
-        else if (strcmp(buf, "createpcb") == 0) // Create PCB Command
+        else if (strcmp(buf, "create pcb") == 0) // Create PCB Command
         {
             create_pcb();
         }
-        else if (strcmp(buf, "deletepcb") == 0) // Delete PCB
+        else if (strcmp(buf, "delete pcb") == 0) // Delete PCB
         {
             delete_pcb();
         }
-        else if (strcmp(buf, "blockpcb") == 0) // Block PCB
+        else if (strcmp(buf, "block pcb") == 0) // Block PCB
         {
             block_pcb();
         }
-        else if (strcmp(buf, "unblockpcb") == 0) // Unblock PCB
+        else if (strcmp(buf, "unblock pcb") == 0) // Unblock PCB
         {
             unblock_pcb();
         }
-        else if (strcmp(buf, "suspendpcb") == 0) // Suspend PCB
+        else if (strcmp(buf, "suspend pcb") == 0) // Suspend PCB
         {
             suspend_pcb();
         }
-        else if (strcmp(buf, "resumepcb") == 0) // Resume PCB
+        else if (strcmp(buf, "resume pcb") == 0) // Resume PCB
         {
             resume_pcb();
         }
-         else if (strcmp(buf, "setpcbpriority") == 0) // Resume PCB
+         else if (strcmp(buf, "set pcb priority") == 0) // Resume PCB
         {
             set_pcb_priority();
         }
-        else if (strcmp(buf, "showpcb") == 0) // Show PCB
+        else if (strcmp(buf, "show pcb") == 0) // Show PCB
         {
             // show_pcb();
         }
-        else if (strcmp(buf, "showready") == 0) // Show Ready
+        else if (strcmp(buf, "show ready") == 0) // Show Ready
         {
             //show_ready();
         }
-        else if (strcmp(buf, "showblocked") == 0) // Show Blocked
+        else if (strcmp(buf, "show blocked") == 0) // Show Blocked
         {
             //show_blocked();
         }
-        else if (strcmp(buf, "showall") == 0) // Show All
+        else if (strcmp(buf, "show all") == 0) // Show All
         {
             //show_all();
         }

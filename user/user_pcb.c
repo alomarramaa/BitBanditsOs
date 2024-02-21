@@ -28,7 +28,7 @@ int create_pcb(void)
     sys_req(WRITE, COM1, inputClass, nread);
 
     // Prompt user for priority
-    const char *priorityPrompt = "\nPlease enter a priority (0-9) for your PCB: \n";
+    const char *priorityPrompt = "\nPlease enter a priority (0-9) for your PCB: \n (Reminder: 0 is reserved for system processes)\n";
     sys_req(WRITE, COM1, priorityPrompt, strlen(priorityPrompt));
     char priorityBuffer[50];
     nread = sys_req(READ, COM1, priorityBuffer, sizeof(priorityBuffer));
@@ -45,20 +45,14 @@ int create_pcb(void)
             return -2; // Error code for non-unique name
         }
 
+        if (strcmp(inputClass, "1") == 0 && strcmp(inputPriority, "0") == 0)
+        {
+            log_info("\nError: User process cannot have priority 0.\n");
+            return -1; // Error code for invalid parameters
+        }
+
         // Call pcb_setup to create a PCB
         struct pcb *new_pcb = pcb_setup(inputName, atoi(inputClass), inputPriority);
-
-        // // Insert the PCB into the appropriate queue
-        // if (strcmp(inputClass, "0") == 0)
-        // {
-        //     // For class 0, insert into blocked queue
-        //     pcb_insert_blocked(new_pcb);
-        // }
-        // else
-        // {
-        //     // For class 1, insert into ready queue (assuming it's a priority queue)
-        //     pcb_insert_ready(new_pcb);
-        // }
 
         pcb_insert(new_pcb);
 
@@ -69,7 +63,7 @@ int create_pcb(void)
     else
     {
         // Invalid parameters, display error message
-        const char *error = "Error: Please make sure you entered a valid name, class, and priority (1-9).";
+        const char *error = "Error: Please make sure you entered a valid name, class, and priority (0-9).";
         sys_req(WRITE, COM1, error, strlen(error));
         return -1; // Error code for invalid parameters
     }
