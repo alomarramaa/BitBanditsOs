@@ -164,27 +164,27 @@ void version(void) // Prints version and compile date
 void help(void) // Prints all available commands
 {
 
-    const char *helpText = "The following are all the commands available to use: \n"
-                           "1. Shutdown - Shut down the system\n"
-                           "2. Version - Display the current version & compilation date\n"
-                           "3. Help - Display all available commands\n"
-                           "4. Echo - Repeats previous message\n"
-                           "5. Get Date - Display current date\n"
-                           "6. Get Time -  Display current time\n"
-                           "7. Set Date - Set date to desired month/day/year\n"
-                           "8. Set Time -  Set time to desired hour/minute/second\n"
-                           "9. Clear - Clear the terminal & redisplay menu\n"
-                           "10. Create PCB - Creates a PCB and puts it in queue\n"
-                           "11. Delete PCB - Removes the requested process from queue\n"
-                           "12. Block PCB - Puts the process in blocked state\n"
-                           "13. Unblock PCB - Puts the process in the unblocked state\n"
-                           "14. Suspend PCB - Puts the process in the suspend state\n"
-                           "15. Resume PCB - Puts the process in the not suspended state\n"
-                           "16. Set Priority - Changes a processes priority\n"
-                           "17. Show PCB - Displays the process's info\n"
-                           "18. Show Ready - Displays all process's info in ready queue\n"
-                           "19. Show Blocked - Displays all process's info in blocked queue\n"
-                           "20. Show All - Displays all process's info\n";
+    const char *helpText = "Please type your command in all lowercase only. The following are all the commands available to use: \n"
+                           "Shutdown - Shut down the system\n"
+                           "Version - Display the current version & compilation date\n"
+                           "Help - Display all available commands\n"
+                           "Echo - Repeats previous message\n"
+                           "Get Date - Display current date\n"
+                           "Get Time -  Display current time\n"
+                           "Set Date - Set date to desired month/day/year\n"
+                           "Set Time -  Set time to desired hour/minute/second\n"
+                           "Clear - Clear the terminal & redisplay menu\n"
+                           "Create PCB - Creates a PCB and puts it in queue\n"
+                           "Delete PCB - Removes the requested process from queue\n"
+                           "Block PCB - Puts the process in blocked state\n"
+                           "Unblock PCB - Puts the process in the unblocked state\n"
+                           "Suspend PCB - Puts the process in the suspend state\n"
+                           "Resume PCB - Puts the process in the not suspended state\n"
+                           "Set Priority - Changes a processes priority\n"
+                           "Show PCB - Displays the process's info\n"
+                           "Show Ready - Displays all process's info in ready queue\n"
+                           "1Show Blocked - Displays all process's info in blocked queue\n"
+                           "Show All - Displays all process's info\n";
     sys_req(WRITE, COM1, helpText, strlen(helpText));
   //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
 }
@@ -256,9 +256,9 @@ void comhand(void)
     // Constants
     const char *comhandInitializeStr = " Comhand Initialized: Please write your preferred command in all lowercase.\n";
     const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n";
-
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
+
 
     // Begin loop for command handler
     for (;;)
@@ -312,47 +312,47 @@ void comhand(void)
         {
             clear(COM1);
         }
-        else if (strcmp(buf, "createpcb") == 0) // Create PCB Command
+        else if (strcmp(buf, "create pcb") == 0) // Create PCB Command
         {
             create_pcb();
         }
-        else if (strcmp(buf, "deletepcb") == 0) // Delete PCB
+        else if (strcmp(buf, "delete pcb") == 0) // Delete PCB
         {
             delete_pcb();
         }
-        else if (strcmp(buf, "blockpcb") == 0) // Block PCB
+        else if (strcmp(buf, "block pcb") == 0) // Block PCB
         {
             block_pcb();
         }
-        else if (strcmp(buf, "unblockpcb") == 0) // Unblock PCB
+        else if (strcmp(buf, "unblock pcb") == 0) // Unblock PCB
         {
             unblock_pcb();
         }
-        else if (strcmp(buf, "suspendpcb") == 0) // Suspend PCB
+        else if (strcmp(buf, "suspend pcb") == 0) // Suspend PCB
         {
             suspend_pcb();
         }
-        else if (strcmp(buf, "resumepcb") == 0) // Resume PCB
+        else if (strcmp(buf, "resume pcb") == 0) // Resume PCB
         {
             resume_pcb();
         }
-         else if (strcmp(buf, "setpcbpriority") == 0) // Resume PCB
+         else if (strcmp(buf, "set pcb priority") == 0) // Resume PCB
         {
             set_pcb_priority();
         }
-        else if (strcmp(buf, "showpcb") == 0) // Show PCB
+        else if (strcmp(buf, "show pcb") == 0) // Show PCB
         {
             // show_pcb();
         }
-        else if (strcmp(buf, "showready") == 0) // Show Ready
+        else if (strcmp(buf, "show ready") == 0) // Show Ready
         {
             //show_ready();
         }
-        else if (strcmp(buf, "showblocked") == 0) // Show Blocked
+        else if (strcmp(buf, "show blocked") == 0) // Show Blocked
         {
             //show_blocked();
         }
-        else if (strcmp(buf, "showall") == 0) // Show All
+        else if (strcmp(buf, "show all") == 0) // Show All
         {
             //show_all();
         }
