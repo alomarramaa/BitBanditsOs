@@ -244,47 +244,44 @@ int serial_poll(device dev, char *buffer, size_t len)
 				// 	// }
 				// 	break;
 
-				case 27:
-					switch ( (int) charIn)
+				case 27: // Escape character
+					charIn = inb(dev); // Read the next character to determine the key
+					if (charIn == '[') // Check if the next character is '['
 					{
-						case 91:
-							switch ( (int) charIn)
+						charIn = inb(dev); // Read the next character after '['
+						switch (charIn)
+						{
+						case '3': // Delete
+							charIn = inb(dev); // Read the next character after '3'
+							if (charIn == '~')
 							{
-								case 51:
-									switch ( (int) charIn)
+								// Handle delete key
+								if (index > 0)
+								{
+									serial_out(COM1, "\b \b", 4);
+									index--;
+									// Shift characters in the buffer to the left
+									for (int i = tempIndex; i <= bufferCount; i++)
 									{
-										case 126:
-											if (index < bufferCount) {
-												serial_out(COM1, " \b", 3);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
-												tempIndex = index;
-												for (int i = index; i < bufferCount; i++) 
-												{
-													buffer[i] = buffer[i + 1];      // Shift each character in the buffer one position to the left
-													//serial_out(COM1, &buffer[i], 1);
-												}
-												buffer[bufferCount] = '\0';      // The new end of the string
-												bufferCount--;
-											}
-											else {
-												tempIndex = index;
-											}
-											break;
+										buffer[i - 1] = buffer[i];
 									}
-									break;
-								
-								case 65: // Up arrow
-									break;
-								
-								case 66: // Down arrow
-									break;
-
-								case 67: // Right arrow
-									break;
-
-								case 68: // Left arrow
-									break;
+									bufferCount--;
+								}
 							}
 							break;
+						case 'A': // Up arrow
+							// Handle up arrow key
+							break;
+						case 'B': // Down arrow
+							// Handle down arrow key
+							break;
+						case 'C': // Right arrow
+							// Handle right arrow key
+							break;
+						case 'D': // Left arrow
+							// Handle left arrow key
+							break;
+						}
 					}
 					break;
 
