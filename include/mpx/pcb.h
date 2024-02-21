@@ -72,7 +72,7 @@ int unblock_pcb(void);
 int suspend_pcb(void);
 int resume_pcb(void);
 int set_pcb_priority(void);
-int show_pcb(char* process_name);
+int show_pcb(void);
 void show_ready(void);
 void show_blocked(void);
 void show_all(void);

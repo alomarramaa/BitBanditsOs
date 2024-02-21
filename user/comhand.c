@@ -342,7 +342,7 @@ void comhand(void)
         }
         else if (strcmp(buf, "show pcb") == 0) // Show PCB
         {
-            // show_pcb();
+             show_pcb();
         }
         else if (strcmp(buf, "show ready") == 0) // Show Ready
         {
