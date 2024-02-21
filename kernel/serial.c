@@ -286,7 +286,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 							if (index == bufferCount) // Do nothing if no characters to the right
 								break;
 							tempIndex++; // Increase the index (move right)
-							serial_out(dev, buffer[index], 1);
+							serial_out(dev, &buffer[index], 1);
 							break;
 
 						case 'D': // Left arrow
