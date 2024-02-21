@@ -116,7 +116,7 @@ int delete_pcb(void)
     else
     {
         // PCB with the given name does not exist
-        const char *error = "Error: The PCB you are trying to delete does not exist.";
+        const char *error = "\nError: The PCB you are trying to delete does not exist.\n";
         sys_req(WRITE, COM1, error, strlen(error));
         return -2; // Error code for non-existent PCB
     }
@@ -146,7 +146,7 @@ int block_pcb(void)
             log_info("\nError: PCB could not be removed from queue.\n");
             return 2;
         }
-        
+
         // Set pcb's execution state
         pcb_to_block->exe_state = BLOCKED;
         pcb_to_block->disp_state = SUSPENDED;
@@ -165,7 +165,7 @@ int block_pcb(void)
     else
     {
         // PCB with the given name does not exist
-        const char *error = "Error: The PCB you are trying to block does not exist or is already blocked.";
+        const char *error = "\nError: The PCB you are trying to block does not exist or is already blocked.\n";
         sys_req(WRITE, COM1, error, strlen(error));
         return -1; // Error code for non-existent PCB
     }
@@ -174,10 +174,11 @@ int block_pcb(void)
 int unblock_pcb(void)
 {
     // Prompt user for the name of the PCB to unblock
-    const char *prompt = "Please enter the name of the PCB that you wish to block.";
+    const char *prompt = "Please enter the name of the PCB that you wish to unblock.\n";
     sys_req(WRITE, COM1, prompt, strlen(prompt));
     char pcbToUnblock[50];
-    sys_req(READ, COM1, pcbToUnblock, sizeof(pcbToUnblock));
+    int nread = sys_req(READ, COM1, pcbToUnblock, sizeof(pcbToUnblock));
+    sys_req(WRITE, COM1, pcbToUnblock, nread);
 
     // Find the PCB with the given name
     struct pcb *pcb_to_unblock = pcb_find(pcbToUnblock);
@@ -186,21 +187,33 @@ int unblock_pcb(void)
     if (pcb_to_unblock != NULL && pcb_to_unblock->exe_state == BLOCKED)
     {
         // Remove the PCB from its current queue
-        pcb_remove(pcb_to_unblock);
+        int retval = pcb_remove(pcb_to_unblock);
+        if (retval != 0)
+        {
+            log_info("\nError: PCB could not be removed from queue.\n");
+            return 2;
+        }
 
         // Set the PCB state to ready
         pcb_to_unblock->exe_state = READY;
+        pcb_to_unblock->disp_state = NOT_SUSPENDED;
 
         // Insert the PCB into the ready queue
-        pcb_insert(pcb_to_unblock);
+        retval = pcb_insert(pcb_to_unblock);
+        if (retval != 0)
+        {
+            log_info("\nError: PCB could not be inserted into queue.\n");
+            return 3;
+        }
 
         // Return success
+        log_info("\nPCB unblocked successfully.\n");
         return 0;
     }
     else
     {
         // PCB with the given name does not exist
-        const char *error = "Error: The PCB you are trying to unblock does not exist or is not blocked.";
+        const char *error = "\nError: The PCB you are trying to unblock does not exist or is not blocked.\n";
         sys_req(WRITE, COM1, error, strlen(error));
         return -1; // Error code for non-existent PCB
     }
@@ -209,10 +222,11 @@ int unblock_pcb(void)
 int suspend_pcb(void)
 {
     // Prompt user for the name of the PCB to suspend
-    const char *prompt = "Please enter the name of the PCB that you wish to suspend.";
+    const char *prompt = "Please enter the name of the PCB that you wish to suspend.\n";
     sys_req(WRITE, COM1, prompt, strlen(prompt));
     char pcbToSuspend[50];
-    sys_req(READ, COM1, pcbToSuspend, sizeof(pcbToSuspend));
+    int nread = sys_req(READ, COM1, pcbToSuspend, sizeof(pcbToSuspend));
+    sys_req(WRITE, COM1, pcbToSuspend, nread);
 
     // Find the PCB with the given name
     struct pcb *pcb_to_suspend = pcb_find(pcbToSuspend);
@@ -223,25 +237,36 @@ int suspend_pcb(void)
         // Check if the PCB is a system process
         if (pcb_to_suspend->process_class == SYSTEM)
         {
-            const char *error = "Error: System processes cannot be suspended.";
+            const char *error = "\nError: System processes cannot be suspended.\n";
             sys_req(WRITE, COM1, error, strlen(error));
             return -1; // Error code for attempting to suspend a system process
         }
 
+        // Remove PCB from prev queue and reinsert into appropriate queue
+        int retval = pcb_remove(pcb_to_suspend);
+        if (retval != 0)
+        {
+            log_info("\nError: PCB could not be removed from queue.\n");
+            return 2;
+        }
+
         // Suspend the PCB
+        pcb_to_suspend->exe_state = BLOCKED;
         pcb_to_suspend->disp_state = SUSPENDED;
 
-        // Remove PCB from prev queue and reinsert into appropriate queue
-        pcb_remove(pcb_to_suspend);
-        pcb_insert(pcb_to_suspend);
+        retval = pcb_insert(pcb_to_suspend);
+        if (retval != 0)
+        {
+            log_info("\nError: PCB could not be inserted into queue.\n");
+            return 3;
+        }
 
         // Return success
+        log_info("\nPCB suspended successfully\n");
         return 0;
-    }
-    else
-    {
+    } else {
         // PCB with the given name does not exist
-        const char *error = "Error: The PCB you are trying to suspend does not exist or is already suspended.";
+        const char *error = "\nError: The PCB you are trying to suspend does not exist or is already suspended.\n";
         sys_req(WRITE, COM1, error, strlen(error));
         return -2; // Error code for non-existent PCB
     }
@@ -250,31 +275,46 @@ int suspend_pcb(void)
 int resume_pcb(void)
 {
     // Prompt user for the name of the PCB to resume
-    const char *prompt = "Please enter the name of the PCB that you wish to resume.";
+    const char *prompt = "Please enter the name of the PCB that you wish to resume.\n";
     sys_req(WRITE, COM1, prompt, strlen(prompt));
     char pcbToResume[50];
-    sys_req(READ, COM1, pcbToResume, sizeof(pcbToResume));
+    int nread = sys_req(READ, COM1, pcbToResume, sizeof(pcbToResume));
+    sys_req(WRITE, COM1, pcbToResume, nread);
 
     // Find the PCB with the given name
     struct pcb *pcb_to_resume = pcb_find(pcbToResume);
 
-    // Check if the PCB exists and is suspended
+    // Check if the PCB exists and is not suspended
     if (pcb_to_resume != NULL && pcb_to_resume->disp_state == SUSPENDED)
     {
+        // Remove PCB from its queue and insert it into correct queue
+        int retval = pcb_remove(pcb_to_resume);
+        if (retval != 0)
+        {
+            log_info("\nError: PCB could not be removed from queue.\n");
+            return 2;
+        }
+        
         // Set the PCB state to not suspended
+        pcb_to_resume->exe_state = RUNNING;
         pcb_to_resume->disp_state = NOT_SUSPENDED;
 
-        // Remove PCB from its queue and insert it into correct queue
-        pcb_remove(pcb_to_resume);
-        pcb_insert(pcb_to_resume);
+        
+        retval = pcb_insert(pcb_to_resume);
+        if (retval != 0)
+        {
+            log_info("\nError: PCB could not be inserted into queue.\n");
+            return 3;
+        }
 
         // Return success
+        log_info("\nPCB resumed successfully\n");
         return 0;
     }
     else
     {
         // PCB with the given name does not exist
-        const char *error = "Error: The PCB you are trying to resume does not exist or is not suspended.";
+        const char *error = "\nError: The PCB you are trying to resume does not exist or is not suspended.\n";
         sys_req(WRITE, COM1, error, strlen(error));
         return -1; // Error code for non-existent PCB
     }
@@ -283,17 +323,19 @@ int resume_pcb(void)
 int set_pcb_priority(void)
 {
     // Prompt user for the name of the PCB and the new priority
-    const char *prompt_name = "Please enter the name of the PCB you wish to set the priority for: ";
+    const char *prompt_name = "Please enter the name of the PCB you wish to set the priority for: \n";
     sys_req(WRITE, COM1, prompt_name, strlen(prompt_name));
 
     char user_input_name[50]; // Assuming a reasonable buffer size
-    sys_req(READ, COM1, user_input_name, sizeof(user_input_name));
+    int nread = sys_req(READ, COM1, user_input_name, sizeof(user_input_name));
+    sys_req(WRITE, COM1, user_input_name, nread);
 
-    const char *prompt_priority = "Please enter the new priority (0-9) for the PCB: ";
+    const char *prompt_priority = "\nPlease enter the new priority (0-9) for the PCB: \n";
     sys_req(WRITE, COM1, prompt_priority, strlen(prompt_priority));
 
     char user_input_priority[3]; // Assuming a reasonable buffer size
-    sys_req(READ, COM1, user_input_priority, sizeof(user_input_priority));
+    nread = sys_req(READ, COM1, user_input_priority, sizeof(user_input_priority));
+    sys_req(WRITE, COM1, user_input_priority, nread);
 
     // Convert user input for new priority to integer
     int new_priority = atoi(user_input_priority);
@@ -318,6 +360,7 @@ int set_pcb_priority(void)
             }
 
             // Return success
+            log_info("\nPCB priority set successfully\n");
             return 0;
         }
         else
@@ -352,7 +395,7 @@ int show_pcb(char *process_name)
     if (pcb != NULL)
     {
         // Display PCB information
-        char buffer[50]; 
+        char buffer[50];
 
         // Display Name
         const char *name_prompt = "\nName: ";
@@ -362,29 +405,29 @@ int show_pcb(char *process_name)
         // Display Class
         const char *class_prompt = "\nClass: ";
         sys_req(WRITE, COM1, class_prompt, strlen(class_prompt));
-        itoa(pcb->process_class, buffer); 
+        itoa(pcb->process_class, buffer);
         sys_req(WRITE, COM1, buffer, strlen(buffer));
 
         // Display Priority
         const char *priority_prompt = "\nPriority: ";
         sys_req(WRITE, COM1, priority_prompt, strlen(priority_prompt));
-        itoa(pcb->process_priority, buffer); 
+        itoa(pcb->process_priority, buffer);
         sys_req(WRITE, COM1, buffer, strlen(buffer));
 
         // Display State
         const char *state_prompt = "\nState: ";
         sys_req(WRITE, COM1, state_prompt, strlen(state_prompt));
-        itoa(pcb->exe_state, buffer); 
+        itoa(pcb->exe_state, buffer);
         sys_req(WRITE, COM1, buffer, strlen(buffer));
 
         // Display Suspended state
         const char *suspended_prompt = "\nSuspended state: ";
         sys_req(WRITE, COM1, suspended_prompt, strlen(suspended_prompt));
-        itoa(pcb->disp_state, buffer); 
+        itoa(pcb->disp_state, buffer);
         sys_req(WRITE, COM1, buffer, strlen(buffer));
 
         const char *newline = "\n";
-        sys_req(WRITE, COM1, newline, strlen(newline)); 
+        sys_req(WRITE, COM1, newline, strlen(newline));
 
         return 0;
     }

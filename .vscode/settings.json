@@ -19,6 +19,8 @@
         "device.h": "c",
         "cstring": "c",
         "sys_req.h": "c",
-        "help.h": "c"
+        "help.h": "c",
+        "array": "c",
+        "string_view": "c"
     }
 }
