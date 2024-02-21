@@ -24,8 +24,8 @@ int create_pcb(void)
     const char *classPrompt = "\nPlease enter a class for your PCB. (0 for system, 1 for user): \n";
     sys_req(WRITE, COM1, classPrompt, strlen(classPrompt));
     char classBuffer[50];
-    nread = sys_req(READ, COM1, inputClass, sizeof(inputClass));
-    sys_req(WRITE, COM1, inputClass, nread);
+    nread = sys_req(READ, COM1, classBuffer, sizeof(classBuffer));
+    sys_req(WRITE, COM1, classBuffer, nread);
     int inputClass = atoi(classBuffer);
 
     // Prompt user for priority
