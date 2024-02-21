@@ -269,10 +269,6 @@ int serial_poll(device dev, char *buffer, size_t len)
 												tempIndex = index;
 											}
 											break;
-
-										default: 
-											serial_out(dev, "Error: could not understand input\n", 35);
-											return -1;
 									}
 									break;
 								
@@ -287,10 +283,6 @@ int serial_poll(device dev, char *buffer, size_t len)
 
 								case 68: // Left arrow
 									break;
-
-								default: 
-									serial_out(dev, "Error: could not understand input\n", 35);
-									return -1;
 							}
 							break;
 
