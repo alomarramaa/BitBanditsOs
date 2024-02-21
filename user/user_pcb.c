@@ -23,9 +23,10 @@ int create_pcb(void)
     // Prompt user for class
     const char *classPrompt = "\nPlease enter a class for your PCB. (0 for system, 1 for user): \n";
     sys_req(WRITE, COM1, classPrompt, strlen(classPrompt));
-    char inputClass[50];
+    char classBuffer[50];
     nread = sys_req(READ, COM1, inputClass, sizeof(inputClass));
     sys_req(WRITE, COM1, inputClass, nread);
+    int inputClass = atoi(classBuffer);
 
     // Prompt user for priority
     const char *priorityPrompt = "\nPlease enter a priority (0-9) for your PCB: \n (Reminder: 0 is reserved for system processes)\n";
@@ -36,7 +37,7 @@ int create_pcb(void)
     int inputPriority = atoi(priorityBuffer);
 
     // Validate the input parameters
-    if ((strlen(inputName) > 0 && strlen(inputName) <= 8) && (strcmp(inputClass, "0") == 0 || strcmp(inputClass, "1") == 0) && (inputPriority >= 0 && inputPriority <= 9))
+    if ((strlen(inputName) > 0 && strlen(inputName) <= 8) && (inputClass == 0 || inputClass == 1) && (inputPriority >= 0 && inputPriority <= 9))
     {
         // Check if the name is unique
         if (pcb_find(inputName) != NULL)
@@ -45,14 +46,14 @@ int create_pcb(void)
             return -2; // Error code for non-unique name
         }
 
-        if (strcmp(inputClass, "1") == 0 && strcmp(inputPriority, "0") == 0)
+        if (inputClass == 1 && inputPriority == 0)
         {
             log_info("\nError: User process cannot have priority 0.\n");
             return -1; // Error code for invalid parameters
         }
 
         // Call pcb_setup to create a PCB
-        struct pcb *new_pcb = pcb_setup(inputName, atoi(inputClass), inputPriority);
+        struct pcb *new_pcb = pcb_setup(inputName, inputClass, inputPriority);
 
         pcb_insert(new_pcb);
 
