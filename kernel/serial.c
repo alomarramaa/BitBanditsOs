@@ -285,10 +285,6 @@ int serial_poll(device dev, char *buffer, size_t len)
 									break;
 							}
 							break;
-
-						default:
-							serial_out(dev, "Error: could not understand input\n", 35);
-							return -1;
 					}
 					break;
 
