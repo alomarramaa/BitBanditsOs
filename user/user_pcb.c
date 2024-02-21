@@ -134,6 +134,12 @@ int block_pcb(void)
     // Find the PCB with the given name
     struct pcb *pcb_to_block = pcb_find(pcbToBlock);
 
+    if (pcb_to_block->process_class == 0)
+    {
+        log_info("\nError: System PCBs cannot be blocked manually.\n");
+        return -1; // Error code for attempting to manually manipulate system processes
+    }
+
     // Check if the PCB exists and is not already blocked
     if (pcb_to_block != NULL && pcb_to_block->exe_state != BLOCKED)
     {
