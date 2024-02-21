@@ -180,11 +180,11 @@ int serial_poll(device dev, char *buffer, size_t len)
 					break;
 
 				// case 68:			// Left arrow
-				// 	if (index == 0) // Do nothing if no characters to the left
-				// 		break;
-				// 	tempIndex--; // Decrease the index (move left)
-				// 	serial_out(COM1, "\b", 2);
-				// 	break;
+					// if (index == 0) // Do nothing if no characters to the left
+					// 	break;
+					// tempIndex--; // Decrease the index (move left)
+					// serial_out(COM1, "\b", 2);
+					// break;
 
 				// case 65: // Up arrow
 				// 	// If not already looking at a previous command
@@ -211,10 +211,10 @@ int serial_poll(device dev, char *buffer, size_t len)
 				// 	break;
 
 				// case 67:					  // Right arrow
-				// 	if (index == bufferCount) // Do nothing if no characters to the right
-				// 		break;
-				// 	tempIndex++; // Increase the index (move right)
-				// 	break;
+					// if (index == bufferCount) // Do nothing if no characters to the right
+					// 	break;
+					// tempIndex++; // Increase the index (move right)
+					// break;
 
 				// case 66: // Down arrow
 				// 	// // If not currently looking at a previous command, do nothing
@@ -256,17 +256,21 @@ int serial_poll(device dev, char *buffer, size_t len)
 							if (charIn == '~')
 							{
 								// Handle delete key
-								if (index > 0)
-								{
-									serial_out(COM1, "\b \b", 4);
-									index--;
-									// Shift characters in the buffer to the left
-									for (int i = tempIndex; i <= bufferCount; i++)
+								if (index < bufferCount) {
+									serial_out(COM1, " \b", 3);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
+									tempIndex = index;
+									for (int i = index; i < bufferCount; i++) 
 									{
-										buffer[i - 1] = buffer[i];
+										buffer[i] = buffer[i + 1];      // Shift each character in the buffer one position to the left
+										//serial_out(COM1, &buffer[i], 1);
 									}
+									buffer[bufferCount] = '\0';      // The new end of the string
 									bufferCount--;
 								}
+								else {
+									tempIndex = index;
+								}
+								break;
 							}
 							break;
 						case 'A': // Up arrow
@@ -276,10 +280,17 @@ int serial_poll(device dev, char *buffer, size_t len)
 							// Handle down arrow key
 							break;
 						case 'C': // Right arrow
-							// Handle right arrow key
+							if (index == bufferCount) // Do nothing if no characters to the right
+								break;
+							tempIndex++; // Increase the index (move right)
+							break;
 							break;
 						case 'D': // Left arrow
 							// Handle left arrow key
+							if (index == 0) // Do nothing if no characters to the left
+								break;
+							tempIndex--; // Decrease the index (move left)
+							serial_out(COM1, "\b", 2);
 							break;
 						}
 					}
