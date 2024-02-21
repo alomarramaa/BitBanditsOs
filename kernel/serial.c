@@ -123,128 +123,184 @@ int serial_poll(device dev, char *buffer, size_t len)
 			char charIn = inb(dev); // Read one byte			
 			switch ( (int) charIn)
 			{
-			case 13:
-				outb(dev, '\r');  // Carriage returns (\r)
-				stop = 1;
-				break;
-			case 10:
-				outb(dev, '\n'); // New line (\n)
-				stop = 1;
-				break;
+				case 13:
+					outb(dev, '\r');  // Carriage returns (\r)
+					stop = 1;
+					break;
+				case 10:
+					outb(dev, '\n'); // New line (\n)
+					stop = 1;
+					break;
 
-			case 126:				// Delete
-				if (index < bufferCount) {
-					serial_out(COM1, " \b", 3);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
-					tempIndex = index;
-					for (int i = index; i < bufferCount; i++) 
+				// case 126:				// Delete
+					// if (index < bufferCount) {
+					// 	serial_out(COM1, " \b", 3);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
+					// 	tempIndex = index;
+					// 	for (int i = index; i < bufferCount; i++) 
+					// 	{
+					// 		buffer[i] = buffer[i + 1];      // Shift each character in the buffer one position to the left
+					// 		//serial_out(COM1, &buffer[i], 1);
+					// 	}
+					// 	buffer[bufferCount] = '\0';      // The new end of the string
+					// 	bufferCount--;
+					// }
+					// else {
+					// 	tempIndex = index;
+					// }
+					// break;
+
+				case 127:	// Backspace
+					if (index > 0) {
+						serial_out(COM1, "\b \b", 4);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
+						index--;
+						tempIndex = index;
+						for (int i = index; i < bufferCount; i++) {
+							buffer[i] = buffer[i + 1];      // Shift each character in the buffer one position to the left
+							//serial_out(COM1, &buffer[i], 1);
+						}
+						buffer[bufferCount] = '\0';      // The new end of the string
+						bufferCount--;
+					}
+					else {
+						tempIndex = 0;
+					}
+					break;
+
+				case 32:				   // Space
+					charIn = ' ';		   // Make input character a blank space
+					bufferCount++;		   // Increase buffer size
+					tempIndex = index + 1; // Save next index
+					do
 					{
-						buffer[i] = buffer[i + 1];      // Shift each character in the buffer one position to the left
-						//serial_out(COM1, &buffer[i], 1);
-					}
-					buffer[bufferCount] = '\0';      // The new end of the string
-					bufferCount--;
-				}
-				else {
-					tempIndex = index;
-				}
-				break;
-
-			case 127:	// Backspace
-				if (index > 0) {
-					serial_out(COM1, "\b \b", 4);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
-					index--;
-					tempIndex = index;
-					for (int i = index; i < bufferCount; i++) {
-						buffer[i] = buffer[i + 1];      // Shift each character in the buffer one position to the left
-						//serial_out(COM1, &buffer[i], 1);
-					}
-					buffer[bufferCount] = '\0';      // The new end of the string
-					bufferCount--;
-				}
-				else {
-					tempIndex = 0;
-				}
-				break;
-
-			case 32:				   // Space
-				charIn = ' ';		   // Make input character a blank space
-				bufferCount++;		   // Increase buffer size
-				tempIndex = index + 1; // Save next index
-				do
-				{
-					tempChar = buffer[index];	 // Save character at current index
-					buffer[index] = charIn;		 // Replace character at current index with charIn or previous tempChar
-					// outb(dev, charIn);
-					charIn = tempChar;			 // Set charIn to the replaced character
-				} while (++index < bufferCount); // Repeat for all remaining characters in the buffer
-				break;
-
-			case 68:			// Left arrow
-				if (index == 0) // Do nothing if no characters to the left
+						tempChar = buffer[index];	 // Save character at current index
+						buffer[index] = charIn;		 // Replace character at current index with charIn or previous tempChar
+						// outb(dev, charIn);
+						charIn = tempChar;			 // Set charIn to the replaced character
+					} while (++index < bufferCount); // Repeat for all remaining characters in the buffer
 					break;
-				tempIndex--; // Decrease the index (move left)
-				serial_out(COM1, "\b", 2);
-				break;
 
-			case 65: // Up arrow
-				// If not already looking at a previous command
-				// if (currBuffer == NULL)
-				// {
-				// 	// If there are no previous commands, do nothing
-				// 	if (bufferHead == NULL)
+				// case 68:			// Left arrow
+				// 	if (index == 0) // Do nothing if no characters to the left
 				// 		break;
-				// 	buffer = bufferHead->bufferText;			  // Set current buffer to the next command in the list
-				// 	bufferCount = bufferHead->bufferSize; // Set the buffer count to the count of the new buffer
-				// 	tempIndex = bufferCount;
-				// 	currBuffer = bufferHead;					  // Set the current buffer pointer to the head of the list of previous commands
-				// }
-				// else
-				// {
-				// 	// If there are no previous commands, do nothing
-				// 	if (currBuffer->nextBuffer == NULL)
-				// 		break;
-				// 	currBuffer = currBuffer->nextBuffer;		  // Set the current buffer pointer to the new command
-				// 	buffer = currBuffer->bufferText;			  // Set current buffer to the next command in the list
-				// 	bufferCount = currBuffer->bufferSize; // Set the buffer count to the count of the new buffer
-				// 	tempIndex = bufferCount;
-				// }
-				break;
-
-			case 67:					  // Right arrow
-				if (index == bufferCount) // Do nothing if no characters to the right
-					break;
-				tempIndex++; // Increase the index (move right)
-				break;
-
-			case 66: // Down arrow
-				// // If not currently looking at a previous command, do nothing
-				// if (currBuffer == NULL)
+				// 	tempIndex--; // Decrease the index (move left)
+				// 	serial_out(COM1, "\b", 2);
 				// 	break;
-				// // If there is no previous command in the list, clear everything
-				// // as if entering a new command
-				// if (currBuffer->prevBuffer == NULL)
-				// {
-				// 	currBuffer = NULL; // Sets the current buffer pointer to null
-				// 	index = 0;		   // Resets index for buffer traversal
-				// 	tempIndex = 0;
-				// 	// Traverses through the buffer and sets every character to the null terminator
-				// 	while (index < bufferCount)
-				// 	{
-				// 		buffer[index] = '\0';
-				// 		index++;
-				// 	}
-				// 	bufferCount = 0; // Resets the buffer count and index
-				// }
-				// else
-				// {
-				// 	currBuffer = currBuffer->prevBuffer;		  // Set the current buffer pointer to the previous command node
-				// 	buffer = currBuffer->bufferText;			  // Set current buffer to the previous command in the list
-				// 	bufferCount = currBuffer->bufferSize; // Set the buffer count to the count of the new buffer
-				// 	tempIndex = bufferCount;
-				// }
-				break;
 
-			default:				   // Basic character (A-Z, a-z, 0-9)
+				// case 65: // Up arrow
+				// 	// If not already looking at a previous command
+				// 	// if (currBuffer == NULL)
+				// 	// {
+				// 	// 	// If there are no previous commands, do nothing
+				// 	// 	if (bufferHead == NULL)
+				// 	// 		break;
+				// 	// 	buffer = bufferHead->bufferText;			  // Set current buffer to the next command in the list
+				// 	// 	bufferCount = bufferHead->bufferSize; // Set the buffer count to the count of the new buffer
+				// 	// 	tempIndex = bufferCount;
+				// 	// 	currBuffer = bufferHead;					  // Set the current buffer pointer to the head of the list of previous commands
+				// 	// }
+				// 	// else
+				// 	// {
+				// 	// 	// If there are no previous commands, do nothing
+				// 	// 	if (currBuffer->nextBuffer == NULL)
+				// 	// 		break;
+				// 	// 	currBuffer = currBuffer->nextBuffer;		  // Set the current buffer pointer to the new command
+				// 	// 	buffer = currBuffer->bufferText;			  // Set current buffer to the next command in the list
+				// 	// 	bufferCount = currBuffer->bufferSize; // Set the buffer count to the count of the new buffer
+				// 	// 	tempIndex = bufferCount;
+				// 	// }
+				// 	break;
+
+				// case 67:					  // Right arrow
+				// 	if (index == bufferCount) // Do nothing if no characters to the right
+				// 		break;
+				// 	tempIndex++; // Increase the index (move right)
+				// 	break;
+
+				// case 66: // Down arrow
+				// 	// // If not currently looking at a previous command, do nothing
+				// 	// if (currBuffer == NULL)
+				// 	// 	break;
+				// 	// // If there is no previous command in the list, clear everything
+				// 	// // as if entering a new command
+				// 	// if (currBuffer->prevBuffer == NULL)
+				// 	// {
+				// 	// 	currBuffer = NULL; // Sets the current buffer pointer to null
+				// 	// 	index = 0;		   // Resets index for buffer traversal
+				// 	// 	tempIndex = 0;
+				// 	// 	// Traverses through the buffer and sets every character to the null terminator
+				// 	// 	while (index < bufferCount)
+				// 	// 	{
+				// 	// 		buffer[index] = '\0';
+				// 	// 		index++;
+				// 	// 	}
+				// 	// 	bufferCount = 0; // Resets the buffer count and index
+				// 	// }
+				// 	// else
+				// 	// {
+				// 	// 	currBuffer = currBuffer->prevBuffer;		  // Set the current buffer pointer to the previous command node
+				// 	// 	buffer = currBuffer->bufferText;			  // Set current buffer to the previous command in the list
+				// 	// 	bufferCount = currBuffer->bufferSize; // Set the buffer count to the count of the new buffer
+				// 	// 	tempIndex = bufferCount;
+				// 	// }
+				// 	break;
+
+				case 27:
+					switch ( (int) charIn)
+					{
+						case 91:
+							switch ( (int) charIn)
+							{
+								case 51:
+									switch ( (int) charIn)
+									{
+										case 126:
+											if (index < bufferCount) {
+												serial_out(COM1, " \b", 3);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
+												tempIndex = index;
+												for (int i = index; i < bufferCount; i++) 
+												{
+													buffer[i] = buffer[i + 1];      // Shift each character in the buffer one position to the left
+													//serial_out(COM1, &buffer[i], 1);
+												}
+												buffer[bufferCount] = '\0';      // The new end of the string
+												bufferCount--;
+											}
+											else {
+												tempIndex = index;
+											}
+											break;
+
+										default: 
+											serial_out(dev, "Error: could not understand input\n", 35);
+											return -1;
+									}
+									break;
+								
+								case 65: // Up arrow
+									break;
+								
+								case 66: // Down arrow
+									break;
+
+								case 67: // Right arrow
+									break;
+
+								case 68: // Left arrow
+									break;
+
+								default: 
+									serial_out(dev, "Error: could not understand input\n", 35);
+									return -1;
+							}
+							break;
+
+						default:
+							serial_out(dev, "Error: could not understand input\n", 35);
+							return -1;
+					}
+					break;
+
+				default:				   // Basic character (A-Z, a-z, 0-9)
 					bufferCount++;		   // Increase buffer size
 					tempIndex = index + 1; // Save next index
 					do
