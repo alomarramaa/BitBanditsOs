@@ -247,11 +247,11 @@ struct pcb* pcb_allocate(void)
     }
 
     // Initialize PCB
-    new_pcbPtr->process_name = NULL;
-    new_pcbPtr->process_class = USER;
-    new_pcbPtr->process_priority = -1;
-    new_pcbPtr->exe_state = BLOCKED;
-    new_pcbPtr->disp_state = SUSPENDED;
+    // new_pcbPtr->process_name = NULL;
+    // new_pcbPtr->process_class = USER;
+    // new_pcbPtr->process_priority = -1;
+    // new_pcbPtr->exe_state = BLOCKED;
+    // new_pcbPtr->disp_state = SUSPENDED;
     for (int i = 0; i < 1024; i++)
     {
         new_pcbPtr->pcb_stack[i] = 0;
@@ -297,7 +297,7 @@ struct pcb* pcb_setup(char* process_name, class_type process_class, int process_
 struct pcb* pcb_find(char* to_find)
 {
     // Ensure given a valid name
-    if (to_find == NULL)
+    if (to_find == NULL || strlen(to_find) == 0)
     {
         return NULL;
     }
@@ -357,4 +357,24 @@ int pcb_remove(struct pcb* to_removePtr)
 
     // PCB removed successfully
     return 0;
+}
+
+struct process_queue* get_ready_queue()
+{
+    return &ready_queue;
+}
+
+struct process_queue* get_blocked_queue()
+{
+    return &blocked_queue;
+}
+
+struct process_queue* get_sus_ready_queue()
+{
+    return &sus_ready_queue;
+}
+
+struct process_queue* get_sus_blocked_queue()
+{
+    return &sus_blocked_queue;
 }

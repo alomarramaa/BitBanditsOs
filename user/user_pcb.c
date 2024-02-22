@@ -64,6 +64,7 @@ int create_pcb(void)
             return -2; // Error code for non-unique name
         }
 
+        // Ensure allowed process and class combo
         if (inputClass == 1 && inputPriority == 0)
         {
             log_info("\nError: User process cannot have priority 0.\n");

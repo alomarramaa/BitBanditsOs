@@ -85,4 +85,12 @@ void enqueue(pcb* to_add, enum queue_tag queue_sel);
 
 int dequeue(pcb* to_remove, enum queue_tag queue_sel);
 
+struct process_queue* get_ready_queue();
+
+struct process_queue* get_blocked_queue();
+
+struct process_queue* get_sus_ready_queue();
+
+struct process_queue* get_sus_blocked_queue();
+
 #endif
