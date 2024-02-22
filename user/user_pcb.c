@@ -488,7 +488,7 @@ void show_ready(void)
         char buffer[50]; 
 
         // Display Name
-        const char *name_prompt = "Name: ";
+      const char *name_prompt = "\nName: ";
         sys_req(WRITE, COM1, name_prompt, strlen(name_prompt));
         sys_req(WRITE, COM1, current_pcb->process_name, strlen(current_pcb->process_name));
 
@@ -529,15 +529,56 @@ void show_ready(void)
 void show_blocked(void)
 {
     // Prompt user for a name for PCB
-    const char *prompt = "Below are all the PCBs in a blocked state.";
+    const char *prompt = "Below are all the PCBs in a blocked state.\n";
     sys_req(WRITE, COM1, prompt, strlen(prompt));
-    /*
-     For all processes in the Blocked state, display the process’s: • Name
-• Class
-• State
-• Suspended Status • Priority
-• Parameters: • None
-• Error Checking: • None*/
+
+    // Get the pointer to the blocked queue
+    struct process_queue *blocked_queue_ptr = get_blocked_queue();
+
+    // Traverse the blocked queue and display PCB information
+    struct pcb *current_pcb = blocked_queue_ptr->queue_head;
+    while (current_pcb != NULL)
+    {
+        // Display PCB information for each PCB in the blocked queue
+        char buffer[50]; 
+
+        // Display Name
+        const char *name_prompt = "Name: ";
+        sys_req(WRITE, COM1, name_prompt, strlen(name_prompt));
+        sys_req(WRITE, COM1, current_pcb->process_name, strlen(current_pcb->process_name));
+
+        // Display Class
+        const char *class_prompt = "\nClass: ";
+        sys_req(WRITE, COM1, class_prompt, strlen(class_prompt));
+        itoa(current_pcb->process_class, buffer); 
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+
+        // Display Priority
+        const char *priority_prompt = "\nPriority: ";
+        sys_req(WRITE, COM1, priority_prompt, strlen(priority_prompt));
+        itoa(current_pcb->process_priority, buffer); 
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+
+        // Display State
+        const char *state_prompt = "\nState: ";
+        sys_req(WRITE, COM1, state_prompt, strlen(state_prompt));
+        itoa(current_pcb->exe_state, buffer); 
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+
+        // Display Suspended state 
+        const char *suspended_prompt = "\nSuspended state: ";
+        sys_req(WRITE, COM1, suspended_prompt, strlen(suspended_prompt));
+        itoa(current_pcb->disp_state, buffer); 
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+
+        const char *newline = "\n";
+        sys_req(WRITE, COM1, newline, strlen(newline)); 
+
+        // Move to the next PCB in the blocked queue
+        current_pcb = current_pcb->next_pcbPtr;
+    }
+    const char *end_prompt = "End of blocked PCBs list.\n";
+    sys_req(WRITE, COM1, end_prompt, strlen(end_prompt));
 }
 
 void show_all(void)

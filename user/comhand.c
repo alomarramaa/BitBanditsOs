@@ -361,7 +361,7 @@ void comhand(void)
         }
         else if (strcmp(buf, "show blocked") == 0) // Show Blocked
         {
-            //show_blocked();
+            show_blocked();
         }
         else if (strcmp(buf, "show all") == 0) // Show All
         {
