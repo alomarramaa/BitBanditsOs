@@ -286,14 +286,14 @@ int serial_poll(device dev, char *buffer, size_t len)
 							if (index == bufferCount) // Do nothing if no characters to the right
 								break;
 							tempIndex++; // Increase the index (move right)
-							serial_out(COM1, "\x1b[C", 3);
+							serial_out(COM1, "\x1b[C", 4);
 							break;
 
 						case 'D': // Left arrow
 							if (index == 0) // Do nothing if no characters to the left
 								break;
 							tempIndex--; // Decrease the index (move left)
-							serial_out(COM1, "\x1b[D", 3);
+							serial_out(COM1, "\x1b[D", 4);
 							break;
 						}
 					}
