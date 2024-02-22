@@ -22,7 +22,7 @@ int create_pcb(void)
 
     if (strlen(inputName) <= 0 || strlen(inputName) > 8)
     {
-        log_info("\nError: Invalid PCB Name\n");
+        log_info("\nError: Invalid name. Please enter a valid name between 0 and 8 characters long.\n");
         return -1; // Error code for invalid parameters
     }
 
@@ -36,7 +36,7 @@ int create_pcb(void)
 
     if (inputClass != 0 && inputClass != 1)
     {
-        log_info("\nError: Class must either be \"0\" (system) or \"1\" (user)\n");
+        log_info("\nError: Invalid class. Class must be either \"0\" (system) or \"1\" (user).\n");
         return -1; // Error code for invalid parameters
     }
 
@@ -48,6 +48,12 @@ int create_pcb(void)
     sys_req(WRITE, COM1, priorityBuffer, nread);
     int inputPriority = atoi(priorityBuffer);
 
+    if (inputPriority < 0 || inputPriority > 9)
+    {
+        log_info("\nError: Invalid priority. Priority must be between 0 and 9.\n");
+        return -1; // Error code for invalid parameters
+    }
+
     // Validate the input parameters
     if ((strlen(inputName) > 0 && strlen(inputName) <= 8) && (inputClass == 0 || inputClass == 1) && (inputPriority >= 0 && inputPriority <= 9))
     {
@@ -58,6 +64,7 @@ int create_pcb(void)
             return -2; // Error code for non-unique name
         }
 
+        // Ensure allowed process and class combo
         if (inputClass == 1 && inputPriority == 0)
         {
             log_info("\nError: User process cannot have priority 0.\n");
