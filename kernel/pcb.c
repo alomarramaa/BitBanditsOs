@@ -308,7 +308,7 @@ struct pcb* pcb_find(char* to_find)
     for(int i = 0; i <= 3; i++)
     {
         // Check if PCB is in current queue
-        found_pcb = search_queue(to_find, i);
+        found_pcb = search_queue(to_find, (enum queue_tag) i);
         if (found_pcb != NULL)
         {
             

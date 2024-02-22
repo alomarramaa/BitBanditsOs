@@ -20,7 +20,7 @@ int create_pcb(void)
     int nread = sys_req(READ, COM1, inputName, sizeof(inputName));
     sys_req(WRITE, COM1, inputName, nread);
 
-    if (strlen(inputName) <= 0 || strlen(inputName) > 8)
+    if (inputName != NULL && (strlen(inputName) <= 0 || strlen(inputName) > 8))
     {
         log_info("\nError: Invalid name. Please enter a valid name between 0 and 8 characters long.\n");
         return -1; // Error code for invalid parameters
@@ -34,13 +34,11 @@ int create_pcb(void)
     sys_req(WRITE, COM1, classBuffer, nread);
     int inputClass = atoi(classBuffer);
 
-    if (inputClass != 0 && inputClass != 1)
+    if (inputClass != NULL && (inputClass != 0 && inputClass != 1))
     {
         log_info("\nError: Invalid class. Class must be either \"0\" (system) or \"1\" (user).\n");
         return -1; // Error code for invalid parameters
     }
-    log_info(inputName);
-    log_info("\n");
 
     // Prompt user for priority
     const char *priorityPrompt = "\nPlease enter a priority (0-9) for your PCB: \n (Reminder: 0 is reserved for system processes)\n";
@@ -50,7 +48,7 @@ int create_pcb(void)
     sys_req(WRITE, COM1, priorityBuffer, nread);
     int inputPriority = atoi(priorityBuffer);
 
-    if (inputPriority < 0 || inputPriority > 9)
+    if (inputClass != NULL && (inputPriority < 0 || inputPriority > 9))
     {
         log_info("\nError: Invalid priority. Priority must be between 0 and 9.\n");
         return -1; // Error code for invalid parameters
@@ -79,6 +77,7 @@ int create_pcb(void)
         pcb_insert(new_pcb);
 
         log_info("\nPCB created successfully.\n");
+        
         // Return success
         return 0;
     }
@@ -98,7 +97,13 @@ int delete_pcb(void)
     sys_req(WRITE, COM1, namePrompt, strlen(namePrompt));
     char pcbToDelete[50];
     int nread = sys_req(READ, COM1, pcbToDelete, sizeof(pcbToDelete));
-    sys_req(WRITE, COM1, pcbToDelete, nread);
+    sys_req(WRITE, COM1, pcbToDelete, nread);\
+    
+    if (pcbToDelete == NULL)
+    {
+        log_info("\nError: Invalid PCB Name\n");
+        return -2; // Error code for invalid input
+    }
 
     // Find the PCB with the given name
     struct pcb *delete_pcb = pcb_find(pcbToDelete);
@@ -146,6 +151,12 @@ int block_pcb(void)
     char pcbToBlock[50];
     int nread = sys_req(READ, COM1, pcbToBlock, sizeof(pcbToBlock));
     sys_req(WRITE, COM1, pcbToBlock, nread);
+
+    if (pcbToBlock == NULL)
+    {
+        log_info("\nError: Invalid PCB Name\n");
+        return -2; // Error code for invalid input
+    }
 
     // Find the PCB with the given name
     struct pcb *pcb_to_block = pcb_find(pcbToBlock);
@@ -202,6 +213,12 @@ int unblock_pcb(void)
     int nread = sys_req(READ, COM1, pcbToUnblock, sizeof(pcbToUnblock));
     sys_req(WRITE, COM1, pcbToUnblock, nread);
 
+    if (pcbToUnblock == NULL)
+    {
+        log_info("\nError: Invalid PCB Name\n");
+        return -2; // Error code for invalid input
+    }
+
     // Find the PCB with the given name
     struct pcb *pcb_to_unblock = pcb_find(pcbToUnblock);
 
@@ -249,6 +266,12 @@ int suspend_pcb(void)
     char pcbToSuspend[50];
     int nread = sys_req(READ, COM1, pcbToSuspend, sizeof(pcbToSuspend));
     sys_req(WRITE, COM1, pcbToSuspend, nread);
+
+    if (pcbToSuspend == NULL)
+    {
+        log_info("\nError: Invalid PCB Name\n");
+        return -2; // Error code for invalid input
+    }
 
     // Find the PCB with the given name
     struct pcb *pcb_to_suspend = pcb_find(pcbToSuspend);
@@ -303,6 +326,12 @@ int resume_pcb(void)
     int nread = sys_req(READ, COM1, pcbToResume, sizeof(pcbToResume));
     sys_req(WRITE, COM1, pcbToResume, nread);
 
+    if (pcbToResume == NULL)
+    {
+        log_info("\nError: Invalid PCB Name\n");
+        return -2; // Error code for invalid input
+    }
+
     // Find the PCB with the given name
     struct pcb *pcb_to_resume = pcb_find(pcbToResume);
 
@@ -352,12 +381,24 @@ int set_pcb_priority(void)
     int nread = sys_req(READ, COM1, user_input_name, sizeof(user_input_name));
     sys_req(WRITE, COM1, user_input_name, nread);
 
+    if (user_input_name == NULL)
+    {
+        log_info("\nError: Invalid PCB Name\n");
+        return -2; // Error code for invalid input
+    }
+
     const char *prompt_priority = "\nPlease enter the new priority (0-9) for the PCB: \n";
     sys_req(WRITE, COM1, prompt_priority, strlen(prompt_priority));
 
     char user_input_priority[3]; // Assuming a reasonable buffer size
     nread = sys_req(READ, COM1, user_input_priority, sizeof(user_input_priority));
     sys_req(WRITE, COM1, user_input_priority, nread);
+
+    if (user_input_priority == NULL)
+    {
+        log_info("\nError: Invalid Priority\n");
+        return -2; // Error code for invalid input
+    }
 
     // Convert user input for new priority to integer
     int new_priority = atoi(user_input_priority);
@@ -413,6 +454,11 @@ int show_pcb(void)
     int nread = sys_req(READ, COM1, pcbToShow, sizeof(pcbToShow));
     sys_req(WRITE, COM1, pcbToShow, nread);
 
+    if (pcbToShow == NULL)
+    {
+        log_info("\nError: Invalid PCB Name\n");
+        return -2; // Error code for invalid input
+    }
 
     // Find the PCB with the given name.
     struct pcb *pcb = pcb_find(pcbToShow);
