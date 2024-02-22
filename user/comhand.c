@@ -365,7 +365,7 @@ void comhand(void)
         }
         else if (strcmp(buf, "show all") == 0) // Show All
         {
-            //show_all();
+            show_all();
         }
         else // Unrecognised command
         {
