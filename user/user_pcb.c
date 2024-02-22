@@ -39,6 +39,8 @@ int create_pcb(void)
         log_info("\nError: Invalid class. Class must be either \"0\" (system) or \"1\" (user).\n");
         return -1; // Error code for invalid parameters
     }
+    log_info(inputName);
+    log_info("\n");
 
     // Prompt user for priority
     const char *priorityPrompt = "\nPlease enter a priority (0-9) for your PCB: \n (Reminder: 0 is reserved for system processes)\n";
