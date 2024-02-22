@@ -381,16 +381,20 @@ int set_pcb_priority(void)
     }
 }
 
-int show_pcb(char *process_name)
+int show_pcb(void)
 {
-    // Not necessary, dummy line to use input so I can run the mpx
-    if (process_name == NULL)
-    {
-        return -1;
-    }
+
+
+ // Prompt user for the name of the PCB to show
+    const char *prompt = "Please enter the name of the PCB that you wish to show.\n";
+    sys_req(WRITE, COM1, prompt, strlen(prompt));
+    char pcbToShow[50];
+    int nread = sys_req(READ, COM1, pcbToShow, sizeof(pcbToShow));
+    sys_req(WRITE, COM1, pcbToShow, nread);
+
 
     // Find the PCB with the given name.
-    struct pcb *pcb = pcb_find(process_name);
+    struct pcb *pcb = pcb_find(pcbToShow);
 
     // Check if the PCB exists
     if (pcb != NULL)
