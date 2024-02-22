@@ -357,7 +357,7 @@ void comhand(void)
         }
         else if (strcmp(buf, "show ready") == 0) // Show Ready
         {
-            //show_ready();
+            show_ready();
         }
         else if (strcmp(buf, "show blocked") == 0) // Show Blocked
         {
