@@ -2,6 +2,7 @@
 #include <mpx/serial.h>
 #include <sys_req.h>
 #include <user/time.h>
+#include <user/rtc_util.h>
 
 #define DEBOUNCE_THRESHOLD 100
 
