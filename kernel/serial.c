@@ -152,6 +152,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 				case 127:	// Backspace
 					if (index > 0) {
 						serial_out(COM1, "\b \b", 4);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
+						serial_out(COM1, "\x1b[2K", 4); // Clear any future characters
 						index--;
 						tempIndex = index;
 						for (int i = index; i < bufferCount; i++) {
@@ -257,7 +258,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 							{
 								// Handle delete key
 								if (index < bufferCount) {
-									serial_out(COM1, "\x1b[2K", 4);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
+									serial_out(COM1, "\x1b[2K", 4);      // Clear any future characters
 									tempIndex = index;
 									for (int i = index; i < bufferCount; i++) 
 									{
