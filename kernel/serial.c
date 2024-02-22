@@ -286,14 +286,14 @@ int serial_poll(device dev, char *buffer, size_t len)
 							if (index == bufferCount) // Do nothing if no characters to the right
 								break;
 							tempIndex++; // Increase the index (move right)
-							outb(COM1, "\x1b[C");
+							//outb(COM1, "\x1b[C");
 							break;
 
 						case 'D': // Left arrow
 							if (index == 0) // Do nothing if no characters to the left
 								break;
 							tempIndex--; // Decrease the index (move left)
-							serial_out(COM1, "\b", 2); // Move cursor back
+							//serial_out(COM1, "\b", 2); // Move cursor back
 							break;
 						}
 					}
@@ -313,9 +313,14 @@ int serial_poll(device dev, char *buffer, size_t len)
 			{
 				break;
 			}
-			//serial_out(dev, "\x1b[2k\r", 5);
+			serial_out(dev, "\x1b[2k\r", 5);
 			serial_out(dev, buffer, bufferCount); // Display current buffer
 			index = tempIndex;					  // Restore index
+			while(tempIndex < bufferCount)
+			{
+				serial_out(dev, "\b", 1);
+				tempIndex++;
+			}
 		}
 	}
 	// Creates a new node for the submitted command
