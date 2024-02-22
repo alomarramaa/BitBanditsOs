@@ -257,7 +257,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 							{
 								// Handle delete key
 								if (index < bufferCount) {
-									serial_out(COM1, " \b", 3);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
+									serial_out(COM1, "\x1b[2K", 4);      // Move the cursor back, print a space to overwrite the previous character, and move the cursor back again
 									tempIndex = index;
 									for (int i = index; i < bufferCount; i++) 
 									{
