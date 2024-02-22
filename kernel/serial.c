@@ -1,16 +1,6 @@
 #include <mpx/io.h>
 #include <mpx/serial.h>
-//#include <sys_req.h>
-#include <user/time.h>
-#include <user/rtc_util.h>
-
-#include "sys_req.h"
-#include "string.h"
-//#include <mpx/io.h>
-#include "stdlib.h"
-//#include <user/rtc_util.h>
-
-#define DEBOUNCE_THRESHOLD 100
+#include <sys_req.h>
 
 // // Maximum buffer list size
 // #define BUFFER_LIST_MAX 5
@@ -67,8 +57,6 @@ enum uart_registers
 // int bufferListLength = 0;
 
 static int initialized[4] = {0};
-
-static unsigned long last_key_press_time = 0;
 
 static int serial_devno(device dev)
 {
@@ -128,13 +116,10 @@ int serial_poll(device dev, char *buffer, size_t len)
 	// previous_buffers *currBuffer = NULL; // Used when traversing previous commands
 
 	int stop = 0;
-	unsigned long current_time = readTimeReg('m') + readTimeReg('s');
 	while (bufferCount < ((int)len - 1) && !stop)
 	{
-		current_time = readTimeReg('m') + readTimeReg('s');
-		if (inb(dev + LSR) & 1 && (current_time - last_key_press_time) > DEBOUNCE_THRESHOLD)
+		if (inb(dev + LSR) & 1)
 		{
-			last_key_press_time = current_time;
 			char charIn = inb(dev); // Read one byte			
 			switch ( (int) charIn)
 			{
@@ -328,7 +313,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 			{
 				break;
 			}
-			serial_out(dev, "\x1b[2k\r", 5);
+			//serial_out(dev, "\x1b[2k\r", 5);
 			serial_out(dev, buffer, bufferCount); // Display current buffer
 			index = tempIndex;					  // Restore index
 		}
