@@ -293,7 +293,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 							if (index == 0) // Do nothing if no characters to the left
 								break;
 							tempIndex--; // Decrease the index (move left)
-							outb(COM1, "\x1b[D");
+							serial_out(COM1, "\b", 1); // Move cursor back
 							break;
 						}
 					}
