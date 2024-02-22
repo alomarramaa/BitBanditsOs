@@ -192,7 +192,7 @@ void help(void) // Prints all available commands
                            "Set Priority - Changes a processes priority\n"
                            "Show PCB - Displays the process's info\n"
                            "Show Ready - Displays all process's info in ready queue\n"
-                           "1Show Blocked - Displays all process's info in blocked queue\n"
+                           "Show Blocked - Displays all process's info in blocked queue\n"
                            "Show All - Displays all process's info\n";
     sys_req(WRITE, COM1, helpText, strlen(helpText));
   //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
@@ -255,7 +255,7 @@ void comhand(void)
             "      | | -       | |\n"
             "      | |  CS450  | |\n"
             "      | |_________| |________________________\n"
-            "      \\=____________/   Bit Bandits          )\n" YELLOW "      / \"\"\"\"\"\"\"\"\"\"\"\"\" \\\n" RESET
+            "      \\=____________/   Bit Bandits          )\n" YELLOW "      /\"\"\"\"\"\"\"\"\"\"\"\"\"\\\n" RESET
                 BLUE "     / ::::::::::::: \\\n" RESET
             "    (_________________)\n"
             "\n";
