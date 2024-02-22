@@ -63,11 +63,11 @@ int setval(char *resource)
 {
     if (strcmp(resource, "date") == 0)
     {
-        sys_req(WRITE, COM1, "Please input the new date (mm dd yyyy): \n", 42);
+        sys_req(WRITE, COM1, "Please input the new date (mm dd yyyy): \n>", 42);
     }
     else if (strcmp(resource, "time") == 0)
     {
-        sys_req(WRITE, COM1, "Please input the new time (hh mm ss): \n", 40);
+        sys_req(WRITE, COM1, "Please input the new time (hh mm ss): \n>", 40);
     }
 
     if (strcmp(resource, "date") == 0 || strcmp(resource, "time") == 0)
@@ -205,7 +205,7 @@ void help(void) // Prints all available commands
  */
 int shutdown(void)
 {
-    char *shutdCheck = "Are you sure you want to shut down? (y/n)\n";
+    char *shutdCheck = "Are you sure you want to shut down? (y/n)\n>";
     sys_req(WRITE, COM1, shutdCheck, strlen(shutdCheck)); // Confirmation to shut down
 
     char confirm[50] = {0};
@@ -272,6 +272,8 @@ void comhand(void)
     // Begin loop for command handler
     for (;;)
     {
+        sys_req(WRITE, COM1, "> ", 1); // Display prompt
+
         char buf[100] = {0};
         int nread = sys_req(READ, COM1, buf, sizeof(buf));
         sys_req(WRITE, COM1, buf, nread);
