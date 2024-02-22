@@ -1,8 +1,14 @@
 #include <mpx/io.h>
 #include <mpx/serial.h>
-#include <sys_req.h>
+//#include <sys_req.h>
 #include <user/time.h>
 #include <user/rtc_util.h>
+
+#include "sys_req.h"
+#include "string.h"
+//#include <mpx/io.h>
+#include "stdlib.h"
+//#include <user/rtc_util.h>
 
 #define DEBOUNCE_THRESHOLD 100
 
