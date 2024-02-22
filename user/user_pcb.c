@@ -20,6 +20,12 @@ int create_pcb(void)
     int nread = sys_req(READ, COM1, inputName, sizeof(inputName));
     sys_req(WRITE, COM1, inputName, nread);
 
+    if (strlen(inputName) <= 0 || strlen(inputName) > 8)
+    {
+        log_info("\nError: Invalid name. Please enter a valid name between 0 and 8 characters long.\n");
+        return -1; // Error code for invalid parameters
+    }
+
     // Prompt user for class
     const char *classPrompt = "\nPlease enter a class for your PCB. (0 for system, 1 for user): \n";
     sys_req(WRITE, COM1, classPrompt, strlen(classPrompt));
@@ -27,6 +33,12 @@ int create_pcb(void)
     nread = sys_req(READ, COM1, classBuffer, sizeof(classBuffer));
     sys_req(WRITE, COM1, classBuffer, nread);
     int inputClass = atoi(classBuffer);
+
+    if (inputClass != 0 && inputClass != 1)
+    {
+        log_info("\nError: Invalid class. Class must be either \"0\" (system) or \"1\" (user).\n");
+        return -1; // Error code for invalid parameters
+    }
 
     // Prompt user for priority
     const char *priorityPrompt = "\nPlease enter a priority (0-9) for your PCB: \n (Reminder: 0 is reserved for system processes)\n";
@@ -36,13 +48,19 @@ int create_pcb(void)
     sys_req(WRITE, COM1, priorityBuffer, nread);
     int inputPriority = atoi(priorityBuffer);
 
+    if (inputPriority < 0 || inputPriority > 9)
+    {
+        log_info("\nError: Invalid priority. Priority must be between 0 and 9.\n");
+        return -1; // Error code for invalid parameters
+    }
+
     // Validate the input parameters
     if ((strlen(inputName) > 0 && strlen(inputName) <= 8) && (inputClass == 0 || inputClass == 1) && (inputPriority >= 0 && inputPriority <= 9))
     {
         // Check if the name is unique
         if (pcb_find(inputName) != NULL)
         {
-            log_info("\nError: PCB name must be unique.");
+            log_info("\nError: PCB name must be unique.\n");
             return -2; // Error code for non-unique name
         }
 
@@ -64,7 +82,7 @@ int create_pcb(void)
     else
     {
         // Invalid parameters, display error message
-        const char *error = "Error: Please make sure you entered a valid name, class, and priority (0-9).";
+        const char *error = "\nError: Please make sure you entered a valid name, class, and priority (0-9).\n";
         sys_req(WRITE, COM1, error, strlen(error));
         return -1; // Error code for invalid parameters
     }
