@@ -37,7 +37,8 @@ int create_pcb(void)
     int nread = sys_req(READ, COM1, inputName, sizeof(inputName));
     sys_req(WRITE, COM1, inputName, nread);
 
-    if (strlen(inputName) <= 8 || strlen(inputName) > 20)
+    //If the name is too short or too long
+    if (strlen(inputName) < 8 || strlen(inputName) > 20)
     {
         log_info("\nError: Invalid name. Please enter a valid name between 8 and 20 characters long.\n");
         return -1; // Error code for invalid parameters
