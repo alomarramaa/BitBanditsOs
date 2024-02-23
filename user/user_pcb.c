@@ -50,6 +50,11 @@ int create_pcb(void)
     char classBuffer[50];
     nread = sys_req(READ, COM1, classBuffer, sizeof(classBuffer));
     sys_req(WRITE, COM1, classBuffer, nread);
+    if (strlen(classBuffer) < 1)
+    {
+        log_info("\nError: Invalid class. Class must be either \"0\" (system) or \"1\" (user).\n");
+        return -2; // Error code for invalid parameters
+    }
     int inputClass = atoi(classBuffer);
 
     if (inputClass != 0 && inputClass != 1)
@@ -64,6 +69,11 @@ int create_pcb(void)
     char priorityBuffer[50];
     nread = sys_req(READ, COM1, priorityBuffer, sizeof(priorityBuffer));
     sys_req(WRITE, COM1, priorityBuffer, nread);
+    if (strlen(priorityBuffer) < 1)
+    {
+        log_info("\nError: Invalid priority. Priority must be between 0 and 9.\n");
+        return -3; // Error code for invalid parameters
+    }
     int inputPriority = atoi(priorityBuffer);
 
     if (inputPriority < 0 || inputPriority > 9)
@@ -73,7 +83,7 @@ int create_pcb(void)
     }
 
     // Validate the input parameters
-    if ((strlen(inputName) > 8 && strlen(inputName) <= 20) && (inputClass == 0 || inputClass == 1) && (inputPriority >= 0 && inputPriority <= 9))
+    if ((strlen(inputName) >= 8 && strlen(inputName) <= 20) && (inputClass == 0 || inputClass == 1) && (inputPriority >= 0 && inputPriority <= 9))
     {
         // Check if the name is unique
         if (pcb_find(inputName) != NULL)
@@ -181,15 +191,16 @@ int block_pcb(void)
     // Find the PCB with the given name
     struct pcb *pcb_to_block = pcb_find(pcbToBlock);
 
-    if (pcb_to_block->process_class == 0)
-    {
-        log_info("\nError: System PCBs cannot be blocked manually.\n");
-        return -1; // Error code for attempting to manually manipulate system processes
-    }
-
     // Check if the PCB exists and is not already blocked
     if (pcb_to_block != NULL && pcb_to_block->exe_state != BLOCKED)
     {
+
+        if (pcb_to_block->process_class == 0)
+        {
+            log_info("\nError: System PCBs cannot be blocked manually.\n");
+            return -1; // Error code for attempting to manually manipulate system processes
+        }
+        
         // Call kernel function to block the PCB
 
         // Remove pcb from previous queue and insert it into the appropriate queue
