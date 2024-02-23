@@ -607,6 +607,16 @@ void show_ready(void)
         sys_req(WRITE, COM1, class_prompt, strlen(class_prompt));
         itoa(current_pcb->process_class, buffer); 
         sys_req(WRITE, COM1, buffer, strlen(buffer));
+        char* class_name;
+        if (current_pcb->process_class == 0)
+        {
+            class_name = " (System)";
+        }
+        else
+        {
+            class_name = " (User)";
+        }
+        sys_req(WRITE, COM1, class_name, strlen(class_name));
 
         // Display Priority
         const char *priority_prompt = "\nPriority: ";
@@ -619,12 +629,36 @@ void show_ready(void)
         sys_req(WRITE, COM1, state_prompt, strlen(state_prompt));
         itoa(current_pcb->exe_state, buffer); 
         sys_req(WRITE, COM1, buffer, strlen(buffer));
+        char* state_name;
+        if (current_pcb->exe_state == 0)
+        {
+            state_name = " (Ready)";
+        }
+        else if (current_pcb->exe_state == 1)
+        {
+            state_name = " (Running)";
+        }
+        else
+        {
+            state_name = " (Blocked)";
+        }
+        sys_req(WRITE, COM1, state_name, strlen(state_name));
 
         // Display Suspended state 
         const char *suspended_prompt = "\nSuspended state: ";
         sys_req(WRITE, COM1, suspended_prompt, strlen(suspended_prompt));
         itoa(current_pcb->disp_state, buffer); 
         sys_req(WRITE, COM1, buffer, strlen(buffer));
+        char* sus_state;
+        if (current_pcb->disp_state == 0)
+        {
+            sus_state = " (Suspended)";
+        }
+        else
+        {
+            sus_state = " (Not Suspended)";
+        }
+        sys_req(WRITE, COM1, sus_state, strlen(sus_state));
 
         const char *newline = "\n";
         sys_req(WRITE, COM1, newline, strlen(newline)); 
@@ -656,11 +690,11 @@ void show_blocked(void)
     struct pcb *current_pcb = blocked_queue_ptr->queue_head;
     while (current_pcb != NULL)
     {
-        // Display PCB information for each PCB in the blocked queue
+        // Display PCB information for each PCB in the ready queue
         char buffer[50]; 
 
         // Display Name
-        const char *name_prompt = "Name: ";
+      const char *name_prompt = "\nName: ";
         sys_req(WRITE, COM1, name_prompt, strlen(name_prompt));
         sys_req(WRITE, COM1, current_pcb->process_name, strlen(current_pcb->process_name));
 
@@ -669,6 +703,16 @@ void show_blocked(void)
         sys_req(WRITE, COM1, class_prompt, strlen(class_prompt));
         itoa(current_pcb->process_class, buffer); 
         sys_req(WRITE, COM1, buffer, strlen(buffer));
+        char* class_name;
+        if (current_pcb->process_class == 0)
+        {
+            class_name = " (System)";
+        }
+        else
+        {
+            class_name = " (User)";
+        }
+        sys_req(WRITE, COM1, class_name, strlen(class_name));
 
         // Display Priority
         const char *priority_prompt = "\nPriority: ";
@@ -681,15 +725,40 @@ void show_blocked(void)
         sys_req(WRITE, COM1, state_prompt, strlen(state_prompt));
         itoa(current_pcb->exe_state, buffer); 
         sys_req(WRITE, COM1, buffer, strlen(buffer));
+        char* state_name;
+        if (current_pcb->exe_state == 0)
+        {
+            state_name = " (Ready)";
+        }
+        else if (current_pcb->exe_state == 1)
+        {
+            state_name = " (Running)";
+        }
+        else
+        {
+            state_name = " (Blocked)";
+        }
+        sys_req(WRITE, COM1, state_name, strlen(state_name));
 
         // Display Suspended state 
         const char *suspended_prompt = "\nSuspended state: ";
         sys_req(WRITE, COM1, suspended_prompt, strlen(suspended_prompt));
         itoa(current_pcb->disp_state, buffer); 
         sys_req(WRITE, COM1, buffer, strlen(buffer));
+        char* sus_state;
+        if (current_pcb->disp_state == 0)
+        {
+            sus_state = " (Suspended)";
+        }
+        else
+        {
+            sus_state = " (Not Suspended)";
+        }
+        sys_req(WRITE, COM1, sus_state, strlen(sus_state));
 
         const char *newline = "\n";
         sys_req(WRITE, COM1, newline, strlen(newline)); 
+
 
         // Move to the next PCB in the blocked queue
         current_pcb = current_pcb->next_pcbPtr;
@@ -731,6 +800,16 @@ void show_all(void)
             sys_req(WRITE, COM1, class_prompt, strlen(class_prompt));
             itoa(current_pcb->process_class, buffer);
             sys_req(WRITE, COM1, buffer, strlen(buffer));
+            char* class_name;
+            if (current_pcb->process_class == 0)
+            {
+                class_name = " (System)";
+            }
+            else
+            {
+                class_name = " (User)";
+            }
+            sys_req(WRITE, COM1, class_name, strlen(class_name));
 
             // Display Priority
             const char *priority_prompt = "\nPriority: ";
@@ -743,12 +822,36 @@ void show_all(void)
             sys_req(WRITE, COM1, state_prompt, strlen(state_prompt));
             itoa(current_pcb->exe_state, buffer);
             sys_req(WRITE, COM1, buffer, strlen(buffer));
+            char* state_name;
+            if (current_pcb->exe_state == 0)
+            {
+                state_name = " (Ready)";
+            }
+            else if (current_pcb->exe_state == 1)
+            {
+                state_name = " (Running)";
+            }
+            else
+            {
+                state_name = " (Blocked)";
+            }
+            sys_req(WRITE, COM1, state_name, strlen(state_name));
 
             // Display Suspended state
             const char *suspended_prompt = "\nSuspended state: ";
             sys_req(WRITE, COM1, suspended_prompt, strlen(suspended_prompt));
             itoa(current_pcb->disp_state, buffer);
             sys_req(WRITE, COM1, buffer, strlen(buffer));
+            char* sus_state;
+            if (current_pcb->disp_state == 0)
+            {
+                sus_state = " (Suspended)";
+            }
+            else
+            {
+                sus_state = " (Not Suspended)";
+            }
+            sys_req(WRITE, COM1, sus_state, strlen(sus_state));
 
             const char *newline = "\n\n";
             sys_req(WRITE, COM1, newline, strlen(newline));
