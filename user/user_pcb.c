@@ -23,7 +23,7 @@ void log_info(char *message)
 
 
 /*
- *Creates a PCB with a given name, class and priority
+ * Creates a PCB with a given name, class and priority
  * Parameters: None
  * Returns: void
  */
@@ -54,7 +54,7 @@ int create_pcb(void)
     if (inputClass != 0 && inputClass != 1)
     {
         log_info("\nError: Invalid class. Class must be either \"0\" (system) or \"1\" (user).\n");
-        return -1; // Error code for invalid parameters
+        return -2; // Error code for invalid parameters
     }
 
     // Prompt user for priority
@@ -68,7 +68,7 @@ int create_pcb(void)
     if (inputPriority < 0 || inputPriority > 9)
     {
         log_info("\nError: Invalid priority. Priority must be between 0 and 9.\n");
-        return -1; // Error code for invalid parameters
+        return -3; // Error code for invalid parameters
     }
 
     // Validate the input parameters
@@ -78,14 +78,14 @@ int create_pcb(void)
         if (pcb_find(inputName) != NULL)
         {
             log_info("\nError: PCB name must be unique.\n");
-            return -2; // Error code for non-unique name
+            return -4; // Error code for non-unique name
         }
 
         // Ensure allowed process and class combo
         if (inputClass == 1 && inputPriority == 0)
         {
             log_info("\nError: User process cannot have priority 0.\n");
-            return -1; // Error code for invalid parameters
+            return -5; // Error code for invalid parameters
         }
 
         // Call pcb_setup to create a PCB
@@ -102,7 +102,7 @@ int create_pcb(void)
         // Invalid parameters, display error message
         const char *error = "\nError: Please make sure you entered a valid name, class, and priority (0-9).\n";
         sys_req(WRITE, COM1, error, strlen(error));
-        return -1; // Error code for invalid parameters
+        return -6; // Error code for invalid parameters
     }
 }
 
@@ -141,7 +141,7 @@ int delete_pcb(void)
         if (retval != 0)
         {
             log_info("\nError: PCB could not be removed from queue.\n");
-            return 2;
+            return -2;
         }
 
         // Free the associated memory
@@ -156,7 +156,7 @@ int delete_pcb(void)
         // PCB with the given name does not exist
         const char *error = "\nError: The PCB you are trying to delete does not exist.\n";
         sys_req(WRITE, COM1, error, strlen(error));
-        return -2; // Error code for non-existent PCB
+        return -3; // Error code for non-existent PCB
     }
 }
 
@@ -195,7 +195,7 @@ int block_pcb(void)
         if (retval != 0)
         {
             log_info("\nError: PCB could not be removed from queue.\n");
-            return 2;
+            return -2;
         }
 
         // Set pcb's execution state
@@ -206,7 +206,7 @@ int block_pcb(void)
         if (retval != 0)
         {
             log_info("\nError: PCB could not be inserted into queue.\n");
-            return 3;
+            return -3;
         }
 
         // Return success
@@ -218,7 +218,7 @@ int block_pcb(void)
         // PCB with the given name does not exist
         const char *error = "\nError: The PCB you are trying to block does not exist or is already blocked.\n";
         sys_req(WRITE, COM1, error, strlen(error));
-        return -1; // Error code for non-existent PCB
+        return -4; // Error code for non-existent PCB
     }
 }
 
@@ -248,7 +248,7 @@ int unblock_pcb(void)
         if (retval != 0)
         {
             log_info("\nError: PCB could not be removed from queue.\n");
-            return 2;
+            return -1;
         }
 
         // Set the PCB state to ready
@@ -260,7 +260,7 @@ int unblock_pcb(void)
         if (retval != 0)
         {
             log_info("\nError: PCB could not be inserted into queue.\n");
-            return 3;
+            return -2;
         }
 
         // Return success
@@ -272,7 +272,7 @@ int unblock_pcb(void)
         // PCB with the given name does not exist
         const char *error = "\nError: The PCB you are trying to unblock does not exist or is not blocked.\n";
         sys_req(WRITE, COM1, error, strlen(error));
-        return -1; // Error code for non-existent PCB
+        return -3; // Error code for non-existent PCB
     }
 }
 
@@ -311,7 +311,7 @@ int suspend_pcb(void)
         if (retval != 0)
         {
             log_info("\nError: PCB could not be removed from queue.\n");
-            return 2;
+            return -2;
         }
 
         // Suspend the PCB
@@ -322,7 +322,7 @@ int suspend_pcb(void)
         if (retval != 0)
         {
             log_info("\nError: PCB could not be inserted into queue.\n");
-            return 3;
+            return -3;
         }
 
         // Return success
@@ -332,7 +332,7 @@ int suspend_pcb(void)
         // PCB with the given name does not exist
         const char *error = "\nError: The PCB you are trying to suspend does not exist or is already suspended.\n";
         sys_req(WRITE, COM1, error, strlen(error));
-        return -2; // Error code for non-existent PCB
+        return -4; // Error code for non-existent PCB
     }
 }
 
@@ -364,7 +364,7 @@ int resume_pcb(void)
         if (retval != 0)
         {
             log_info("\nError: PCB could not be removed from queue.\n");
-            return 2;
+            return -1;
         }
         
         // Set the PCB state to not suspended
@@ -376,7 +376,7 @@ int resume_pcb(void)
         if (retval != 0)
         {
             log_info("\nError: PCB could not be inserted into queue.\n");
-            return 3;
+            return -2;
         }
 
         // Return success
@@ -388,7 +388,7 @@ int resume_pcb(void)
         // PCB with the given name does not exist
         const char *error = "\nError: The PCB you are trying to resume does not exist or is not suspended.\n";
         sys_req(WRITE, COM1, error, strlen(error));
-        return -1; // Error code for non-existent PCB
+        return -3; // Error code for non-existent PCB
     }
 }
 
@@ -447,7 +447,7 @@ int set_pcb_priority(void)
             // Invalid priority
             const char *error = "Error: Priority must be between 0 and 9. Priority can only be 0 for system processes";
             sys_req(WRITE, COM1, error, strlen(error));
-            return -2; // Error code for invalid priority
+            return -1; // Error code for invalid priority
         }
     }
     else
@@ -455,7 +455,7 @@ int set_pcb_priority(void)
         // PCB with the given name does not exist
         const char *error = "Error: The PCB you are trying to set the priority for does not exist.";
         sys_req(WRITE, COM1, error, strlen(error));
-        return -1; // Error code for non-existent PCB
+        return -2; // Error code for non-existent PCB
     }
 }
 
@@ -523,7 +523,7 @@ int show_pcb(void)
     // PCB with the given name does not exist
     const char *not_found_error = "\nProcess not found.\n";
     sys_req(WRITE, COM1, not_found_error, strlen(not_found_error));
-    return 0;
+    return -1;
 }
 
 
@@ -584,8 +584,6 @@ void show_ready(void)
         // Move to the next PCB in the ready queue
         current_pcb = current_pcb->next_pcbPtr;
     }
-    const char *end_prompt = "End of ready PCBs list.\n";
-    sys_req(WRITE, COM1, end_prompt, strlen(end_prompt));
 }
 
 /*
