@@ -40,8 +40,6 @@ typedef struct pcb
     // Stack - array all initialized to 0, at least 1024 byte
     // Not sure if I'm doing this right
     int pcb_stack[1024];
-    // Stack pointer
-    // Or this
     int* stackPtr;
     struct pcb* next_pcbPtr;
     struct pcb* prev_pcbPtr;
@@ -57,7 +55,7 @@ struct pcb* pcb_allocate(void);
 
 int pcb_free(struct pcb* to_freePtr);
 
-struct pcb* pcb_setup(char* process_name, class_type process_class, int process_priority);
+struct pcb* pcb_setup(char* new_process_name, class_type new_process_class, int new_process_priority);
 
 struct pcb* pcb_find(char* to_find);
 

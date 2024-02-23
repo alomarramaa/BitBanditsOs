@@ -268,14 +268,14 @@ int pcb_free(struct pcb* to_freePtr)
     return sys_free_mem(to_freePtr);
 }
 
-struct pcb* pcb_setup(char* process_name, class_type process_class, int process_priority)
+struct pcb* pcb_setup(char* new_process_name, class_type new_process_class, int new_process_priority)
 {
     // Ensure a legal priority input
-    if ((process_priority < 0 || process_priority > 9) ||
-        (process_priority == 0 && process_class == SYSTEM))
-    {
-        return NULL;
-    }
+    // if ((process_priority < 0 || process_priority > 9) ||
+    //     (process_priority == 0 && process_class == SYSTEM))
+    // {
+    //     return NULL;
+    // }
 
     // Allocate memory for the pcb and ensure proper allocation
     pcb* new_pcbPtr = pcb_allocate();
@@ -285,9 +285,9 @@ struct pcb* pcb_setup(char* process_name, class_type process_class, int process_
     }
 
     // Finalize PCB initialization
-    new_pcbPtr->process_name = process_name;
-    new_pcbPtr->process_class = process_class;
-    new_pcbPtr->process_priority = process_priority;
+    new_pcbPtr->process_name = new_process_name;
+    new_pcbPtr->process_class = new_process_class;
+    new_pcbPtr->process_priority = new_process_priority;
     new_pcbPtr->exe_state = READY;
     new_pcbPtr->disp_state = NOT_SUSPENDED;
 
