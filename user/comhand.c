@@ -268,7 +268,6 @@ void comhand(void)
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
-
     // Begin loop for command handler
     for (;;)
     {

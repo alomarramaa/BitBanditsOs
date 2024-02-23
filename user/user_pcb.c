@@ -1,3 +1,6 @@
+/*
+ * Functions for PCB functions that users can use
+ */
 
 #include <mpx/pcb.h>
 #include <stddef.h>
@@ -6,23 +9,37 @@
 #include <string.h>
 #include <stdlib.h>
 
+
+/*
+ * Logs message
+ * Parameters: char* message
+ * Returns: void
+ */
+
 void log_info(char *message)
 {
     sys_req(WRITE, COM1, message, strlen(message));
 }
 
+
+/*
+ *Creates a PCB with a given name, class and priority
+ * Parameters: None
+ * Returns: void
+ */
+
 int create_pcb(void)
 {
-    // Prompt user for a name
-    const char *namePrompt = "Please enter a name (8 characters max) for your PCB: \n";
+    // Prompt user for a name between 8 and 20 characters
+    const char *namePrompt = "Please enter a name (8 - 20) for your PCB: \n";
     sys_req(WRITE, COM1, namePrompt, strlen(namePrompt));
     char inputName[50];
     int nread = sys_req(READ, COM1, inputName, sizeof(inputName));
     sys_req(WRITE, COM1, inputName, nread);
 
-    if (strlen(inputName) <= 0 || strlen(inputName) > 8)
+    if (strlen(inputName) <= 8 || strlen(inputName) > 20)
     {
-        log_info("\nError: Invalid name. Please enter a valid name between 0 and 8 characters long.\n");
+        log_info("\nError: Invalid name. Please enter a valid name between 8 and 20 characters long.\n");
         return -1; // Error code for invalid parameters
     }
 
@@ -41,7 +58,7 @@ int create_pcb(void)
     }
 
     // Prompt user for priority
-    const char *priorityPrompt = "\nPlease enter a priority (0-9) for your PCB: \n (Reminder: 0 is reserved for system processes)\n";
+    const char *priorityPrompt = "\nPlease enter a priority (0-9) for your PCB (0 is reserved for system processes): \n";
     sys_req(WRITE, COM1, priorityPrompt, strlen(priorityPrompt));
     char priorityBuffer[50];
     nread = sys_req(READ, COM1, priorityBuffer, sizeof(priorityBuffer));
@@ -55,7 +72,7 @@ int create_pcb(void)
     }
 
     // Validate the input parameters
-    if ((strlen(inputName) > 0 && strlen(inputName) <= 8) && (inputClass == 0 || inputClass == 1) && (inputPriority >= 0 && inputPriority <= 9))
+    if ((strlen(inputName) > 8 && strlen(inputName) <= 20) && (inputClass == 0 || inputClass == 1) && (inputPriority >= 0 && inputPriority <= 9))
     {
         // Check if the name is unique
         if (pcb_find(inputName) != NULL)
@@ -88,6 +105,13 @@ int create_pcb(void)
         return -1; // Error code for invalid parameters
     }
 }
+
+
+/*
+ * Deletes a PCB with a given name
+ * Parameters: None
+ * Returns: void
+ */
 
 int delete_pcb(void)
 {
@@ -135,6 +159,13 @@ int delete_pcb(void)
         return -2; // Error code for non-existent PCB
     }
 }
+
+
+/*
+ * Blocks a PCB with a given name
+ * Parameters: None
+ * Returns: void
+ */
 
 int block_pcb(void)
 {
@@ -191,6 +222,12 @@ int block_pcb(void)
     }
 }
 
+/*
+ * Unblocks a PCB with a given name
+ * Parameters: None
+ * Returns: void
+ */
+
 int unblock_pcb(void)
 {
     // Prompt user for the name of the PCB to unblock
@@ -238,6 +275,13 @@ int unblock_pcb(void)
         return -1; // Error code for non-existent PCB
     }
 }
+
+
+/*
+ * Suspends a PCB with a given name
+ * Parameters: None
+ * Returns: void
+ */
 
 int suspend_pcb(void)
 {
@@ -292,6 +336,14 @@ int suspend_pcb(void)
     }
 }
 
+
+
+/*
+ * Resumes a PCB with a given name
+ * Parameters: None
+ * Returns: void
+ */
+
 int resume_pcb(void)
 {
     // Prompt user for the name of the PCB to resume
@@ -339,6 +391,13 @@ int resume_pcb(void)
         return -1; // Error code for non-existent PCB
     }
 }
+
+
+/*
+ * Sets the priority of a PCB
+ * Parameters: None
+ * Returns: void
+ */
 
 int set_pcb_priority(void)
 {
@@ -400,10 +459,15 @@ int set_pcb_priority(void)
     }
 }
 
+
+/*
+ * Shows the information of a PCB
+ * Parameters: None
+ * Returns: void
+ */
+
 int show_pcb(void)
 {
-
-
  // Prompt user for the name of the PCB to show
     const char *prompt = "Please enter the name of the PCB that you wish to show.\n";
     sys_req(WRITE, COM1, prompt, strlen(prompt));
@@ -459,17 +523,15 @@ int show_pcb(void)
     // PCB with the given name does not exist
     const char *not_found_error = "\nProcess not found.\n";
     sys_req(WRITE, COM1, not_found_error, strlen(not_found_error));
-    /*
-    Displays a process’s: • Name
-• Class
-• State
-• Suspended Status • Priority
-• Parameters:
-• Process Name
-• Error Checking:
-• Name must be valid*/
     return 0;
 }
+
+
+/*
+ * Shows information of PCBs in the ready queue
+ * Parameters: None
+ * Returns: void
+ */
 
 void show_ready(void)
 {
@@ -526,6 +588,12 @@ void show_ready(void)
     sys_req(WRITE, COM1, end_prompt, strlen(end_prompt));
 }
 
+/*
+ * Shows information of PCBs in the blocked queue
+ * Parameters: None
+ * Returns: void
+ */
+
 void show_blocked(void)
 {
     // Prompt user for a name for PCB
@@ -580,6 +648,12 @@ void show_blocked(void)
     const char *end_prompt = "End of blocked PCBs list.\n";
     sys_req(WRITE, COM1, end_prompt, strlen(end_prompt));
 }
+
+/*
+ * Shows information of all PCBs 
+ * Parameters: None
+ * Returns: void
+ */
 
 void show_all(void)
 {
