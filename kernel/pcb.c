@@ -56,10 +56,10 @@ struct pcb* search_queue(char* to_find, enum queue_tag queue_sel)
     }
 
     // Check the last item of the queue
-    if (strcmp(to_find, index->process_name) == 0)
-    {
-        return index;
-    }
+    // if (strcmp(to_find, index->process_name) == 0)
+    // {
+    //     return index;
+    // }
 
     // PCB not found
     return NULL;
