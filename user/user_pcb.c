@@ -71,11 +71,11 @@ int create_pcb(void)
     sys_req(WRITE, COM1, priorityBuffer, nread);
     int inputPriority = atoi(priorityBuffer);
 
-    if (strlen(priorityBuffer) <= 0)
-    {
-        log_info("\nError: Invalid priority. Priority must be between 0 and 9.\n");
-        return -3; // Error code for invalid parameters
-    }
+    // if (strlen(priorityBuffer) < 1)
+    // {
+    //     log_info("\nError: Invalid priority. Priority must be between 0 and 9.\n");
+    //     return -3; // Error code for invalid parameters
+    // }
 
     if (inputPriority < 0 || inputPriority > 9)
     {
@@ -459,7 +459,7 @@ int set_pcb_priority(void)
         else
         {
             // Invalid priority
-            const char *error = "\nError: Priority must be between 0 and 9. Priority can only be 0 for system processes";
+            const char *error = "\nError: Priority must be between 0 and 9. Priority can only be 0 for system processes\n";
             sys_req(WRITE, COM1, error, strlen(error));
             return -1; // Error code for invalid priority
         }
@@ -467,7 +467,7 @@ int set_pcb_priority(void)
     else
     {
         // PCB with the given name does not exist
-        const char *error = "\nError: The PCB you are trying to set the priority for does not exist.";
+        const char *error = "\nError: The PCB you are trying to set the priority for does not exist.\n";
         sys_req(WRITE, COM1, error, strlen(error));
         return -2; // Error code for non-existent PCB
     }
@@ -509,6 +509,16 @@ int show_pcb(void)
         sys_req(WRITE, COM1, class_prompt, strlen(class_prompt));
         itoa(pcb->process_class, buffer);
         sys_req(WRITE, COM1, buffer, strlen(buffer));
+        char* class_name;
+        if (pcb->process_class == 0)
+        {
+            class_name = " (System)";
+        }
+        else
+        {
+            class_name = " (User)";
+        }
+        sys_req(WRITE, COM1, class_name, strlen(class_name));
 
         // Display Priority
         const char *priority_prompt = "\nPriority: ";
@@ -521,14 +531,38 @@ int show_pcb(void)
         sys_req(WRITE, COM1, state_prompt, strlen(state_prompt));
         itoa(pcb->exe_state, buffer);
         sys_req(WRITE, COM1, buffer, strlen(buffer));
+        char* state_name;
+        if (pcb->exe_state == 0)
+        {
+            state_name = " (Ready)";
+        }
+        else if (pcb->exe_state == 1)
+        {
+            state_name = " (Running)";
+        }
+        else
+        {
+            state_name = " (Blocked)";
+        }
+        sys_req(WRITE, COM1, state_name, strlen(state_name));
 
         // Display Suspended state
         const char *suspended_prompt = "\nSuspended state: ";
         sys_req(WRITE, COM1, suspended_prompt, strlen(suspended_prompt));
         itoa(pcb->disp_state, buffer);
         sys_req(WRITE, COM1, buffer, strlen(buffer));
+        char* sus_state;
+        if (pcb->disp_state == 0)
+        {
+            sus_state = " (Suspended)";
+        }
+        else
+        {
+            sus_state = " (Not Suspended)";
+        }
 
-        const char *newline = "\n";
+
+        const char *newline = "\n\n";
         sys_req(WRITE, COM1, newline, strlen(newline));
 
         return 0;
@@ -598,6 +632,9 @@ void show_ready(void)
         // Move to the next PCB in the ready queue
         current_pcb = current_pcb->next_pcbPtr;
     }
+
+    const char *end_prompt = "Below are all the PCBs in a ready state.\n";
+    sys_req(WRITE, COM1, end_prompt, strlen(end_prompt));
 }
 
 /*
@@ -713,7 +750,7 @@ void show_all(void)
             itoa(current_pcb->disp_state, buffer);
             sys_req(WRITE, COM1, buffer, strlen(buffer));
 
-            const char *newline = "\n";
+            const char *newline = "\n\n";
             sys_req(WRITE, COM1, newline, strlen(newline));
 
             // Move to the next PCB in the queue
