@@ -69,12 +69,13 @@ int create_pcb(void)
     char priorityBuffer[50];
     nread = sys_req(READ, COM1, priorityBuffer, sizeof(priorityBuffer));
     sys_req(WRITE, COM1, priorityBuffer, nread);
-    if (strlen(priorityBuffer) < 1)
+    int inputPriority = atoi(priorityBuffer);
+
+    if (strlen(priorityBuffer) <= 0)
     {
         log_info("\nError: Invalid priority. Priority must be between 0 and 9.\n");
         return -3; // Error code for invalid parameters
     }
-    int inputPriority = atoi(priorityBuffer);
 
     if (inputPriority < 0 || inputPriority > 9)
     {
