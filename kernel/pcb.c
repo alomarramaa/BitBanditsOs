@@ -284,19 +284,22 @@ struct pcb* pcb_setup(char* new_process_name, class_type new_process_class, int 
         return NULL;
     }
 
-    // // Allocate memory for the process name
-    // new_pcbPtr->process_name = (char*)sys_alloc_mem(strlen(new_process_name) + 1);
-    // if (new_pcbPtr->process_name == NULL)
-    // {
-    //     sys_free_mem(new_pcbPtr);
-    //     return NULL;
-    // }
+    // Allocate memory for the process name
+    new_pcbPtr->process_name = (char*)sys_alloc_mem(strlen(new_process_name) + 1);
+    if (new_pcbPtr->process_name == NULL)
+    {
+        sys_free_mem(new_pcbPtr);
+        return NULL;
+    }
 
-    // // Copy the process name into the allocated memory
-    // strcpy(new_pcbPtr->process_name, new_process_name);
-
-    char proc_name[50] = *new_process_name;
-    new_pcbPtr->process_name = proc_name;
+    // Copy the process name into the allocated memory
+    int i = 0;
+    while (new_process_name[i] != '\0')
+    {
+        new_pcbPtr->process_name[i] = new_process_name[i];
+        i++;
+    }
+    new_pcbPtr->process_name[i] = '\0'; // Null-terminate the string
 
     // Finalize PCB initialization
     new_pcbPtr->process_class = new_process_class;
