@@ -633,7 +633,7 @@ void show_ready(void)
         current_pcb = current_pcb->next_pcbPtr;
     }
 
-    const char *end_prompt = "Below are all the PCBs in a ready state.\n";
+    const char *end_prompt = "End of Ready PCB list.\n";
     sys_req(WRITE, COM1, end_prompt, strlen(end_prompt));
 }
 
