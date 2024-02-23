@@ -31,7 +31,7 @@ void log_info(char *message)
 int create_pcb(void)
 {
     // Prompt user for a name between 8 and 20 characters
-    const char *namePrompt = "Please enter a name (8 - 20) for your PCB: \n";
+    const char *namePrompt = "Please enter a name (8 - 20 characters) for your PCB: \n";
     sys_req(WRITE, COM1, namePrompt, strlen(namePrompt));
     char inputName[50];
     int nread = sys_req(READ, COM1, inputName, sizeof(inputName));
