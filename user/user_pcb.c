@@ -214,7 +214,7 @@ int block_pcb(void)
 
         // Set pcb's execution state
         pcb_to_block->exe_state = BLOCKED;
-        pcb_to_block->disp_state = SUSPENDED;
+        // pcb_to_block->disp_state = SUSPENDED;
 
         retval = pcb_insert(pcb_to_block);
         if (retval != 0)
@@ -267,7 +267,7 @@ int unblock_pcb(void)
 
         // Set the PCB state to ready
         pcb_to_unblock->exe_state = READY;
-        pcb_to_unblock->disp_state = NOT_SUSPENDED;
+        // pcb_to_unblock->disp_state = NOT_SUSPENDED;
 
         // Insert the PCB into the ready queue
         retval = pcb_insert(pcb_to_unblock);
@@ -329,7 +329,7 @@ int suspend_pcb(void)
         }
 
         // Suspend the PCB
-        pcb_to_suspend->exe_state = BLOCKED;
+        // pcb_to_suspend->exe_state = BLOCKED;
         pcb_to_suspend->disp_state = SUSPENDED;
 
         retval = pcb_insert(pcb_to_suspend);
@@ -690,11 +690,11 @@ void show_blocked(void)
     struct pcb *current_pcb = blocked_queue_ptr->queue_head;
     while (current_pcb != NULL)
     {
-        // Display PCB information for each PCB in the ready queue
+        // Display PCB information for each PCB in the blocked queue
         char buffer[50]; 
 
         // Display Name
-      const char *name_prompt = "\nName: ";
+        const char *name_prompt = "Name: ";
         sys_req(WRITE, COM1, name_prompt, strlen(name_prompt));
         sys_req(WRITE, COM1, current_pcb->process_name, strlen(current_pcb->process_name));
 
@@ -756,9 +756,8 @@ void show_blocked(void)
         }
         sys_req(WRITE, COM1, sus_state, strlen(sus_state));
 
-        const char *newline = "\n";
+        const char *newline = "\n\n";
         sys_req(WRITE, COM1, newline, strlen(newline)); 
-
 
         // Move to the next PCB in the blocked queue
         current_pcb = current_pcb->next_pcbPtr;
