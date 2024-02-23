@@ -54,10 +54,23 @@ void get_time(void) {
  */
 
 void set_time(int hours, int minutes, int seconds) {
-    // Convert time values to BCD
-    hours = hours % 24; // Ensure hours are in the range 0-23
-    minutes = minutes % 60; // Ensure minutes are in the range 0-60
-    seconds = seconds % 60; // Ensures seconds are in the range 0-60
+   // Check if hours, minutes, and seconds are within valid range
+    if (hours < 0 || hours >= 24) {
+        const char* errorMsg = "Error: Invalid hours. Hours should be in the range 0-23.\n";
+        sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
+        return;
+    }
+    if (minutes < 0 || minutes >= 60) {
+        const char* errorMsg = "Error: Invalid minutes. Minutes should be in the range 0-59.\n";
+        sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
+        return;
+    }
+    if (seconds < 0 || seconds >= 60) {
+        const char* errorMsg = "Error: Invalid seconds. Seconds should be in the range 0-59.\n";
+        sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
+        return;
+    }
+
     int hours_bcd = ((hours / 10) << 4) | (hours % 10);
     int minutes_bcd = ((minutes / 10) << 4) | (minutes % 10);
     int seconds_bcd = ((seconds / 10) << 4) | (seconds % 10);
