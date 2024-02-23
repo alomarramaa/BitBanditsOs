@@ -560,7 +560,7 @@ int show_pcb(void)
         {
             sus_state = " (Not Suspended)";
         }
-
+        sys_req(WRITE, COM1, sus_state, strlen(sus_state));
 
         const char *newline = "\n\n";
         sys_req(WRITE, COM1, newline, strlen(newline));
