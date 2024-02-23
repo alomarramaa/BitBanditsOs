@@ -55,7 +55,7 @@ struct pcb* search_queue(char* to_find, enum queue_tag queue_sel)
         index = index->next_pcbPtr;
     }
 
-    // Check the last item of the queue
+    //Check the last item of the queue
     if (strcmp(to_find, index->process_name) == 0)
     {
         return index;
@@ -311,7 +311,6 @@ struct pcb* pcb_find(char* to_find)
         found_pcb = search_queue(to_find, (enum queue_tag) i);
         if (found_pcb != NULL)
         {
-            
             return found_pcb;
         }
     }
@@ -359,22 +358,22 @@ int pcb_remove(struct pcb* to_removePtr)
     return 0;
 }
 
-struct process_queue* get_ready_queue()
+struct process_queue* get_ready_queue(void)
 {
     return &ready_queue;
 }
 
-struct process_queue* get_blocked_queue()
+struct process_queue* get_blocked_queue(void)
 {
     return &blocked_queue;
 }
 
-struct process_queue* get_sus_ready_queue()
+struct process_queue* get_sus_ready_queue(void)
 {
     return &sus_ready_queue;
 }
 
-struct process_queue* get_sus_blocked_queue()
+struct process_queue* get_sus_blocked_queue(void)
 {
     return &sus_blocked_queue;
 }

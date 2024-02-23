@@ -268,7 +268,6 @@ void comhand(void)
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
-
     // Begin loop for command handler
     for (;;)
     {
@@ -357,15 +356,15 @@ void comhand(void)
         }
         else if (strcmp(buf, "show ready") == 0) // Show Ready
         {
-            //show_ready();
+            show_ready();
         }
         else if (strcmp(buf, "show blocked") == 0) // Show Blocked
         {
-            //show_blocked();
+            show_blocked();
         }
         else if (strcmp(buf, "show all") == 0) // Show All
         {
-            //show_all();
+            show_all();
         }
         else // Unrecognised command
         {

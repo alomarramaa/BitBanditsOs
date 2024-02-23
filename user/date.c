@@ -75,17 +75,47 @@ void get_date(void) {
     sys_req(WRITE, COM1, "\n", 2);
 }
 
-// Function to set the date in RTC
-void set_date(int month, int day, int year) {
-    // Convert date values to BCD
-    month = month % 12; // Ensure the month is within the range of 0-12
-    day = day % 31;     // Ensure the day is within the range of 0-31
-    //int month_bcd = ((month / 10) << 4) | (month % 10);
-    //int day_bcd = ((day / 10) << 4) | (day % 10);
+// Function to get the number of days in a month
+int days_in_month(int month, int year) {
+    switch(month) {
+        case 2:
+            if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))
+                return 29; // February has 29 days in a leap year
+            else
+                return 28; // February has 28 days in a non-leap year
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+            return 30; // April, June, September, November have 30 days
+        default:
+            return 31; // All other months have 31 days
+    }
+}
 
+// Function to set the date in RTC with data validation
+void set_date(int month, int day, int year) {
+    // Validate month
+    if (month < 1 || month > 12) {
+        // Invalid month
+        const char* errorMsg = "Error: Invalid month.\n";
+        sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
+        return;
+    }
+
+    // Validate day
+    int max_days = days_in_month(month, year);
+    if (day < 1 || day > max_days) {
+        // Invalid day
+        const char* errorMsg = "Error: Invalid day for this month.\n";
+        sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
+        return;
+    }
+
+    // Convert date values to BCD
     int month_bcd = binary_to_bcd(month);
     int day_bcd = binary_to_bcd(day);
-    
+
     // Convert year to BCD and ensure it's a 4-digit year
     year = year % 9999;  // Assuming the RTC uses a two-digit year representation
     int year_bcd = binary_to_bcd(year);
