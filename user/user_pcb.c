@@ -382,7 +382,7 @@ int resume_pcb(void)
         }
         
         // Set the PCB state to not suspended
-        pcb_to_resume->exe_state = RUNNING;
+        // pcb_to_resume->exe_state = RUNNING;
         pcb_to_resume->disp_state = NOT_SUSPENDED;
 
         

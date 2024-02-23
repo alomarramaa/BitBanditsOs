@@ -264,7 +264,7 @@ void comhand(void)
 
     // Constants
     const char *comhandInitializeStr = " Comhand Initialized: Please write your preferred command in all lowercase.\n";
-    const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n";
+    const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n\tcreate pcb\n\tdelete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n";
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
