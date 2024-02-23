@@ -446,7 +446,7 @@ int set_pcb_priority(void)
         else
         {
             // Invalid priority
-            const char *error = "Error: Priority must be between 0 and 9. Priority can only be 0 for system processes";
+            const char *error = "\nError: Priority must be between 0 and 9. Priority can only be 0 for system processes";
             sys_req(WRITE, COM1, error, strlen(error));
             return -1; // Error code for invalid priority
         }
@@ -454,7 +454,7 @@ int set_pcb_priority(void)
     else
     {
         // PCB with the given name does not exist
-        const char *error = "Error: The PCB you are trying to set the priority for does not exist.";
+        const char *error = "\nError: The PCB you are trying to set the priority for does not exist.";
         sys_req(WRITE, COM1, error, strlen(error));
         return -2; // Error code for non-existent PCB
     }
