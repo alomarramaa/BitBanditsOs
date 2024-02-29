@@ -12,6 +12,7 @@
 #include <user/date.h>
 #include <stdlib.h>
 #include <mpx/pcb.h>
+#include <processes.h>
 
 // Colors
 #define RED "\x1B[31m"
@@ -19,6 +20,61 @@
 #define YELLOW "\x1B[33m"
 #define BLUE "\x1B[34m"
 #define RESET "\x1B[0m"
+
+void yield()
+{
+    sys_req(IDLE);
+}
+
+void load_r3()
+{
+
+    //Load the processes from <processes.h>
+    proc1();
+    proc2();
+    proc3();
+    proc4();
+    proc5();
+
+
+
+
+
+    /*
+
+• Each process (one per function) is loaded and queued in a non-suspended
+ready state, with a name and priority of your choosing
+• Initialize and save the context for each process at the top of the PCB stack:
+• CS must be 0x08, all other segments 0x10
+• EBP must be the bottom of the PCB stack
+• ESP must be the top of the PCB stack
+• EIP must be a pointer to the function (the name of the function, without
+parenthesis, is a pointer to that function)
+• EFLAGS must be 0x0202
+• All other registers should be 0*/
+}
+
+void proc1(){
+    CreatePCB("Process 1", "0", "0");
+}
+
+
+
+void load_r3_suspended()
+{
+    /*
+    Loads the R3 test processes from <processes.h>
+• Each process (one per function) is loaded and queued in a non-suspended
+ready state, with a name and priority of your choosing
+• Initialize and save the context for each process at the top of the PCB stack:
+• CS must be 0x08, all other segments 0x10
+• EBP must be the bottom of the PCB stack
+• ESP must be the top of the PCB stack
+• EIP must be a pointer to the function (the name of the function, without
+parenthesis, is a pointer to that function)
+• EFLAGS must be 0x0202
+• All other registers should be 0*/
+}
 
 /*
  * Retrieves and displays values based on the provided resource ("date" or "time").
@@ -86,7 +142,7 @@ int setval(char *resource)
             i++;
         }
         buff[i] = ' ';
-        buff[i+1] = '\0';
+        buff[i + 1] = '\0';
 
         char *token = strtok(buff, " "); // Tokenize the input using space (' ')
         int m_h = (token != NULL && strlen(token) == 2) ? atoi(token) : -1;
@@ -95,8 +151,7 @@ int setval(char *resource)
         int d_m = (token != NULL && strlen(token) == 2) ? atoi(token) : -1;
 
         token = strtok(NULL, " ");
-        int y_s = (strcmp(resource, "date") == 0) ? ((token != NULL && strlen(token) == 4) ? atoi(token) : -1) : 
-                    ((token != NULL && strlen(token) == 2) ? atoi(token) : -1); //If date requires 4 chars, time requires 2
+        int y_s = (strcmp(resource, "date") == 0) ? ((token != NULL && strlen(token) == 4) ? atoi(token) : -1) : ((token != NULL && strlen(token) == 2) ? atoi(token) : -1); // If date requires 4 chars, time requires 2
 
         // Remove newline character if present
         int len = strlen(token);
@@ -158,8 +213,8 @@ void clear(device dev)
  */
 void version(void) // Prints version and compile date
 {
-    const char *version = "MPX Version R2\n";
-    const char *compileDate = "Compiled on: 2/23/24 \n";
+    const char *version = "MPX Version R3\n";
+    const char *compileDate = "Compiled on: 3/22/24 \n";
     sys_req(WRITE, COM1, version, strlen(version));
     sys_req(WRITE, COM1, compileDate, strlen(compileDate));
 }
@@ -189,13 +244,13 @@ void help(void) // Prints all available commands
                            "Unblock PCB - Puts the process in the unblocked state\n"
                            "Suspend PCB - Puts the process in the suspend state\n"
                            "Resume PCB - Puts the process in the not suspended state\n"
-                           "Set Priority - Changes a processes priority\n"
+                           "Set PCB Priority - Changes a processes priority\n"
                            "Show PCB - Displays the process's info\n"
                            "Show Ready - Displays all process's info in ready queue\n"
                            "Show Blocked - Displays all process's info in blocked queue\n"
                            "Show All - Displays all process's info\n";
     sys_req(WRITE, COM1, helpText, strlen(helpText));
-  //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
+    //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
 }
 
 /*
@@ -324,7 +379,7 @@ void comhand(void)
         }
         else if (strcmp(buf, "create pcb") == 0) // Create PCB Command
         {
-            create_pcb();
+            //  create_pcb();
         }
         else if (strcmp(buf, "delete pcb") == 0) // Delete PCB
         {
@@ -346,13 +401,13 @@ void comhand(void)
         {
             resume_pcb();
         }
-         else if (strcmp(buf, "set pcb priority") == 0) // Resume PCB
+        else if (strcmp(buf, "set pcb priority") == 0) // Resume PCB
         {
             set_pcb_priority();
         }
         else if (strcmp(buf, "show pcb") == 0) // Show PCB
         {
-             show_pcb();
+            show_pcb();
         }
         else if (strcmp(buf, "show ready") == 0) // Show Ready
         {
@@ -366,6 +421,22 @@ void comhand(void)
         {
             show_all();
         }
+
+        else if (strcmp(buf, "yield") == 0)
+        {
+            yield();
+        }
+
+        else if (strcmp(buf, "load r3") == 0)
+        {
+            load_r3();
+        }
+
+        else if (strcmp(buf, "load r3 suspended") == 0)
+        {
+            load_r3_suspended();
+        }
+
         else // Unrecognised command
         {
             char *errorMsg = "Improper command entered. Please try again. Ensure that the command is listed and in lowercase.\n";
