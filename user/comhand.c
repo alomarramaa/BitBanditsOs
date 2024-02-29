@@ -21,12 +21,12 @@
 #define BLUE "\x1B[34m"
 #define RESET "\x1B[0m"
 
-void yield()
+void yield(void)
 {
     sys_req(IDLE);
 }
 
-void load_r3()
+void load_r3(void)
 {
 
     //Load the processes from <processes.h>
@@ -54,13 +54,9 @@ parenthesis, is a pointer to that function)
 • All other registers should be 0*/
 }
 
-void proc1(){
-    CreatePCB("Process 1", "0", "0");
-}
 
 
-
-void load_r3_suspended()
+void load_r3_suspended(void)
 {
     /*
     Loads the R3 test processes from <processes.h>
