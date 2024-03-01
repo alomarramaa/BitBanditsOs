@@ -16,6 +16,9 @@ sys_call_isr:
 
     call sys_call      ; Call your C function
 
+	; Set ESP based on the return value of your function (EAX)
+	mov esp, eax
+
 	; Restore context
     add esp, 4          ; Adjust ESP to remove the parameter pushed earlier
 
@@ -23,7 +26,6 @@ sys_call_isr:
     pop fs
     pop es
     pop ds
-
     popad               ; Pop all general purpose registers
 
 	iret ; Return from ISR
