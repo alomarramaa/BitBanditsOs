@@ -21,55 +21,55 @@
 #define BLUE "\x1B[34m"
 #define RESET "\x1B[0m"
 
+/*
+ * Cause the Command Handler to yield the CPU
+ * Returns: void
+ */
+
 void yield(void)
 {
     sys_req(IDLE);
 }
 
+/*
+ * Loads the processes for R3 and initializes and 
+ saves the context at the top of the stack
+ * Returns: void
+ */
 void load_r3(void)
 {
 
-    //Load the processes from <processes.h>
+    // Load the processes from <processes.h>
     proc1();
     proc2();
     proc3();
     proc4();
     proc5();
 
-
-
-
-
     /*
+ • Each process (one per function) is loaded and queued in a non-suspended
+ ready state, with a name and priority of your choosing
+ •
 
-• Each process (one per function) is loaded and queued in a non-suspended
-ready state, with a name and priority of your choosing
-• Initialize and save the context for each process at the top of the PCB stack:
-• CS must be 0x08, all other segments 0x10
-• EBP must be the bottom of the PCB stack
-• ESP must be the top of the PCB stack
-• EIP must be a pointer to the function (the name of the function, without
-parenthesis, is a pointer to that function)
-• EFLAGS must be 0x0202
-• All other registers should be 0*/
+  /*
+  Initialize and save the context for each process at the top of the PCB stack:
+ All other registers should be 0*/
+    cp->cs = 0x08;
+    cp->ebp =            // bottom of stack;
+    cp->esp =        // top of stack;
+    cp->eip = proc1; // pointer to function
+    cp->EFLAGS = 0x0202;
 }
 
-
-
+/*
+ * Loads the processes in a suspended state for R3 
+ and initializes and 
+ saves the context at the top of the stack
+ * Returns: void
+ */
 void load_r3_suspended(void)
 {
-    /*
-    Loads the R3 test processes from <processes.h>
-• Each process (one per function) is loaded and queued in a non-suspended
-ready state, with a name and priority of your choosing
-• Initialize and save the context for each process at the top of the PCB stack:
-• CS must be 0x08, all other segments 0x10
-• EBP must be the bottom of the PCB stack
-• ESP must be the top of the PCB stack
-• EIP must be a pointer to the function (the name of the function, without
-parenthesis, is a pointer to that function)
-• EFLAGS must be 0x0202
-• All other registers should be 0*/
+ 
 }
 
 /*
