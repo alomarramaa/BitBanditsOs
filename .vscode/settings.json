@@ -21,6 +21,7 @@
         "sys_req.h": "c",
         "help.h": "c",
         "array": "c",
-        "string_view": "c"
+        "string_view": "c",
+        "processes.h": "c"
     }
 }
