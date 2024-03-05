@@ -8,7 +8,37 @@
  @brief System request function and constants
 */
 
-typedef enum {
+// Define the context struct
+// Defined using bitfields modeled after the given site
+// https://flint.cs.yale.edu/cs422/doc/pc-arch.html
+typedef struct context {
+	// Status and control registers (also CS from Segment registers)
+	int EFLAGS : 31;
+	int CS : 15;
+	int EIP : 31;
+
+	// Segment registers (remaining)
+	int DS : 15;
+	int SS : 15;
+	int ES : 15;
+	int FS : 15;
+	int GS : 15;
+
+	// General-purpose registers
+	int EAX : 31;
+	int EBX : 31;
+	int ECX : 31;
+	int EDX : 31;
+	int ESI : 31;
+	int EDI : 31;
+	int EBP : 31;
+	int ESP : 31;
+} context;
+
+// Global PCB pointer representing the currently executing process
+struct pcb *current_process = NULL;
+
+typedef enum op_code{
 	EXIT,
 	IDLE,
 	READ,

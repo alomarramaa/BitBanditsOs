@@ -1,45 +1,74 @@
 #include <stdint.h>
-
-// Define the context struct
-struct context {
-    // Define the members of your context struct here
-    // For example:
-    // int eax;
-    // int ebx;
-    // ...
-};
-
-// Global PCB pointer representing the currently executing process
-struct context *current_pcb = NULL;
+#include <string.h>
+#include <sys_req.h>
+#include <mpx/pcb.h>
 
 // Global or static context pointer representing the initial context
 struct context *initial_context = NULL;
 
 // Define the C function for handling the ISR
-struct context* sys_call(uint32_t op_code, struct context *pcb) {
-    // Check the operation code
-    switch(op_code) {
-        case IDLE:
-            // Implement IDLE operation
-            // If there are ready, non-suspended PCBs in the queue, remove the first
-            // Save the context of the current PCB
-            // Add the current PCB back to the queue
-            // Return the context of the next process
-            // If the PCB queue is empty, or only consists of blocked or suspended PCBs, continue with the current process
-            // Ensure that the return value seen by sys req() is 0
-            break;
-        case EXIT:
-            // Implement EXIT operation
-            // Delete the currently running PCB
-            // If there are any ready, non-suspended PCBs in the queue, load the first as in IDLE
-            // If the PCB queue is empty, or only consists of blocked or suspended PCBs, load the original context
-            // Ensure that the return value seen by sys req() is 0
-            break;
-        default:
-            // If the operation code is anything but IDLE or EXIT, do not load any new context and set the return value to -1
-            break;
+struct context* sys_call(struct context *current_context) {
+
+    // If first time running sys_call, set initial context
+    if (initial_context == NULL)
+    {
+        initial_context = current_context;
     }
 
-    // Return the appropriate context based on the operation code
-    return NULL;
+    if (current_context->EAX == IDLE)
+    {
+        process_queue* ready_q = get_ready_queue();
+        if (ready_q->queue_head != NULL)
+        {
+            // Get first pcb in ready queue and remove it from the queue
+            pcb* next_process = ready_q->queue_head;
+            pcb_remove(next_process);
+
+            // Not sure if this is what we update the stack ptr with
+            current_process->stackPtr = current_context;
+
+            // Put current process back into queue and update current process variable
+            pcb_insert(current_process);
+            current_process = next_process;
+        }
+
+        current_context->EAX = 0;
+        return current_context;
+    }
+    else if (current_context->EAX == EXIT)
+    {
+        // Attempt to delete current process
+        if (pcb_free(current_process) != 0)
+        {
+            // Error freeing memory
+            current_context->EAX = -1;
+            return current_context;
+        }
+
+        process_queue* ready_q = get_ready_queue();
+        if (ready_q->queue_head != NULL)
+        {
+            // Get first pcb in ready queue and remove it from the queue
+            pcb* next_process = ready_q->queue_head;
+            pcb_remove(next_process);
+
+            // Update current process variable
+            current_process = next_process;
+        }
+        else
+        {
+            // No remaining ready processes
+            current_context = initial_context;
+        }
+
+        // Set return to 0
+        current_context->EAX = 0;
+        return current_context;
+    }
+    else
+    {
+        current_context->EAX = -1;
+        return current_context;
+    }
+
 }

@@ -6,11 +6,12 @@ extern sys_call			; The C function that sys_call_isr will call
 
 sys_call_isr:
 	; Save context
-    pushad              ; Push all general purpose registers
-    push ds             ; Push remaining segment registers
-    push es
+    push ad             ; Push all general purpose registers
+    push gs             ; Push remaining segment registers
     push fs
-    push gs
+    push es
+    push ss
+    push ds
 
     push dword esp      ; Push ESP as a parameter for the C function call
 
@@ -22,10 +23,11 @@ sys_call_isr:
 	; Restore context
     add esp, 4          ; Adjust ESP to remove the parameter pushed earlier
 
-    pop gs              ; Pop segment registers
-    pop fs
+    pop ds              ; Pop segment registers
+    pop ss
     pop es
-    pop ds
-    popad               ; Pop all general purpose registers
+    pop fs
+    pop gs
+    pop ad               ; Pop all general purpose registers
 
 	iret ; Return from ISR
