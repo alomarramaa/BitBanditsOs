@@ -234,7 +234,6 @@ void help(void) // Prints all available commands
                            "Set Date - Set date to desired month/day/year\n"
                            "Set Time -  Set time to desired hour/minute/second\n"
                            "Clear - Clear the terminal & redisplay menu\n"
-                           "Create PCB - Creates a PCB and puts it in queue\n"
                            "Delete PCB - Removes the requested process from queue\n"
                            "Block PCB - Puts the process in blocked state\n"
                            "Unblock PCB - Puts the process in the unblocked state\n"
@@ -244,7 +243,10 @@ void help(void) // Prints all available commands
                            "Show PCB - Displays the process's info\n"
                            "Show Ready - Displays all process's info in ready queue\n"
                            "Show Blocked - Displays all process's info in blocked queue\n"
-                           "Show All - Displays all process's info\n";
+                           "Show All - Displays all process's info\n"
+                           "Yield - Yields the CPU, any process in queue will finish first\n"
+                           "Load R3 - Loads the R3 test processes in a non-suspended state\n"
+                           "Load R3 Suspended - Loads the R3 test processes in a suspended state\n";
     sys_req(WRITE, COM1, helpText, strlen(helpText));
     //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
 }
