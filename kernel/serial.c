@@ -1,6 +1,7 @@
 #include <mpx/io.h>
 #include <mpx/serial.h>
 #include <sys_req.h>
+#include <memory.h>
 
 // // Maximum buffer list size
 #define BUFFER_LIST_MAX 5
