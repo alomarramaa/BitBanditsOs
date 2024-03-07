@@ -50,7 +50,7 @@ void load_r3(void)
  • Each process (one per function) is loaded and queued in a non-suspended
  ready state, with a name and priority of your choosing
  •
-
+    */
   /*
   Initialize and save the context for each process at the top of the PCB stack:
  All other registers should be 0*/
