@@ -54,11 +54,11 @@ void load_r3(void)
   /*
   Initialize and save the context for each process at the top of the PCB stack:
  All other registers should be 0*/
-    cp->cs = 0x08;
-    cp->ebp =            // bottom of stack;
-    cp->esp =        // top of stack;
-    cp->eip = proc1; // pointer to function
-    cp->EFLAGS = 0x0202;
+    // cp->cs = 0x08;
+    // cp->ebp =            // bottom of stack;
+    // cp->esp =        // top of stack;
+    // cp->eip = proc1; // pointer to function
+    // cp->EFLAGS = 0x0202;
 }
 
 /*
