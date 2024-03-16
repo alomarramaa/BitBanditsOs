@@ -3,6 +3,25 @@
 
 #include <stddef.h>
 
+#define PCB_STACK_SIZE (1024 / sizeof(int))
+
+#define ESP_OFFSET (32 / 8)
+#define CS_OFFSET (16 / 8)
+#define DS_OFFSET (16 / 8)
+#define SS_OFFSET (16 / 8)
+#define ES_OFFSET (16 / 8)
+#define FS_OFFSET (16 / 8)
+#define GS_OFFSET (16 / 8)
+#define EAX_OFFSET (32 / 8)
+#define EBX_OFFSET (32 / 8)
+#define ECX_OFFSET (32 / 8)
+#define EDX_OFFSET (32 / 8)
+#define ESI_OFFSET (32 / 8)
+#define EDI_OFFSET (32 / 8)
+#define EFLAGS_OFFSET (32 / 8)
+#define EIP_OFFSET (32 / 8)
+#define EBP_OFFSET (32 / 8)
+
 typedef enum queue_tag
 {
     SUS_READY_QUEUE_TAG = 0,
@@ -39,7 +58,7 @@ typedef struct pcb
     dispatching_state disp_state;
     // Stack - array all initialized to 0, at least 1024 byte
     // Not sure if I'm doing this right
-    int pcb_stack[1024];
+    int pcb_stack[PCB_STACK_SIZE];
     int* stackPtr;
     struct pcb* next_pcbPtr;
     struct pcb* prev_pcbPtr;

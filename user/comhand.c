@@ -38,14 +38,20 @@ void yield(void)
  */
 void load_r3(void)
 {
+    r3_load_pcb(proc1, "Process_1", 5);
+    r3_load_pcb(proc2, "Process_2", 1);
+    r3_load_pcb(proc3, "Process_3", 9);
+    r3_load_pcb(proc4, "Process_4", 3);
+    r3_load_pcb(proc5, "Process_5", 1);
 
+    /*
     // Load the processes from <processes.h>
     proc1();
     proc2();
     proc3();
     proc4();
     proc5();
-
+    */
     /*
  • Each process (one per function) is loaded and queued in a non-suspended
  ready state, with a name and priority of your choosing
@@ -54,11 +60,61 @@ void load_r3(void)
   /*
   Initialize and save the context for each process at the top of the PCB stack:
  All other registers should be 0*/
-    cp->cs = 0x08;
-    cp->ebp =            // bottom of stack;
-    cp->esp =        // top of stack;
-    cp->eip = proc1; // pointer to function
-    cp->EFLAGS = 0x0202;
+    // cp->cs = 0x08;
+    // cp->ebp =            // bottom of stack;
+    // cp->esp =        // top of stack;
+    // cp->eip = proc1; // pointer to function
+    // cp->EFLAGS = 0x0202;
+}
+
+void r3_load_pcb(void (*proc_function)(void), char* proc_name, int proc_priority)
+{
+    char* error_msg;
+
+    // Attempt to create a pcb for the given function
+    pcb* new_process = pcb_setup(proc_name, USER, proc_priority);
+    if (new_process == NULL)
+    {
+        error_msg = "Could not allocate the PCB for an r3 function.\n";
+        sys_req(WRITE, COM1, error_msg, strlen(error_msg));
+        return;
+    }
+
+    // Sets registers of stack starting with ESP and ending with EBP
+    *(new_process->stackPtr) = 0x0000;
+    new_process->stackPtr -= CS_OFFSET;
+    *(new_process->stackPtr) = 0x08;
+    new_process->stackPtr -= DS_OFFSET;
+    *(new_process->stackPtr) = 0x10;
+    new_process->stackPtr -= SS_OFFSET;
+    *(new_process->stackPtr) = 0x10;
+    new_process->stackPtr -= ES_OFFSET;
+    *(new_process->stackPtr) = 0x10;
+    new_process->stackPtr -= FS_OFFSET;
+    *(new_process->stackPtr) = 0x10;
+    new_process->stackPtr -= GS_OFFSET;
+    *(new_process->stackPtr) = 0x10;
+    new_process->stackPtr -= EAX_OFFSET;
+    *(new_process->stackPtr) = 0x0000;
+    new_process->stackPtr -= EBX_OFFSET;
+    *(new_process->stackPtr) = 0x0000;
+    new_process->stackPtr -= ECX_OFFSET;
+    *(new_process->stackPtr) = 0x0000;
+    new_process->stackPtr -= EDX_OFFSET;
+    *(new_process->stackPtr) = 0x0000;
+    new_process->stackPtr -= ESI_OFFSET;
+    *(new_process->stackPtr) = 0x0000;
+    new_process->stackPtr -= EDI_OFFSET;
+    *(new_process->stackPtr) = 0x0000;
+    new_process->stackPtr -= EFLAGS_OFFSET;
+    *(new_process->stackPtr) = 0x0202;
+    new_process->stackPtr -= EIP_OFFSET;
+    *(new_process->stackPtr) = (int) proc_function;
+    new_process->stackPtr -= EBP_OFFSET;
+    *(new_process->stackPtr) = 0x0000;
+
+
+    pcb_insert(new_process);
 }
 
 /*
@@ -317,7 +373,7 @@ void comhand(void)
 
     // Constants
     const char *comhandInitializeStr = " Comhand Initialized: Please write your preferred command in all lowercase.\n";
-    const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n\tcreate pcb\n\tdelete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n";
+    const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n\tdelete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n";
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
@@ -374,10 +430,6 @@ void comhand(void)
         else if (strcmp(buf, "clear") == 0)
         {
             clear(COM1);
-        }
-        else if (strcmp(buf, "create pcb") == 0) // Create PCB Command
-        {
-            //  create_pcb();
         }
         else if (strcmp(buf, "delete pcb") == 0) // Delete PCB
         {
