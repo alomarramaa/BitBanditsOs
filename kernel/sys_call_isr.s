@@ -16,7 +16,7 @@ sys_call_isr:
 
     push dword esp      ; Push ESP as a parameter for the C function call
 
-    mov eax sys_call
+    mov eax, dword sys_call
 
     call eax      ; Call your C function
 
