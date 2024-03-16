@@ -50,6 +50,8 @@ typedef enum op_code{
 #define INVALID_BUFFER		(-2)
 #define INVALID_COUNT		(-3)
 
+struct context* sys_call(struct context *current_context);
+
 /**
  Request an MPX kernel operation.
  @param op_code One of READ, WRITE, IDLE, or EXIT

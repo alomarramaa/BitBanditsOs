@@ -7,7 +7,8 @@
 struct context *initial_context = NULL;
 
 // Define the C function for handling the ISR
-struct context* sys_call(struct context *current_context) {
+struct context* sys_call(struct context *current_context) 
+{
 
     // If first time running sys_call, set initial context
     if (initial_context == NULL)
