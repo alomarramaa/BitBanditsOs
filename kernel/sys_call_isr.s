@@ -6,14 +6,8 @@ extern sys_call			; The C function that sys_call_isr will call
 
 sys_call_isr:
 	; Save context
-    push esp             ; Push all general purpose registers
-    push ebp
-    push edi
-    push esi
-    push edx
-    push ecx
-    push ebx
-    push eax
+    pusha             ; Push all general purpose registers
+
     push gs             ; Push remaining segment registers
     push fs
     push es
@@ -22,7 +16,9 @@ sys_call_isr:
 
     push dword esp      ; Push ESP as a parameter for the C function call
 
-    call sys_call      ; Call your C function
+    mov eax sys_call
+
+    call eax      ; Call your C function
 
 	; Set ESP based on the return value of your function (EAX)
 	mov esp, eax
@@ -35,13 +31,7 @@ sys_call_isr:
     pop es
     pop fs
     pop gs
-    pop eax               ; Pop all general purpose registers
-    pop ebx
-    pop ecx
-    pop edx
-    pop esi
-    pop edi
-    pop ebp
-    pop esp
+
+    popa               ; Pop all general purpose registers
 
 	iret ; Return from ISR
