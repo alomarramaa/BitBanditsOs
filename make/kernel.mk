@@ -12,8 +12,7 @@ kernel/core-c.o: kernel/core-c.c include/mpx/gdt.h include/mpx/panic.h \
   include/mpx/device.h include/sys_req.h include/string.h \
   include/mpx/vm.h
 
-kernel/sys_call.o: kernel/sys_call.c include/stdint.h include/string.h \
-  include/user/sys_req.h include/mpx/pcb.h
+
 
 
 KERNEL_OBJECTS=\
