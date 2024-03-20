@@ -11,7 +11,7 @@ user/comhand.o: user/comhand.c include/user/comhand.h
 
 kernel/pcb.o: kernel/pcb.c include/mpx/pcb.h
 
-user/user_pcb.o: user/user_pcb.c
+user/user_pcb.o: user/user_pcb.c include/mpx/pcb.h
 
 USER_OBJECTS=\
 	user/core.o \
