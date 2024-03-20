@@ -2,7 +2,7 @@
 #include <mpx/interrupts.h>
 #include <mpx/serial.h>
 #include <mpx/vm.h>
-#include <sys_req.h>
+#include "sys_req.h"
 #include <string.h>
 #include <memory.h>
 #include <user/date.h>

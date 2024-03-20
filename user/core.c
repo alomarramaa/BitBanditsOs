@@ -14,7 +14,7 @@
 #include <mpx/serial.h>
 
 #include <processes.h>
-#include <sys_req.h>
+#include "sys_req.h"
 
 /* For R3: How many times each process prints its message */
 #define RC_1 1
