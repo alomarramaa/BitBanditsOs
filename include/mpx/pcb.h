@@ -2,6 +2,7 @@
 #define PCB_H
 
 #include <stddef.h>
+#include "sys_req.h"
 
 #define PCB_STACK_SIZE (1024 / sizeof(int))
 
