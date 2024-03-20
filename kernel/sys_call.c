@@ -6,6 +6,7 @@
 // Global or static context pointer representing the initial context
 struct context *initial_context = NULL;
 
+
 // Define the C function for handling the ISR
 struct context* sys_call(struct context *current_context) 
 {
