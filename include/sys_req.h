@@ -37,7 +37,7 @@ typedef struct context {
 } context;
 
 // Global PCB pointer representing the currently executing process
-struct pcb *current_process;
+extern struct pcb *current_process;
 
 typedef enum op_code{
 	EXIT,
@@ -51,7 +51,7 @@ typedef enum op_code{
 #define INVALID_BUFFER		(-2)
 #define INVALID_COUNT		(-3)
 
-extern struct context* sys_call;
+struct context* sys_call(struct context *current_context);
 
 /**
  Request an MPX kernel operation.
