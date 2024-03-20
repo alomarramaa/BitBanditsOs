@@ -4,7 +4,7 @@
  */
 
 #include <string.h>
-#include <sys_req.h>
+#include "sys_req.h"
 #include <user/comhand.h>
 #include <user/time.h>
 #include <mpx/io.h>

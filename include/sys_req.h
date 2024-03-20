@@ -2,6 +2,7 @@
 #define MPX_SYS_REQ_H
 
 #include <mpx/device.h>
+#include <stdlib.h>
 
 /**
  @file sys_req.h
@@ -36,7 +37,7 @@ typedef struct context {
 } context;
 
 // Global PCB pointer representing the currently executing process
-struct pcb *current_process = NULL;
+struct pcb *current_process;
 
 typedef enum op_code{
 	EXIT,
