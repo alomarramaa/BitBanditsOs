@@ -75,7 +75,7 @@ void r3_load_pcb(void (*proc_function)(void), char* proc_name, int proc_priority
     pcb* new_process = pcb_setup(proc_name, USER, proc_priority);
     if (new_process == NULL)
     {
-        error_msg = "Could not allocate the PCB for an r3 function.\n";
+        error_msg = "Could not allocate the PCB for an R3 function.\n";
         sys_req(WRITE, COM1, error_msg, strlen(error_msg));
         return;
     }

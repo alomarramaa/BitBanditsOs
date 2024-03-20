@@ -12,6 +12,9 @@ kernel/core-c.o: kernel/core-c.c include/mpx/gdt.h include/mpx/panic.h \
   include/mpx/device.h include/sys_req.h include/string.h \
   include/mpx/vm.h
 
+
+
+
 KERNEL_OBJECTS=\
 	kernel/core-asm.o\
   kernel/sys_call.o\
@@ -19,3 +22,4 @@ KERNEL_OBJECTS=\
 	kernel/serial.o\
 	kernel/kmain.o\
 	kernel/core-c.o
+
