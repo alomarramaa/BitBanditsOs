@@ -51,7 +51,7 @@ typedef enum op_code{
 #define INVALID_BUFFER		(-2)
 #define INVALID_COUNT		(-3)
 
-extern struct context* sys_call(struct context *current_context);
+extern struct context* sys_call;
 
 /**
  Request an MPX kernel operation.
