@@ -43,28 +43,6 @@ void load_r3(void)
     r3_load_pcb(proc3, "Process_3", 9);
     r3_load_pcb(proc4, "Process_4", 3);
     r3_load_pcb(proc5, "Process_5", 1);
-
-    /*
-    // Load the processes from <processes.h>
-    proc1();
-    proc2();
-    proc3();
-    proc4();
-    proc5();
-    */
-    /*
- • Each process (one per function) is loaded and queued in a non-suspended
- ready state, with a name and priority of your choosing
- •
-    */
-  /*
-  Initialize and save the context for each process at the top of the PCB stack:
- All other registers should be 0*/
-    // cp->cs = 0x08;
-    // cp->ebp =            // bottom of stack;
-    // cp->esp =        // top of stack;
-    // cp->eip = proc1; // pointer to function
-    // cp->EFLAGS = 0x0202;
 }
 
 void r3_load_pcb(void (*proc_function)(void), char* proc_name, int proc_priority)
@@ -373,7 +351,7 @@ void comhand(void)
 
     // Constants
     const char *comhandInitializeStr = " Comhand Initialized: Please write your preferred command in all lowercase.\n";
-    const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n\tdelete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n";
+    const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n\tdelete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n\tyield\n\tload r3\n\tload r3 suspended\n";
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
