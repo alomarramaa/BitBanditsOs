@@ -37,7 +37,7 @@ typedef struct context {
 } context;
 
 // Global PCB pointer representing the currently executing process
-struct pcb *current_process;
+extern struct pcb *current_process;
 
 typedef enum op_code{
 	EXIT,
