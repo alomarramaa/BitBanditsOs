@@ -20,20 +20,20 @@ struct context* sys_call(struct context *current_context)
 
     if (current_context->EAX == IDLE)
     {
-        process_queue* ready_q = get_ready_queue();
-        if (ready_q->queue_head != NULL)
-        {
-            // Get first pcb in ready queue and remove it from the queue
-            pcb* next_process = ready_q->queue_head;
-            pcb_remove(next_process);
+        // process_queue* ready_q = get_ready_queue();
+        // if (ready_q->queue_head != NULL)
+        // {
+        //     // Get first pcb in ready queue and remove it from the queue
+        //     pcb* next_process = ready_q->queue_head;
+        //     pcb_remove(next_process);
 
-            // Update the stack ptr
-            current_process->stackPtr = (int*)current_context;
+        //     // Update the stack ptr
+        //     current_process->stackPtr = (int*)current_context;
 
-            // Put current process back into queue and update current process variable
-            pcb_insert(current_process);
-            current_process = next_process;
-        }
+        //     // Put current process back into queue and update current process variable
+        //     pcb_insert(current_process);
+        //     current_process = next_process;
+        // }
 
         current_context->EAX = 0;
         return current_context;
