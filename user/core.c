@@ -26,7 +26,7 @@ struct context* sys_call_isr();
 #define RC_4 4
 #define RC_5 5
 
-#define STACK_BOTTOM_TO_EAX (EBP_OFFSET + EIP_OFFSET + EFLAGS_OFFSET + EDI_OFFSET + ESI_OFFSET + EDX_OFFSET + ECX_OFFSET + EBX_OFFSET)
+#define STACK_TOP_TO_EAX (ESP_OFFSET + CS_OFFSET + DS_OFFSET + SS_OFFSET + ES_OFFSET + FS_OFFSET + GS_OFFSET + EAX_OFFSET)
 
 /***********************************************************************/
 /* Issue a request to the kernel. */
@@ -62,9 +62,9 @@ int sys_req(op_code op, ...)
 	}
 	else if (op == IDLE || op == EXIT)
 	{
-		current_process->stackPtr += STACK_BOTTOM_TO_EAX;
-		//*(current_process->stackPtr) = (op == IDLE) ? 0x01 : 0x00;
-		current_process->stackPtr -= STACK_BOTTOM_TO_EAX;
+		//current_process->stackPtr += STACK_BOTTOM_TO_EAX;
+		current_process->pcb_stack[PCB_STACK_SIZE - STACK_TOP_TO_EAX] = (op == IDLE) ? 0x01 : 0x00;
+		//current_process->stackPtr -= STACK_BOTTOM_TO_EAX;
 		//sys_call_isr();
 		return 0;
 	}
