@@ -15,6 +15,9 @@
 
 #include <processes.h>
 #include "sys_req.h"
+#include <mpx/pcb.h>
+
+struct context* sys_call_isr(enum op_code);
 
 /* For R3: How many times each process prints its message */
 #define RC_1 1
@@ -22,6 +25,8 @@
 #define RC_3 3
 #define RC_4 4
 #define RC_5 5
+
+#define STACK_BOTTOM_TO_EAX (EBP_OFFSET + EIP_OFFSET + EFLAGS_OFFSET + EDI_OFFSET + ESI_OFFSET + EDX_OFFSET + ECX_OFFSET + EBX_OFFSET)
 
 /***********************************************************************/
 /* Issue a request to the kernel. */
@@ -48,6 +53,14 @@ int sys_req(op_code op, ...)
 		return (op == READ)
 			? serial_poll(dev, buffer, len)
 			: serial_out(dev, buffer, len);
+	}
+	else if (op == IDLE || op == EXIT)
+	{
+		// current_process->stackPtr += STACK_BOTTOM_TO_EAX;
+		// *(current_process->stackPtr) = op;
+		// current_process->stackPtr -= STACK_BOTTOM_TO_EAX;
+		sys_call_isr(op);
+		return 0;
 	}
 
 	return ret;
