@@ -248,7 +248,7 @@ void clear(device dev)
  */
 void version(void) // Prints version and compile date
 {
-    const char *version = "MPX Version R3\n";
+    const char *version = "MPX Version R4\n";
     const char *compileDate = "Compiled on: 3/22/24 \n";
     sys_req(WRITE, COM1, version, strlen(version));
     sys_req(WRITE, COM1, compileDate, strlen(compileDate));
