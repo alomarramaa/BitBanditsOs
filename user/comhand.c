@@ -28,16 +28,21 @@
 
 void yield(void)
 {
+    const char *message = "Halting CPU...\n";
+    sys_req(WRITE, COM1, message, strlen(message));
     sys_req(IDLE);
 }
 
 /*
- * Loads the processes for R3 and initializes and 
+ * Loads the processes for R3 and initializes and
  saves the context at the top of the stack
  * Returns: void
  */
 void load_r3(void)
 {
+    const char *loadMessage = "Loading unsuspended R3 processes into memory.\n";
+    sys_req(WRITE, COM1, loadMessage, strlen(loadMessage));
+
     r3_load_pcb(proc1, "Process_1", 5);
     r3_load_pcb(proc2, "Process_2", 1);
     r3_load_pcb(proc3, "Process_3", 9);
@@ -45,12 +50,12 @@ void load_r3(void)
     r3_load_pcb(proc5, "Process_5", 1);
 }
 
-void r3_load_pcb(void (*proc_function)(void), char* proc_name, int proc_priority)
+void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority)
 {
-    char* error_msg;
+    char *error_msg;
 
     // Attempt to create a pcb for the given function
-    pcb* new_process = pcb_setup(proc_name, USER, proc_priority);
+    pcb *new_process = pcb_setup(proc_name, USER, proc_priority);
     if (new_process == NULL)
     {
         error_msg = "Could not allocate the PCB for an R3 function.\n";
@@ -87,23 +92,23 @@ void r3_load_pcb(void (*proc_function)(void), char* proc_name, int proc_priority
     new_process->stackPtr -= EFLAGS_OFFSET;
     *(new_process->stackPtr) = 0x0202;
     new_process->stackPtr -= EIP_OFFSET;
-    *(new_process->stackPtr) = (int) proc_function;
+    *(new_process->stackPtr) = (int)proc_function;
     new_process->stackPtr -= EBP_OFFSET;
     *(new_process->stackPtr) = 0x0000;
-
 
     pcb_insert(new_process);
 }
 
 /*
- * Loads the processes in a suspended state for R3 
- and initializes and 
+ * Loads the processes in a suspended state for R3
+ and initializes and
  saves the context at the top of the stack
  * Returns: void
  */
 void load_r3_suspended(void)
 {
- 
+    const char *loadMessage = "Loading suspended R3 processes into memory.\n";
+    sys_req(WRITE, COM1, loadMessage, strlen(loadMessage));
 }
 
 /*
@@ -278,9 +283,10 @@ void help(void) // Prints all available commands
                            "Show Ready - Displays all process's info in ready queue\n"
                            "Show Blocked - Displays all process's info in blocked queue\n"
                            "Show All - Displays all process's info\n"
-                           "Yield - Yields the CPU, any process in queue will finish first\n"
+                           "Yield - Yields the CPU. Any process in queue will finish first\n"
                            "Load R3 - Loads the R3 test processes in a non-suspended state\n"
                            "Load R3 Suspended - Loads the R3 test processes in a suspended state\n";
+                           
     sys_req(WRITE, COM1, helpText, strlen(helpText));
     //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
 }
