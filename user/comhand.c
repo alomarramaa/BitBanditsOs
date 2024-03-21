@@ -28,7 +28,7 @@
 
 void yield(void)
 {
-    const char *message = "Halting CPU.\n";
+    const char *message = "Halting CPU...\n";
     sys_req(WRITE, COM1, message, strlen(message));
     sys_req(IDLE);
 }
@@ -283,9 +283,10 @@ void help(void) // Prints all available commands
                            "Show Ready - Displays all process's info in ready queue\n"
                            "Show Blocked - Displays all process's info in blocked queue\n"
                            "Show All - Displays all process's info\n"
-                           "Yield - Yields the CPU, any process in queue will finish first\n"
+                           "Yield - Yields the CPU. Any process in queue will finish first\n"
                            "Load R3 - Loads the R3 test processes in a non-suspended state\n"
                            "Load R3 Suspended - Loads the R3 test processes in a suspended state\n";
+                           
     sys_req(WRITE, COM1, helpText, strlen(helpText));
     //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
 }
