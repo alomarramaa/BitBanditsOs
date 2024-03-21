@@ -62,10 +62,10 @@ int sys_req(op_code op, ...)
 	}
 	else if (op == IDLE || op == EXIT)
 	{
-		current_process->stackPtr += STACK_BOTTOM_TO_EAX;
-		*(current_process->stackPtr) = op;
-		current_process->stackPtr -= STACK_BOTTOM_TO_EAX;
-		sys_call_isr(op);
+		// current_process->stackPtr += STACK_BOTTOM_TO_EAX;
+		// *(current_process->stackPtr) = op;
+		// current_process->stackPtr -= STACK_BOTTOM_TO_EAX;
+		// sys_call_isr(op);
 		return 0;
 	}
 
