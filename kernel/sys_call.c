@@ -28,7 +28,39 @@ struct context* sys_call(struct context *current_context)
             pcb_remove(next_process);
 
             // Update the stack ptr
-            current_process->stackPtr = (int*)current_context;
+            // Updates registers of current pcb's stack to match the current context
+            next_process->stackPtr = &(next_process->pcb_stack[PCB_STACK_SIZE - ESP_OFFSET]);
+            *(next_process->stackPtr) = current_context->ESP;
+            next_process->stackPtr -= CS_OFFSET;
+            *(next_process->stackPtr) = current_context->CS;
+            next_process->stackPtr -= DS_OFFSET;
+            *(next_process->stackPtr) = current_context->DS;
+            next_process->stackPtr -= SS_OFFSET;
+            *(next_process->stackPtr) = current_context->SS;
+            next_process->stackPtr -= ES_OFFSET;
+            *(next_process->stackPtr) = current_context->ES;
+            next_process->stackPtr -= FS_OFFSET;
+            *(next_process->stackPtr) = current_context->FS;
+            next_process->stackPtr -= GS_OFFSET;
+            *(next_process->stackPtr) = current_context->GS;
+            next_process->stackPtr -= EAX_OFFSET;
+            *(next_process->stackPtr) = current_context->EAX;
+            next_process->stackPtr -= EBX_OFFSET;
+            *(next_process->stackPtr) = current_context->EBX;
+            next_process->stackPtr -= ECX_OFFSET;
+            *(next_process->stackPtr) = current_context->ECX;
+            next_process->stackPtr -= EDX_OFFSET;
+            *(next_process->stackPtr) = current_context->EDX;
+            next_process->stackPtr -= ESI_OFFSET;
+            *(next_process->stackPtr) = current_context->ESI;
+            next_process->stackPtr -= EDI_OFFSET;
+            *(next_process->stackPtr) = current_context->EDI;
+            next_process->stackPtr -= EFLAGS_OFFSET;
+            *(next_process->stackPtr) = current_context->EFLAGS;
+            next_process->stackPtr -= EIP_OFFSET;
+            *(next_process->stackPtr) = current_context->EIP;
+            next_process->stackPtr -= EBP_OFFSET;
+            *(next_process->stackPtr) = current_context->EBP;
 
             // Put current process back into queue and update current process variable
             pcb_insert(current_process);
