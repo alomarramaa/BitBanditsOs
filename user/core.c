@@ -60,14 +60,14 @@ int sys_req(op_code op, ...)
 			? serial_poll(dev, buffer, len)
 			: serial_out(dev, buffer, len);
 	}
-	else if (op == IDLE || op == EXIT)
-	{
-		//current_process->stackPtr += STACK_BOTTOM_TO_EAX;
-		//current_process->pcb_stack[PCB_STACK_SIZE - STACK_TOP_TO_EAX] = (op == IDLE) ? 0x01 : 0x00;
-		//current_process->stackPtr -= STACK_BOTTOM_TO_EAX;
-		//sys_call_isr();
-		return 0;
-	}
+	// else if (op == IDLE || op == EXIT)
+	// {
+	// 	//current_process->stackPtr += STACK_BOTTOM_TO_EAX;
+	// 	//current_process->pcb_stack[PCB_STACK_SIZE - STACK_TOP_TO_EAX] = (op == IDLE) ? 0x01 : 0x00;
+	// 	//current_process->stackPtr -= STACK_BOTTOM_TO_EAX;
+	// 	//sys_call_isr();
+	// 	return 0;
+	// }
 
 	return ret;
 }
