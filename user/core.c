@@ -65,7 +65,7 @@ int sys_req(op_code op, ...)
 		current_process->stackPtr += STACK_BOTTOM_TO_EAX;
 		*(current_process->stackPtr) = op;
 		current_process->stackPtr -= STACK_BOTTOM_TO_EAX;
-		sys_call_isr();
+		//sys_call_isr();
 		return 0;
 	}
 
