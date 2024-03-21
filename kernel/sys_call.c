@@ -4,7 +4,7 @@
 #include <mpx/pcb.h>
 
 // Global or static context pointer representing the initial context
-struct context *initial_context = NULL;
+static struct context *initial_context = NULL;
 struct pcb *current_process;
 extern struct context* sys_call(struct context *current_context);
 
@@ -27,8 +27,8 @@ struct context* sys_call(struct context *current_context)
             pcb* next_process = ready_q->queue_head;
             pcb_remove(next_process);
 
-            // // Update the stack ptr
-            // current_process->stackPtr = (int*)current_context;
+            // Update the stack ptr
+            current_process->stackPtr = (uint8_t*)current_context;
 
             // Put current process back into queue and update current process variable
             pcb_insert(current_process);
