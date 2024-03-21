@@ -7,7 +7,7 @@
 #include <memory.h>
 #include <user/date.h>
 #include <processes.h>
-#include <pcb.h>
+#include <mpx/pcb.h>
 
 #include <user/comhand.h>
 
