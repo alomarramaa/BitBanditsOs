@@ -11,11 +11,11 @@ char message[50];
 struct alarm* nxtAlarm;
 };
 
-void checkAlarm();
+void checkAlarm(void);
 
-void showAlarms();
+void showAlarms(void);
 
-void createAlarm();
+void createAlarm(void);
 
 void addAlarm(int hour, int minute, int seconds, char* message);
 

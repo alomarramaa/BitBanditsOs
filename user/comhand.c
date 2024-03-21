@@ -22,19 +22,8 @@
 #define BLUE "\x1B[34m"
 #define RESET "\x1B[0m"
 
-/*
- * Cause the Command Handler to yield the CPU
- * Returns: void
- */
 
-/*
-void yield(void)
-{
-    const char *message = "Halting CPU.\n";
-    sys_req(WRITE, COM1, message, strlen(message));
-    sys_req(IDLE);
-}
-*/
+
 /*
  * Loads the processes for R3 and initializes and
  saves the context at the top of the stack
@@ -285,7 +274,6 @@ void help(void) // Prints all available commands
                            "Show Ready - Displays all process's info in ready queue\n"
                            "Show Blocked - Displays all process's info in blocked queue\n"
                            "Show All - Displays all process's info\n"
-                           "Yield - Yields the CPU, any process in queue will finish first\n"
                            "Load R3 - Loads the R3 test processes in a non-suspended state\n"
                            "Load R3 Suspended - Loads the R3 test processes in a suspended state\n"
                            "Set Alarm- To set an alarm\n"
@@ -360,7 +348,7 @@ void comhand(void)
 
     // Constants
     const char *comhandInitializeStr = " Comhand Initialized: Please write your preferred command in all lowercase.\n";
-    const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n\tdelete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n\tyield\n\tload r3\n\tload r3 suspended\n\tset alarm\n\tremove alarm\n";
+    const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n\tdelete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n\tload r3\n\tload r3 suspended\n\tset alarm\n\tremove alarm\n";
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
@@ -457,11 +445,6 @@ void comhand(void)
         else if (strcmp(buf, "show all") == 0) // Show All
         {
             show_all();
-        }
-
-        else if (strcmp(buf, "yield") == 0)
-        {
-            //yield();
         }
 
         else if (strcmp(buf, "load r3") == 0)
