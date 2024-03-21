@@ -29,7 +29,7 @@ struct context* sys_call(struct context *current_context)
 
             // Update the stack ptr
             // Sets registers of stack starting with ESP and ending with EBP
-            next_process->stackPtr = PCB_STACK_SIZE - ESP_OFFSET;
+            next_process->stackPtr = next_process->pcb_stack[PCB_STACK_SIZE - ESP_OFFSET];
             *(next_process->stackPtr) = current_context->ESP;
             next_process->stackPtr -= CS_OFFSET;
             *(next_process->stackPtr) = current_context->CS;
