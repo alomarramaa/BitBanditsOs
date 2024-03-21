@@ -23,9 +23,9 @@ struct context* sys_call(struct context *current_context)
         process_queue* ready_q = get_ready_queue();
         if (ready_q->queue_head != NULL)
         {
-            // // Get first pcb in ready queue and remove it from the queue
-            // pcb* next_process = ready_q->queue_head;
-            // pcb_remove(next_process);
+            // Get first pcb in ready queue and remove it from the queue
+            pcb* next_process = ready_q->queue_head;
+            pcb_remove(next_process);
 
             // // Update the stack ptr
             // current_process->stackPtr = (int*)current_context;
