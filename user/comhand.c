@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <mpx/pcb.h>
 #include <processes.h>
+#include <user/alarm.h>
 
 // Colors
 #define RED "\x1B[31m"
@@ -21,10 +22,6 @@
 #define BLUE "\x1B[34m"
 #define RESET "\x1B[0m"
 
-/*
- * Cause the Command Handler to yield the CPU
- * Returns: void
- */
 
 void yield(void)
 {
@@ -102,11 +99,15 @@ void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority
 /*
  * Loads the processes in a suspended state for R3
  and initializes and
+ * Loads the processes in a suspended state for R3
+ and initializes and
  saves the context at the top of the stack
  * Returns: void
  */
 void load_r3_suspended(void)
 {
+    const char *loadMessage = "Loading suspended R3 processes into memory.\n";
+    sys_req(WRITE, COM1, loadMessage, strlen(loadMessage));
     const char *loadMessage = "Loading suspended R3 processes into memory.\n";
     sys_req(WRITE, COM1, loadMessage, strlen(loadMessage));
 }
@@ -248,7 +249,7 @@ void clear(device dev)
  */
 void version(void) // Prints version and compile date
 {
-    const char *version = "MPX Version R3\n";
+    const char *version = "MPX Version R4\n";
     const char *compileDate = "Compiled on: 3/22/24 \n";
     sys_req(WRITE, COM1, version, strlen(version));
     sys_req(WRITE, COM1, compileDate, strlen(compileDate));
@@ -288,13 +289,10 @@ void help(void) // Prints all available commands
                            "Show Ready - Displays all process's info in ready queue\n"
                            "Show Blocked - Displays all process's info in blocked queue\n"
                            "Show All - Displays all process's info\n"
-
-                           "\n"
-                           "---R3 Commands---\n\n"
-                           "Yield - Yields the CPU. Any process in queue will finish first\n"
                            "Load R3 - Loads the R3 test processes in a non-suspended state\n"
-                           "Load R3 Suspended - Loads the R3 test processes in a suspended state\n";
-
+                           "Load R3 Suspended - Loads the R3 test processes in a suspended state\n"
+                           "Set Alarm- To set an alarm\n"
+                           "Remove Alarm - To remove an alarm that was set\n";
     sys_req(WRITE, COM1, helpText, strlen(helpText));
     //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
 }
@@ -365,7 +363,7 @@ void comhand(void)
 
     // Constants
     const char *comhandInitializeStr = " Comhand Initialized: Please write your preferred command in all lowercase.\n";
-    const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n\tdelete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n\tyield\n\tload r3\n\tload r3 suspended\n";
+    const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n\tdelete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n\tload r3\n\tload r3 suspended\n\tset alarm\n\tremove alarm\n";
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
@@ -464,11 +462,6 @@ void comhand(void)
             show_all();
         }
 
-        else if (strcmp(buf, "yield") == 0)
-        {
-            yield();
-        }
-
         else if (strcmp(buf, "load r3") == 0)
         {
             load_r3();
@@ -477,6 +470,14 @@ void comhand(void)
         else if (strcmp(buf, "load r3 suspended") == 0)
         {
             load_r3_suspended();
+        }
+        else if (strcmp(buf, "set alarm") == 0)
+        {
+            //setAlarm();
+        }
+        else if (strcmp(buf, "remove alarm") == 0)
+        {
+            //removeAlarm();
         }
 
         else // Unrecognised command
