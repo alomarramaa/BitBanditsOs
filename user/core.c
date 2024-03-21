@@ -17,7 +17,6 @@
 #include "sys_req.h"
 #include <mpx/pcb.h>
 
-struct context* sys_call_isr();
 
 /* For R3: How many times each process prints its message */
 #define RC_1 1
@@ -45,12 +44,6 @@ int sys_req(op_code op, ...)
 		len = va_arg(ap, size_t);
 		va_end(ap);
 	}
-	// else if (op == IDLE || op == EXIT)
-	// {
-	// 	va_list ap;
-	// 	va_start(ap, op);
-	// 	va_end(ap);
-	// }
 
 	int ret = 0;
 	__asm__ volatile("int $0x60" : "=a"(ret) : "a"(op), "b"(dev), "c"(buffer), "d"(len));
@@ -60,14 +53,6 @@ int sys_req(op_code op, ...)
 			? serial_poll(dev, buffer, len)
 			: serial_out(dev, buffer, len);
 	}
-	// else if (op == IDLE || op == EXIT)
-	// {
-	// 	//current_process->stackPtr += STACK_BOTTOM_TO_EAX;
-	// 	//current_process->pcb_stack[PCB_STACK_SIZE - STACK_TOP_TO_EAX] = (op == IDLE) ? 0x01 : 0x00;
-	// 	//current_process->stackPtr -= STACK_BOTTOM_TO_EAX;
-	// 	//sys_call_isr();
-	// 	return 0;
-	// }
 
 	return ret;
 }
