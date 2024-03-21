@@ -28,7 +28,7 @@ struct context* sys_call(struct context *current_context)
             pcb_remove(next_process);
 
             // Update the stack ptr
-            current_process->stackPtr = (uint8_t*)current_context;
+            current_process->stackPtr = (int*)current_context;
 
             // Put current process back into queue and update current process variable
             pcb_insert(current_process);
