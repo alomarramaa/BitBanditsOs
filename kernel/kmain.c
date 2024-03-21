@@ -6,6 +6,8 @@
 #include <string.h>
 #include <memory.h>
 #include <user/date.h>
+#include <processes.h>
+#include <pcb.h>
 
 #include <user/comhand.h>
 
@@ -90,7 +92,19 @@ void kmain(void)
 	// Pass execution to your command handler so the user can interact with
 	// the system.
 	klogv(COM1, "Transferring control to commhand...");
-	comhand();
+	// comhand();
+
+	// Create a comhand pcb with the lowest priority
+	pcb* comhand_pcb = pcb_setup("command_handler", SYSTEM, 0);
+	// Set the stack to contain the address of the comhand function
+	comhand_pcb->pcb_stack[PCB_STACK_SIZE - EIP_TOTAL_OFFSET] = (int) comhand;
+
+	// Create the system idle process pcb with the lowest priority
+	pcb* sys_idle_pcb = pcb_setup("system_idle_proc", SYSTEM, 9);
+	// Set the stack to contain the address of the system idle process function
+	sys_idle_pcb->pcb_stack[PCB_STACK_SIZE - EIP_TOTAL_OFFSET] = (int) sys_idle_process;
+
+	// Give the comhand function control
 	__asm__ volatile ("int $0x60" :: "a"(IDLE));
 
 	// 10) System Shutdown -- *headers to be determined by your design*

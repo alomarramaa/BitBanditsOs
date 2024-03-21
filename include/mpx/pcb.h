@@ -22,6 +22,8 @@
 #define EIP_OFFSET (32 / 8)
 #define EBP_OFFSET (32 / 8)
 
+#define EIP_TOTAL_OFFSET (ESP_OFFSET + CS_OFFSET + DS_OFFSET + SS_OFFSET + ES_OFFSET + FS_OFFSET + GS_OFFSET + EAX_OFFSET + EBX_OFFSET + ECX_OFFSET + EDX_OFFSET + ESI_OFFSET + EDI_OFFSET + EFLAGS_OFFSET + EIP_OFFSET)
+
 typedef enum queue_tag
 {
     SUS_READY_QUEUE_TAG = 0,
@@ -73,6 +75,8 @@ typedef struct process_queue
 struct pcb* pcb_allocate(void);
 
 int pcb_free(struct pcb* to_freePtr);
+
+void pcb_stack_init(struct pcb* to_init);
 
 struct pcb* pcb_setup(char* new_process_name, class_type new_process_class, int new_process_priority);
 
