@@ -108,8 +108,6 @@ void load_r3_suspended(void)
 {
     const char *loadMessage = "Loading suspended R3 processes into memory.\n";
     sys_req(WRITE, COM1, loadMessage, strlen(loadMessage));
-    const char *loadMessage = "Loading suspended R3 processes into memory.\n";
-    sys_req(WRITE, COM1, loadMessage, strlen(loadMessage));
 }
 
 /*

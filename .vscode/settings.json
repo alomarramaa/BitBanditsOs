@@ -22,6 +22,8 @@
         "help.h": "c",
         "array": "c",
         "string_view": "c",
-        "processes.h": "c"
+        "processes.h": "c",
+        "time.h": "c",
+        "string.h": "c"
     }
 }
