@@ -264,6 +264,9 @@ void help(void) // Prints all available commands
 {
 
     const char *helpText = "Please type your command in all lowercase only. The following are all the commands available to use: \n"
+"\n"
+                           "---General Commands---\n\n"
+
                            "Shutdown - Shut down the system\n"
                            "Version - Display the current version & compilation date\n"
                            "Help - Display all available commands\n"
@@ -273,6 +276,8 @@ void help(void) // Prints all available commands
                            "Set Date - Set date to desired month/day/year\n"
                            "Set Time -  Set time to desired hour/minute/second\n"
                            "Clear - Clear the terminal & redisplay menu\n"
+                           "\n"
+                           "---PCB Commands---\n\n"
                            "Delete PCB - Removes the requested process from queue\n"
                            "Block PCB - Puts the process in blocked state\n"
                            "Unblock PCB - Puts the process in the unblocked state\n"
@@ -283,10 +288,13 @@ void help(void) // Prints all available commands
                            "Show Ready - Displays all process's info in ready queue\n"
                            "Show Blocked - Displays all process's info in blocked queue\n"
                            "Show All - Displays all process's info\n"
+
+                           "\n"
+                           "---R3 Commands---\n\n"
                            "Yield - Yields the CPU. Any process in queue will finish first\n"
                            "Load R3 - Loads the R3 test processes in a non-suspended state\n"
                            "Load R3 Suspended - Loads the R3 test processes in a suspended state\n";
-                           
+
     sys_req(WRITE, COM1, helpText, strlen(helpText));
     //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
 }
