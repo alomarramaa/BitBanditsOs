@@ -19,3 +19,8 @@ void createAlarm();
 
 void addAlarm(int hour, int minute, int seconds, char* message);
 
+void removeAlarm(int hour, int minute, int seconds);
+
+extern struct alarm *alarmsHead;
+
+

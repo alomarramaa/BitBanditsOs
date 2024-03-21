@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <mpx/pcb.h>
 #include <processes.h>
+#include <user/alarm.h>
 
 // Colors
 #define RED "\x1B[31m"
@@ -26,13 +27,14 @@
  * Returns: void
  */
 
+/*
 void yield(void)
 {
     const char *message = "Halting CPU.\n";
     sys_req(WRITE, COM1, message, strlen(message));
     sys_req(IDLE);
 }
-
+*/
 /*
  * Loads the processes for R3 and initializes and
  saves the context at the top of the stack
@@ -285,7 +287,9 @@ void help(void) // Prints all available commands
                            "Show All - Displays all process's info\n"
                            "Yield - Yields the CPU, any process in queue will finish first\n"
                            "Load R3 - Loads the R3 test processes in a non-suspended state\n"
-                           "Load R3 Suspended - Loads the R3 test processes in a suspended state\n";
+                           "Load R3 Suspended - Loads the R3 test processes in a suspended state\n"
+                           "Set Alarm- To set an alarm\n"
+                           "Remove Alarm - To remove an alarm that was set\n";
     sys_req(WRITE, COM1, helpText, strlen(helpText));
     //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
 }
@@ -356,7 +360,7 @@ void comhand(void)
 
     // Constants
     const char *comhandInitializeStr = " Comhand Initialized: Please write your preferred command in all lowercase.\n";
-    const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n\tdelete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n\tyield\n\tload r3\n\tload r3 suspended\n";
+    const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n\tdelete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n\tyield\n\tload r3\n\tload r3 suspended\n\tset alarm\n\tremove alarm\n";
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
@@ -457,7 +461,7 @@ void comhand(void)
 
         else if (strcmp(buf, "yield") == 0)
         {
-            yield();
+            //yield();
         }
 
         else if (strcmp(buf, "load r3") == 0)
@@ -468,6 +472,14 @@ void comhand(void)
         else if (strcmp(buf, "load r3 suspended") == 0)
         {
             load_r3_suspended();
+        }
+        else if (strcmp(buf, "set alarm") == 0)
+        {
+            //setAlarm();
+        }
+        else if (strcmp(buf, "remove alarm") == 0)
+        {
+            //removeAlarm();
         }
 
         else // Unrecognised command
