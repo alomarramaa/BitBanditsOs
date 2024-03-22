@@ -290,7 +290,6 @@ void help(void) // Prints all available commands
                            "Show All - Displays all process's info\n"
                            "\n"
                            "---R3 Commands---\n\n"
-                           "Yield - Yields the CPU. Any process in queue will finish first\n"
                            "Load R3 - Loads the R3 test processes in a non-suspended state\n"
                            "Load R3 Suspended - Loads the R3 test processes in a suspended state\n"
                            "\n"
@@ -380,7 +379,7 @@ void comhand(void)
                                      "\n\t"
                                       "-- r3 commands --\n\t"
                                       "\n\t"
-                                      "yield\n\tload r3\n\tload r3 suspended\n"
+                                      "load r3\n\tload r3 suspended\n"
                                       "\n\t"
                                       "-- r4 commands --\n\t"
                                       "\n\t"
@@ -483,11 +482,6 @@ void comhand(void)
         else if (strcmp(buf, "show all") == 0) // Show All
         {
             show_all();
-        }
-
-        else if (strcmp(buf, "yield") == 0)
-        {
-            yield();
         }
 
         else if (strcmp(buf, "load r3") == 0)
