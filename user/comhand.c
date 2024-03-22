@@ -22,6 +22,10 @@
 #define BLUE "\x1B[34m"
 #define RESET "\x1B[0m"
 
+/*
+ * Cause the Command Handler to yield the CPU
+ * Returns: void
+ */
 
 void yield(void)
 {
@@ -97,8 +101,6 @@ void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority
 }
 
 /*
- * Loads the processes in a suspended state for R3
- and initializes and
  * Loads the processes in a suspended state for R3
  and initializes and
  saves the context at the top of the stack
@@ -263,9 +265,8 @@ void help(void) // Prints all available commands
 {
 
     const char *helpText = "Please type your command in all lowercase only. The following are all the commands available to use: \n"
-"\n"
+                           "\n"
                            "---General Commands---\n\n"
-
                            "Shutdown - Shut down the system\n"
                            "Version - Display the current version & compilation date\n"
                            "Help - Display all available commands\n"
@@ -287,10 +288,17 @@ void help(void) // Prints all available commands
                            "Show Ready - Displays all process's info in ready queue\n"
                            "Show Blocked - Displays all process's info in blocked queue\n"
                            "Show All - Displays all process's info\n"
+                           "\n"
+                           "---R3 Commands---\n\n"
+                           "Yield - Yields the CPU. Any process in queue will finish first\n"
                            "Load R3 - Loads the R3 test processes in a non-suspended state\n"
                            "Load R3 Suspended - Loads the R3 test processes in a suspended state\n"
-                           "Set Alarm- To set an alarm\n"
-                           "Remove Alarm - To remove an alarm that was set\n";
+                           "\n"
+                           "---R4 Commands---\n\n"
+                           "Set Alarm - Creates an alarm prompted by the user\n"
+                           "Remove Alarm - Deletes an alarm selected by the user\n"
+                           "\n";
+
     sys_req(WRITE, COM1, helpText, strlen(helpText));
     //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
 }
@@ -361,7 +369,22 @@ void comhand(void)
 
     // Constants
     const char *comhandInitializeStr = " Comhand Initialized: Please write your preferred command in all lowercase.\n";
-    const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n\tdelete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n\tload r3\n\tload r3 suspended\n\tset alarm\n\tremove alarm\n";
+    const char *avaliableCommandStr = " Available Commands:\n\n\t"
+                                      "--- general commands --\n\t"
+                                      "\n\t"
+                                      "echo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n\t"
+                                      "\n\t"
+                                      "--- pcb commands--\n\t"
+                                      "\n\t"
+                                      "delete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n\t"
+                                     "\n\t"
+                                      "-- r3 commands --\n\t"
+                                      "\n\t"
+                                      "yield\n\tload r3\n\tload r3 suspended\n"
+                                      "\n\t"
+                                      "-- r4 commands --\n\t"
+                                      "\n\t"
+                                      "set alarm\n\tremove alarm\n";
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
@@ -371,6 +394,8 @@ void comhand(void)
         sys_req(WRITE, COM1, "> ", 1); // Display prompt
 
         char buf[100] = {0};
+        
+        
         int nread = sys_req(READ, COM1, buf, sizeof(buf));
         sys_req(WRITE, COM1, buf, nread);
 
@@ -460,6 +485,11 @@ void comhand(void)
             show_all();
         }
 
+        else if (strcmp(buf, "yield") == 0)
+        {
+            yield();
+        }
+
         else if (strcmp(buf, "load r3") == 0)
         {
             load_r3();
@@ -469,39 +499,39 @@ void comhand(void)
         {
             load_r3_suspended();
         }
-         else if (strcmp(buf, "set alarm") == 0)
+          else if (strcmp(buf, "set alarm") == 0)
         {
             
             int hour, minute, seconds;
             char message[100];
-            char tempBuf[100]; 
+            char tempBuf[100] ; 
 
             
-            sys_req(WRITE, COM1, "Enter hour: ", 12);
+            sys_req(WRITE, COM1, "Enter hour: \n", 14);
             int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             hour = atoi(tempBuf);
 
             
-            sys_req(WRITE, COM1, "Enter minute: ", 14);
+            sys_req(WRITE, COM1, "\nEnter minute: \n", 17);
             nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             minute = atoi(tempBuf);
 
             
-            sys_req(WRITE, COM1, "Enter seconds: ", 15);
+            sys_req(WRITE, COM1, "\nEnter seconds: \n", 18);
             nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             seconds = atoi(tempBuf);
 
             
-            sys_req(WRITE, COM1, "Enter message: ", 15);
+            sys_req(WRITE, COM1, "\nEnter message: \n", 18);
             nread = sys_req(READ, COM1, message, sizeof(message));
             message[nread] = '\0';
 
             
             addAlarm(hour, minute, seconds, message);
-            sys_req(WRITE, COM1, "Alarm set.\n", 11);
+            sys_req(WRITE, COM1, "\nAlarm set.\n", 13);
         }
         else if (strcmp(buf, "remove alarm") == 0)
         {
@@ -510,26 +540,26 @@ void comhand(void)
             char tempBuf[100]; 
 
             
-            sys_req(WRITE, COM1, "Enter hour: ", 12);
+            sys_req(WRITE, COM1, "Enter hour: \n", 12);
             int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             hour = atoi(tempBuf);
 
             
-            sys_req(WRITE, COM1, "Enter minute: ", 14);
+            sys_req(WRITE, COM1, "\nEnter minute: \n", 17);
             nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             minute = atoi(tempBuf);
 
             
-            sys_req(WRITE, COM1, "Enter seconds: ", 15);
+            sys_req(WRITE, COM1, "\nEnter seconds: \n", 18);
             nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             seconds = atoi(tempBuf);
 
             
             removeAlarm(hour, minute, seconds);
-            sys_req(WRITE, COM1, "Alarm removed.\n", 14);
+            sys_req(WRITE, COM1, "\nAlarm removed.\n", 17);
 
         }
 

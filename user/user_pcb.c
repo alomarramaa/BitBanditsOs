@@ -8,6 +8,7 @@
 #include "sys_req.h"
 #include <string.h>
 #include <stdlib.h>
+#include <user/comhand.h>
 
 
 /*
