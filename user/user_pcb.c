@@ -36,7 +36,6 @@ int create_pcb(void)
     sys_req(WRITE, COM1, namePrompt, strlen(namePrompt));
     char inputName[50];
     int nread = sys_req(READ, COM1, inputName, sizeof(inputName));
-    yield();
     sys_req(WRITE, COM1, inputName, nread);
 
     //If the name is too short or too long
@@ -51,7 +50,6 @@ int create_pcb(void)
     sys_req(WRITE, COM1, classPrompt, strlen(classPrompt));
     char classBuffer[50];
     nread = sys_req(READ, COM1, classBuffer, sizeof(classBuffer));
-    yield();
     sys_req(WRITE, COM1, classBuffer, nread);
     if (strlen(classBuffer) < 1)
     {
@@ -71,7 +69,6 @@ int create_pcb(void)
     sys_req(WRITE, COM1, priorityPrompt, strlen(priorityPrompt));
     char priorityBuffer[50];
     nread = sys_req(READ, COM1, priorityBuffer, sizeof(priorityBuffer));
-    yield();
     sys_req(WRITE, COM1, priorityBuffer, nread);
     int inputPriority = atoi(priorityBuffer);
 
@@ -137,7 +134,6 @@ int delete_pcb(void)
     sys_req(WRITE, COM1, namePrompt, strlen(namePrompt));
     char pcbToDelete[50];
     int nread = sys_req(READ, COM1, pcbToDelete, sizeof(pcbToDelete));
-    yield();
     sys_req(WRITE, COM1, pcbToDelete, nread);
 
     // Find the PCB with the given name
@@ -192,7 +188,6 @@ int block_pcb(void)
     sys_req(WRITE, COM1, prompt, strlen(prompt));
     char pcbToBlock[50];
     int nread = sys_req(READ, COM1, pcbToBlock, sizeof(pcbToBlock));
-    yield();
     sys_req(WRITE, COM1, pcbToBlock, nread);
 
     // Find the PCB with the given name
@@ -255,7 +250,6 @@ int unblock_pcb(void)
     sys_req(WRITE, COM1, prompt, strlen(prompt));
     char pcbToUnblock[50];
     int nread = sys_req(READ, COM1, pcbToUnblock, sizeof(pcbToUnblock));
-    yield();
     sys_req(WRITE, COM1, pcbToUnblock, nread);
 
     // Find the PCB with the given name
@@ -311,7 +305,6 @@ int suspend_pcb(void)
     sys_req(WRITE, COM1, prompt, strlen(prompt));
     char pcbToSuspend[50];
     int nread = sys_req(READ, COM1, pcbToSuspend, sizeof(pcbToSuspend));
-    yield();
     sys_req(WRITE, COM1, pcbToSuspend, nread);
 
     // Find the PCB with the given name
@@ -373,7 +366,6 @@ int resume_pcb(void)
     sys_req(WRITE, COM1, prompt, strlen(prompt));
     char pcbToResume[50];
     int nread = sys_req(READ, COM1, pcbToResume, sizeof(pcbToResume));
-    yield();
     sys_req(WRITE, COM1, pcbToResume, nread);
 
     // Find the PCB with the given name
@@ -430,7 +422,6 @@ int set_pcb_priority(void)
 
     char user_input_name[50]; // Assuming a reasonable buffer size
     int nread = sys_req(READ, COM1, user_input_name, sizeof(user_input_name));
-    yield();
     sys_req(WRITE, COM1, user_input_name, nread);
 
     const char *prompt_priority = "\nPlease enter the new priority (0-9) for the PCB: \n";
@@ -438,7 +429,6 @@ int set_pcb_priority(void)
 
     char user_input_priority[3]; // Assuming a reasonable buffer size
     nread = sys_req(READ, COM1, user_input_priority, sizeof(user_input_priority));
-    yield();
     sys_req(WRITE, COM1, user_input_priority, nread);
 
     // Convert user input for new priority to integer
@@ -498,7 +488,6 @@ int show_pcb(void)
     sys_req(WRITE, COM1, prompt, strlen(prompt));
     char pcbToShow[50];
     int nread = sys_req(READ, COM1, pcbToShow, sizeof(pcbToShow));
-    yield();
     sys_req(WRITE, COM1, pcbToShow, nread);
 
 
