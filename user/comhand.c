@@ -14,7 +14,6 @@
 #include <mpx/pcb.h>
 #include <processes.h>
 #include <user/alarm.h>
-#include <user/comhand.h>
 
 // Colors
 #define RED "\x1B[31m"
