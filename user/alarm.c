@@ -27,7 +27,16 @@ void checkAlarm() {
         if ((hours > current->hour) || 
             (hours == current->hour && minutes > current->minute) ||
             (hours == current->hour && minutes == current->minute && seconds >= current->seconds)) {
-            sys_req(WRITE, COM1, current->message, strlen(current->message));
+
+           
+            sys_req(WRITE, COM1, "Alarm: ", strlen("Alarm: "));
+            sys_req(WRITE, COM1, current->hour, 2); 
+            sys_req(WRITE, COM1, ":", 1);
+            sys_req(WRITE, COM1, current->minute, 2); 
+            sys_req(WRITE, COM1, ":", 1);
+            sys_req(WRITE, COM1, current->seconds, 2); 
+            sys_req(WRITE, COM1, ", ", 2);
+            sys_req(WRITE, COM1, current->message, strlen(current->message)); 
             sys_req(WRITE, COM1, "\n", 1);
 
             if (prev == NULL) {
@@ -45,7 +54,6 @@ void checkAlarm() {
         current = current->nxtAlarm;
     }
 
-    
     sys_req(WRITE, COM1, "No alarms triggered.\n", strlen("No alarms triggered.\n"));
 }
 

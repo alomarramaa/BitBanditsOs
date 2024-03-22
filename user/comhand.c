@@ -296,7 +296,7 @@ void help(void) // Prints all available commands
                            "\n"
                            "---R4 Commands---\n\n"
                            "Set Alarm - Creates an alarm prompted by the user\n"
-                           "Delete Alarm - Deletes any alarm created\n"
+                           "Remove Alarm - Deletes an alarm selected by the user\n"
                            "\n";
 
     sys_req(WRITE, COM1, helpText, strlen(helpText));
@@ -380,7 +380,11 @@ void comhand(void)
                                      "\n\t"
                                       "-- r3 commands --\n\t"
                                       "\n\t"
-                                      "yield\n\tload r3\n\tload r3 suspended\n";
+                                      "yield\n\tload r3\n\tload r3 suspended\n"
+                                      "\n\t"
+                                      "-- r4 commands --\n\t"
+                                      "\n\t"
+                                      "set alarm\n\tremove alarm\n";
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
