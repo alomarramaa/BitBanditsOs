@@ -376,7 +376,7 @@ void comhand(void)
         
         int nread = sys_req(READ, COM1, buf, sizeof(buf));
         sys_req(WRITE, COM1, buf, nread);
-        yield();
+        //yield();
 
         writeNewLine();
 
