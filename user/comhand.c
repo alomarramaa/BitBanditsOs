@@ -372,6 +372,7 @@ void comhand(void)
 
         char buf[100] = {0};
         
+        yield();
         int nread = sys_req(READ, COM1, buf, sizeof(buf));
         sys_req(WRITE, COM1, buf, nread);
 
