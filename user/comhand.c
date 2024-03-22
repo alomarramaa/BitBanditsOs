@@ -264,7 +264,7 @@ void help(void) // Prints all available commands
 {
 
     const char *helpText = "Please type your command in all lowercase only. The following are all the commands available to use: \n"
-"\n"
+                           "\n"
                            "---General Commands---\n\n"
 
                            "Shutdown - Shut down the system\n"
@@ -365,7 +365,18 @@ void comhand(void)
 
     // Constants
     const char *comhandInitializeStr = " Comhand Initialized: Please write your preferred command in all lowercase.\n";
-    const char *avaliableCommandStr = " Available Commands:\n\n\techo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n\tdelete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n\tyield\n\tload r3\n\tload r3 suspended\n";
+    const char *avaliableCommandStr = " Available Commands:\n\n\t"
+                                      "--- general commands --\n\t"
+                                      "\n\t"
+                                      "echo\n\tget time/date\n\thelp\n\tset time/date\n\tshutdown\n\tversion\n\tclear\n\t"
+                                      "\n\t"
+                                      "--- pcb commands--\n\t"
+                                      "\n\t"
+                                      "delete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n\t"
+                                     "\n\t"
+                                      "-- r3 commands --\n\t"
+                                      "\n\t"
+                                      "yield\n\tload r3\n\tload r3 suspended\n";
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
