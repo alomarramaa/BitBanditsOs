@@ -32,43 +32,44 @@ struct context* sys_call(struct context *current_context)
             if (current_process != NULL)
             {
                 current_process->stackPtr = &(next_process->pcb_stack[PCB_STACK_SIZE - ESP_OFFSET]);
-                *(current_process->stackPtr) = current_context->ESP;
-                current_process->stackPtr -= CS_OFFSET;
-                *(current_process->stackPtr) = current_context->CS;
-                current_process->stackPtr -= DS_OFFSET;
-                *(current_process->stackPtr) = current_context->DS;
-                current_process->stackPtr -= SS_OFFSET;
-                *(current_process->stackPtr) = current_context->SS;
-                current_process->stackPtr -= ES_OFFSET;
-                *(current_process->stackPtr) = current_context->ES;
-                current_process->stackPtr -= FS_OFFSET;
-                *(current_process->stackPtr) = current_context->FS;
-                current_process->stackPtr -= GS_OFFSET;
-                *(current_process->stackPtr) = current_context->GS;
-                current_process->stackPtr -= EAX_OFFSET;
-                *(current_process->stackPtr) = current_context->EAX;
-                current_process->stackPtr -= EBX_OFFSET;
-                *(current_process->stackPtr) = current_context->EBX;
-                current_process->stackPtr -= ECX_OFFSET;
-                *(current_process->stackPtr) = current_context->ECX;
-                current_process->stackPtr -= EDX_OFFSET;
-                *(current_process->stackPtr) = current_context->EDX;
-                current_process->stackPtr -= ESI_OFFSET;
-                *(current_process->stackPtr) = current_context->ESI;
-                current_process->stackPtr -= EDI_OFFSET;
-                *(current_process->stackPtr) = current_context->EDI;
-                current_process->stackPtr -= EFLAGS_OFFSET;
-                *(current_process->stackPtr) = current_context->EFLAGS;
-                current_process->stackPtr -= EIP_OFFSET;
-                *(current_process->stackPtr) = current_context->EIP;
-                current_process->stackPtr -= EBP_OFFSET;
-                *(current_process->stackPtr) = current_context->EBP;
-                current_process->stackPtr = &(next_process->pcb_stack[PCB_STACK_SIZE - ESP_OFFSET]);
             }
 
             // Put current process back into queue and update current process variable
             pcb_insert(current_process);
             current_process = next_process;
+
+            current_process->stackPtr = &(next_process->pcb_stack[PCB_STACK_SIZE - ESP_OFFSET]);
+                current_context->ESP = *(current_process->stackPtr);
+                current_process->stackPtr -= CS_OFFSET;
+                current_context->CS = *(current_process->stackPtr);
+                current_process->stackPtr -= DS_OFFSET;
+                current_context->DS = *(current_process->stackPtr);
+                current_process->stackPtr -= SS_OFFSET;
+                current_context->SS = *(current_process->stackPtr);
+                current_process->stackPtr -= ES_OFFSET;
+                current_context->ES = *(current_process->stackPtr);
+                current_process->stackPtr -= FS_OFFSET;
+                current_context->FS = *(current_process->stackPtr);
+                current_process->stackPtr -= GS_OFFSET;
+                current_context->GS = *(current_process->stackPtr);
+                current_process->stackPtr -= EAX_OFFSET;
+                current_context->EAX = *(current_process->stackPtr);
+                current_process->stackPtr -= EBX_OFFSET;
+                current_context->EBX = *(current_process->stackPtr);
+                current_process->stackPtr -= ECX_OFFSET;
+                current_context->ECX = *(current_process->stackPtr);
+                current_process->stackPtr -= EDX_OFFSET;
+                current_context->EDX = *(current_process->stackPtr);
+                current_process->stackPtr -= ESI_OFFSET;
+                current_context->ESI = *(current_process->stackPtr);
+                current_process->stackPtr -= EDI_OFFSET;
+                current_context->EDI = *(current_process->stackPtr);
+                current_process->stackPtr -= EFLAGS_OFFSET;
+                current_context->EFLAGS = *(current_process->stackPtr);
+                current_process->stackPtr -= EIP_OFFSET;
+                current_context->EIP = *(current_process->stackPtr);
+                current_process->stackPtr -= EBP_OFFSET;
+                current_context->EBP = *(current_process->stackPtr);
         }
 
         current_context->EAX = 0;
