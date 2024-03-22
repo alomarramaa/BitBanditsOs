@@ -507,31 +507,31 @@ void comhand(void)
             char tempBuf[100] ; 
 
             
-            sys_req(WRITE, COM1, "Enter hour: ", 12);
+            sys_req(WRITE, COM1, "Enter hour: \n", 14);
             int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             hour = atoi(tempBuf);
 
             
-            sys_req(WRITE, COM1, "\nEnter minute: ", 14);
+            sys_req(WRITE, COM1, "\nEnter minute: \n", 17);
             nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             minute = atoi(tempBuf);
 
             
-            sys_req(WRITE, COM1, "\nEnter seconds: ", 15);
+            sys_req(WRITE, COM1, "\nEnter seconds: \n", 18);
             nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             seconds = atoi(tempBuf);
 
             
-            sys_req(WRITE, COM1, "\nEnter message: ", 15);
+            sys_req(WRITE, COM1, "\nEnter message: \n", 18);
             nread = sys_req(READ, COM1, message, sizeof(message));
             message[nread] = '\0';
 
             
             addAlarm(hour, minute, seconds, message);
-            sys_req(WRITE, COM1, "\nAlarm set.\n", 11);
+            sys_req(WRITE, COM1, "\nAlarm set.\n", 13);
         }
         else if (strcmp(buf, "remove alarm") == 0)
         {
@@ -540,26 +540,26 @@ void comhand(void)
             char tempBuf[100]; 
 
             
-            sys_req(WRITE, COM1, "Enter hour: ", 12);
+            sys_req(WRITE, COM1, "Enter hour: \n", 12);
             int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             hour = atoi(tempBuf);
 
             
-            sys_req(WRITE, COM1, "\nEnter minute: ", 14);
+            sys_req(WRITE, COM1, "\nEnter minute: \n", 17);
             nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             minute = atoi(tempBuf);
 
             
-            sys_req(WRITE, COM1, "\nEnter seconds: ", 15);
+            sys_req(WRITE, COM1, "\nEnter seconds: \n", 18);
             nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             seconds = atoi(tempBuf);
 
             
             removeAlarm(hour, minute, seconds);
-            sys_req(WRITE, COM1, "\nAlarm removed.\n", 14);
+            sys_req(WRITE, COM1, "\nAlarm removed.\n", 17);
 
         }
 
