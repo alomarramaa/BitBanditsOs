@@ -165,6 +165,7 @@ int setval(char *resource)
         char buff[100];
 
         if (sys_req(READ, COM1, buff, sizeof(buff)) <= 0)
+        yield();
         { // Read input
             sys_req(WRITE, COM1, "Error reading input\n", 21);
             return -1; // Indicate failure
@@ -307,6 +308,7 @@ int shutdown(void)
 
     char confirm[50] = {0};
     int nread = sys_req(READ, COM1, confirm, sizeof(confirm));
+    yield();
 
     if (nread > 0 && confirm[0] == 'y') // Shutdown confirmed
     {
@@ -372,6 +374,7 @@ void comhand(void)
 
         char buf[100] = {0};
         int nread = sys_req(READ, COM1, buf, sizeof(buf));
+        yield();
         sys_req(WRITE, COM1, buf, nread);
 
         writeNewLine();
