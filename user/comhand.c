@@ -502,10 +502,10 @@ void comhand(void)
             
             int hour, minute, seconds;
             char message[100];
-            char tempBuf[100]; 
+            char tempBuf[100] ; 
 
             
-            sys_req(WRITE, COM1, "\nEnter hour: ", 12);
+            sys_req(WRITE, COM1, "Enter hour: ", 12);
             int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             hour = atoi(tempBuf);
@@ -544,20 +544,20 @@ void comhand(void)
             hour = atoi(tempBuf);
 
             
-            sys_req(WRITE, COM1, "Enter minute: ", 14);
+            sys_req(WRITE, COM1, "\nEnter minute: ", 14);
             nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             minute = atoi(tempBuf);
 
             
-            sys_req(WRITE, COM1, "Enter seconds: ", 15);
+            sys_req(WRITE, COM1, "\nEnter seconds: ", 15);
             nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             seconds = atoi(tempBuf);
 
             
             removeAlarm(hour, minute, seconds);
-            sys_req(WRITE, COM1, "Alarm removed.\n", 14);
+            sys_req(WRITE, COM1, "\nAlarm removed.\n", 14);
 
         }
 
