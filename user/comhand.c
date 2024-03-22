@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <mpx/pcb.h>
 #include <processes.h>
+#include <user/alarm.h>
 
 // Colors
 #define RED "\x1B[31m"
@@ -291,10 +292,12 @@ void help(void) // Prints all available commands
                            "---R3 Commands---\n\n"
                            "Yield - Yields the CPU. Any process in queue will finish first\n"
                            "Load R3 - Loads the R3 test processes in a non-suspended state\n"
-                           "Load R3 Suspended - Loads the R3 test processes in a suspended state\n";
+                           "Load R3 Suspended - Loads the R3 test processes in a suspended state\n"
+                           "\n"
                            "---R4 Commands---\n\n"
                            "Set Alarm - Creates an alarm prompted by the user\n"
                            "Delete Alarm - Deletes any alarm created\n"
+                           "\n";
 
     sys_req(WRITE, COM1, helpText, strlen(helpText));
     //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
@@ -489,6 +492,69 @@ void comhand(void)
         else if (strcmp(buf, "load r3 suspended") == 0)
         {
             load_r3_suspended();
+        }
+          else if (strcmp(buf, "set alarm") == 0)
+        {
+            
+            int hour, minute, seconds;
+            char message[100];
+            char tempBuf[100]; 
+
+            
+            sys_req(WRITE, COM1, "\nEnter hour: ", 12);
+            int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
+            tempBuf[nread] = '\0';
+            hour = atoi(tempBuf);
+
+            
+            sys_req(WRITE, COM1, "\nEnter minute: ", 14);
+            nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
+            tempBuf[nread] = '\0';
+            minute = atoi(tempBuf);
+
+            
+            sys_req(WRITE, COM1, "\nEnter seconds: ", 15);
+            nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
+            tempBuf[nread] = '\0';
+            seconds = atoi(tempBuf);
+
+            
+            sys_req(WRITE, COM1, "\nEnter message: ", 15);
+            nread = sys_req(READ, COM1, message, sizeof(message));
+            message[nread] = '\0';
+
+            
+            addAlarm(hour, minute, seconds, message);
+            sys_req(WRITE, COM1, "\nAlarm set.\n", 11);
+        }
+        else if (strcmp(buf, "remove alarm") == 0)
+        {
+            
+            int hour, minute, seconds;
+            char tempBuf[100]; 
+
+            
+            sys_req(WRITE, COM1, "Enter hour: ", 12);
+            int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
+            tempBuf[nread] = '\0';
+            hour = atoi(tempBuf);
+
+            
+            sys_req(WRITE, COM1, "Enter minute: ", 14);
+            nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
+            tempBuf[nread] = '\0';
+            minute = atoi(tempBuf);
+
+            
+            sys_req(WRITE, COM1, "Enter seconds: ", 15);
+            nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
+            tempBuf[nread] = '\0';
+            seconds = atoi(tempBuf);
+
+            
+            removeAlarm(hour, minute, seconds);
+            sys_req(WRITE, COM1, "Alarm removed.\n", 14);
+
         }
 
         else // Unrecognised command
