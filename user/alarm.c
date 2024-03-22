@@ -9,10 +9,10 @@
 #include <mpx/io.h> 
 #define MAX_ALARMS 5
 
-void displayMessage(char* message);
 
 extern int readTimeReg(char sect);
-extern void sys_req(int operation, ...);
+extern int sys_req(op_code operation, ...);
+
 
 struct alarm *alarmsHead = NULL;
 
@@ -33,11 +33,11 @@ void checkAlarm() {
 
             if (prev == NULL) {
                 alarmsHead = current->nxtAlarm;
-                free(current);
+                sys_free_mem(current);
                 current = alarmsHead;
             } else {
                 prev->nxtAlarm = current->nxtAlarm;
-                free(current);
+                sys_free_mem(current);
                 current = prev->nxtAlarm;
             }
             continue;
@@ -45,6 +45,9 @@ void checkAlarm() {
         prev = current;
         current = current->nxtAlarm;
     }
+
+    
+    sys_req(WRITE, COM1, "No alarms triggered.\n", strlen("No alarms triggered.\n"));
 }
 
 void addAlarm(int hour, int minute, int seconds, char* message) {
@@ -56,21 +59,23 @@ void addAlarm(int hour, int minute, int seconds, char* message) {
             numAlarms++;
         }
         if (numAlarms >= MAX_ALARMS) {
-            displayMessage("Error: Maximum number of alarms reached.");
+            
+            sys_req(WRITE, COM1, "Error: Maximum number of alarms reached.\n", strlen("Error: Maximum number of alarms reached.\n"));
             return;
         }
     }
 
-    struct alarm* newAlarm = (struct alarm*)malloc(sizeof(struct alarm));
+    struct alarm* newAlarm = (struct alarm*)sys_alloc_mem(sizeof(struct alarm));
     if (newAlarm == NULL) {
-        displayMessage("Error: Unable to allocate memory for new alarm.");
+        
+        sys_req(WRITE, COM1, "Error: Unable to allocate memory for new alarm.\n", strlen("Error: Unable to allocate memory for new alarm.\n"));
         return;
     }
 
     newAlarm->hour = hour;
     newAlarm->minute = minute;
     newAlarm->seconds = seconds;
-    strncpy(newAlarm->message, message, sizeof(newAlarm->message) - 1);
+    memcpy(newAlarm->message, message, sizeof(newAlarm->message) - 1);
     newAlarm->message[sizeof(newAlarm->message) - 1] = '\0';
     newAlarm->nxtAlarm = NULL;
 
@@ -89,9 +94,22 @@ void removeAlarm(int hour, int minute, int seconds) {
     struct alarm* current = alarmsHead;
     struct alarm* prev = NULL;
 
-   /* while (current != NULL) {
+    while (current != NULL) {
         if (current->hour == hour && current->minute == minute && current->seconds == seconds) {
             if (prev == NULL) {
                 alarmsHead = current->nxtAlarm;
-    */          
+                sys_free_mem(current);
+                return; 
+            } else {
+                prev->nxtAlarm = current->nxtAlarm;
+                sys_free_mem(current);
+                return; 
+            }
+        }
+        prev = current;
+        current = current->nxtAlarm;
+    }
+
+    
+    sys_req(WRITE, COM1, "Error: Alarm not found.\n", strlen("Error: Alarm not found.\n"));
 }

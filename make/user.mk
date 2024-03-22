@@ -13,11 +13,14 @@ kernel/pcb.o: kernel/pcb.c include/mpx/pcb.h
 
 user/user_pcb.o: user/user_pcb.c include/mpx/pcb.h
 
+user/alarm.o: user/alarm.c include/user/alarm.h
+
 USER_OBJECTS=\
 	user/core.o \
 	user/date.o \
 	user/time.o \
 	user/comhand.o \
+	user/alarm.o \
 	kernel/pcb.o \
 	user/user_pcb.o
-
+	
