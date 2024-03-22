@@ -15,7 +15,7 @@ extern int sys_req(op_code operation, ...);
 
 struct alarm *alarmsHead = NULL;
 
-void checkAlarm() {
+void checkAlarm(void) {
     struct alarm* current = alarmsHead;
     struct alarm* prev = NULL;
 
