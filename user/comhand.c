@@ -266,7 +266,6 @@ void help(void) // Prints all available commands
     const char *helpText = "Please type your command in all lowercase only. The following are all the commands available to use: \n"
                            "\n"
                            "---General Commands---\n\n"
-
                            "Shutdown - Shut down the system\n"
                            "Version - Display the current version & compilation date\n"
                            "Help - Display all available commands\n"
@@ -288,12 +287,14 @@ void help(void) // Prints all available commands
                            "Show Ready - Displays all process's info in ready queue\n"
                            "Show Blocked - Displays all process's info in blocked queue\n"
                            "Show All - Displays all process's info\n"
-
                            "\n"
                            "---R3 Commands---\n\n"
                            "Yield - Yields the CPU. Any process in queue will finish first\n"
                            "Load R3 - Loads the R3 test processes in a non-suspended state\n"
                            "Load R3 Suspended - Loads the R3 test processes in a suspended state\n";
+                           "---R4 Commands---\n\n"
+                           "Set Alarm - Creates an alarm prompted by the user\n"
+                           "Delete Alarm - Deletes any alarm created\n"
 
     sys_req(WRITE, COM1, helpText, strlen(helpText));
     //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
