@@ -92,7 +92,7 @@ void kmain(void)
 	// Pass execution to your command handler so the user can interact with
 	// the system.
 	klogv(COM1, "Transferring control to commhand...");
-	//comhand();
+	comhand();
 
 	// Create a comhand pcb with the lowest priority
 	pcb* comhand_pcb = pcb_setup("command_handler", SYSTEM, 0);
