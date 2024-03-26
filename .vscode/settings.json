@@ -24,6 +24,7 @@
         "string_view": "c",
         "processes.h": "c",
         "time.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "comhand.h": "c"
     }
 }
