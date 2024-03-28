@@ -68,37 +68,30 @@ void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority
     }
 
     // Sets registers of stack starting with ESP and ending with EBP
-    *(new_process->stackPtr) = 0x0000;
-    new_process->stackPtr -= CS_OFFSET;
-    *(new_process->stackPtr) = 0x08;
-    new_process->stackPtr -= DS_OFFSET;
-    *(new_process->stackPtr) = 0x10;
-    new_process->stackPtr -= SS_OFFSET;
-    *(new_process->stackPtr) = 0x10;
-    new_process->stackPtr -= ES_OFFSET;
-    *(new_process->stackPtr) = 0x10;
-    new_process->stackPtr -= FS_OFFSET;
-    *(new_process->stackPtr) = 0x10;
-    new_process->stackPtr -= GS_OFFSET;
-    *(new_process->stackPtr) = 0x10;
-    new_process->stackPtr -= EAX_OFFSET;
-    *(new_process->stackPtr) = 0x0000;
-    new_process->stackPtr -= EBX_OFFSET;
-    *(new_process->stackPtr) = 0x0000;
-    new_process->stackPtr -= ECX_OFFSET;
-    *(new_process->stackPtr) = 0x0000;
-    new_process->stackPtr -= EDX_OFFSET;
-    *(new_process->stackPtr) = 0x0000;
-    new_process->stackPtr -= ESI_OFFSET;
-    *(new_process->stackPtr) = 0x0000;
-    new_process->stackPtr -= EDI_OFFSET;
-    *(new_process->stackPtr) = 0x0000;
-    new_process->stackPtr -= EFLAGS_OFFSET;
-    *(new_process->stackPtr) = 0x0202;
-    new_process->stackPtr -= EIP_OFFSET;
-    *(new_process->stackPtr) = (int)proc_function;
-    new_process->stackPtr -= EBP_OFFSET;
-    *(new_process->stackPtr) = 0x0000;
+   struct context *c = (struct context*)new_process->stackPtr;
+   	// Segment registers (remaining)
+	c-> SS = 0x10;
+	c-> GS = 0x10;
+	c-> FS = 0x10;
+	c-> ES = 0x10;
+	c-> DS = 0x10;
+
+	// General-purpose registers
+	c-> EDI = 0;
+	c-> ESI = 0;
+    
+    c-> ESP = (int)new_process ->pcb_stack;//top of pcb stack
+	c-> EBP = (int)new_process ->stackPtr;//bottom of pcb stack
+
+	c-> EBX = 0;
+	c-> EDX = 0;
+	c-> ECX = 0;
+	c-> EAX = 0;
+
+	// Status and control registers (also CS from Segment registers)
+	c-> EIP = (int)proc_function;
+	c-> CS = 0x08;
+	c-> EFLAGS = 0x0202;
 
     pcb_insert(new_process);
 }
