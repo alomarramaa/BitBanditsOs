@@ -28,8 +28,6 @@
 
 void yield(void)
 {
-    const char *message = "Halting CPU...\n";
-    sys_req(WRITE, COM1, message, strlen(message));
     sys_req(IDLE);
 }
 
@@ -65,7 +63,8 @@ void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority
 
     // Sets registers of stack starting with ESP and ending with EBP
    struct context *c = (struct context*)new_process->stackPtr;
-   	// Segment registers (remaining)
+   	// Segment registers
+    c-> CS = 0x08;
 	c-> SS = 0x10;
 	c-> GS = 0x10;
 	c-> FS = 0x10;
@@ -76,8 +75,8 @@ void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority
 	c-> EDI = 0;
 	c-> ESI = 0;
     
-    c-> ESP = (int)new_process ->pcb_stack;//top of pcb stack
-	c-> EBP = (int)new_process ->stackPtr;//bottom of pcb stack
+    c-> ESP = (int)new_process ->stackPtr;//top of pcb stack
+	c-> EBP = (int)new_process ->pcb_stack;//bottom of pcb stack
 
 	c-> EBX = 0;
 	c-> EDX = 0;
@@ -86,7 +85,6 @@ void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority
 
 	// Status and control registers (also CS from Segment registers)
 	c-> EIP = (int)proc_function;
-	c-> CS = 0x08;
 	c-> EFLAGS = 0x0202;
 
     pcb_insert(new_process);
