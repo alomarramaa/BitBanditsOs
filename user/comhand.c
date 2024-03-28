@@ -75,8 +75,10 @@ void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority
 	// General-purpose registers
 	c-> EDI = 0;
 	c-> ESI = 0;
+    
+    c-> ESP = (int)new_process ->pcb_stack;//top of pcb stack
 	c-> EBP = (int)new_process ->stackPtr;//bottom of pcb stack
-	c-> ESP = (int)new_process ->pcb_stack;//top of pcb stack
+
 	c-> EBX = 0;
 	c-> EDX = 0;
 	c-> ECX = 0;
@@ -86,9 +88,6 @@ void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority
 	c-> EIP = (int)proc_function;
 	c-> CS = 0x08;
 	c-> EFLAGS = 0x0202;
-
-
-
 
     pcb_insert(new_process);
 }
