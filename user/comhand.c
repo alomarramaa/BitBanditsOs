@@ -326,7 +326,9 @@ void comhand(void)
 
             if (shutdown() == 1)
             {
-                break; // exit the loop if shutdown is confirmed
+                //pcb_free(); //empty pcb queue
+                sys_req(EXIT);
+                
             }
         }
 
