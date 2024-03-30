@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include "sys_req.h"
 
-#define PCB_STACK_SIZE (1024 / sizeof(int))
+#define PCB_STACK_SIZE (1024)
 
 #define ESP_OFFSET (32 / 8)
 #define CS_OFFSET (16 / 8)

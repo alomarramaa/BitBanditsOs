@@ -32,8 +32,6 @@
 
 void yield(void)
 {
-    const char *message = "Halting CPU...\n";
-    sys_req(WRITE, COM1, message, strlen(message));
     sys_req(IDLE);
 }
 
@@ -68,37 +66,30 @@ void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority
     }
 
     // Sets registers of stack starting with ESP and ending with EBP
-    *(new_process->stackPtr) = 0x0000;
-    new_process->stackPtr -= CS_OFFSET;
-    *(new_process->stackPtr) = 0x08;
-    new_process->stackPtr -= DS_OFFSET;
-    *(new_process->stackPtr) = 0x10;
-    new_process->stackPtr -= SS_OFFSET;
-    *(new_process->stackPtr) = 0x10;
-    new_process->stackPtr -= ES_OFFSET;
-    *(new_process->stackPtr) = 0x10;
-    new_process->stackPtr -= FS_OFFSET;
-    *(new_process->stackPtr) = 0x10;
-    new_process->stackPtr -= GS_OFFSET;
-    *(new_process->stackPtr) = 0x10;
-    new_process->stackPtr -= EAX_OFFSET;
-    *(new_process->stackPtr) = 0x0000;
-    new_process->stackPtr -= EBX_OFFSET;
-    *(new_process->stackPtr) = 0x0000;
-    new_process->stackPtr -= ECX_OFFSET;
-    *(new_process->stackPtr) = 0x0000;
-    new_process->stackPtr -= EDX_OFFSET;
-    *(new_process->stackPtr) = 0x0000;
-    new_process->stackPtr -= ESI_OFFSET;
-    *(new_process->stackPtr) = 0x0000;
-    new_process->stackPtr -= EDI_OFFSET;
-    *(new_process->stackPtr) = 0x0000;
-    new_process->stackPtr -= EFLAGS_OFFSET;
-    *(new_process->stackPtr) = 0x0202;
-    new_process->stackPtr -= EIP_OFFSET;
-    *(new_process->stackPtr) = (int)proc_function;
-    new_process->stackPtr -= EBP_OFFSET;
-    *(new_process->stackPtr) = 0x0000;
+   struct context *c = (struct context*)new_process->stackPtr;
+   	// Segment registers
+    c-> CS = 0x08;
+	c-> SS = 0x10;
+	c-> GS = 0x10;
+	c-> FS = 0x10;
+	c-> ES = 0x10;
+	c-> DS = 0x10;
+
+	// General-purpose registers
+	c-> EDI = 0;
+	c-> ESI = 0;
+    
+    c-> ESP = (int)new_process ->stackPtr;//top of pcb stack
+	c-> EBP = (int)new_process ->pcb_stack;//bottom of pcb stack
+
+	c-> EBX = 0;
+	c-> EDX = 0;
+	c-> ECX = 0;
+	c-> EAX = 0;
+
+	// Status and control registers (also CS from Segment registers)
+	c-> EIP = (int)proc_function;
+	c-> EFLAGS = 0x0202;
 
     pcb_insert(new_process);
 }
@@ -245,10 +236,90 @@ void clear(device dev)
     outb(dev, "\033[2J");
 }
 
+/*
+ * Prints the version of the MPX, as well as a compilation date.
+ * Parameters: void
+ * Returns: void
+ */
+void version(void) // Prints version and compile date
+{
+    const char *version = "MPX Version R3\n";
+    const char *compileDate = "Compiled on: 3/22/24 \n";
+    sys_req(WRITE, COM1, version, strlen(version));
+    sys_req(WRITE, COM1, compileDate, strlen(compileDate));
+}
 
+/*
+ * Prints all available commands as well as a description for the user.
+ * Parameters: void
+ * Returns: void
+ */
 
+void help(void) // Prints all available commands
+{
 
+    const char *helpText = "Please type your command in all lowercase only. The following are all the commands available to use: \n"
+                           "\n"
+                           "---General Commands---\n\n"
 
+                           "Shutdown - Shut down the system\n"
+                           "Version - Display the current version & compilation date\n"
+                           "Help - Display all available commands\n"
+                           "Echo - Repeats previous message\n"
+                           "Get Date - Display current date\n"
+                           "Get Time -  Display current time\n"
+                           "Set Date - Set date to desired month/day/year\n"
+                           "Set Time -  Set time to desired hour/minute/second\n"
+                           "Clear - Clear the terminal & redisplay menu\n"
+                           "\n"
+                           "---PCB Commands---\n\n"
+                           "Delete PCB - Removes the requested process from queue\n"
+                           "Block PCB - Puts the process in blocked state\n"
+                           "Unblock PCB - Puts the process in the unblocked state\n"
+                           "Suspend PCB - Puts the process in the suspend state\n"
+                           "Resume PCB - Puts the process in the not suspended state\n"
+                           "Set PCB Priority - Changes a processes priority\n"
+                           "Show PCB - Displays the process's info\n"
+                           "Show Ready - Displays all process's info in ready queue\n"
+                           "Show Blocked - Displays all process's info in blocked queue\n"
+                           "Show All - Displays all process's info\n"
+
+                           "\n"
+                           "---R3 Commands---\n\n"
+                           "Yield - Yields the CPU. Any process in queue will finish first\n"
+                           "Load R3 - Loads the R3 test processes in a non-suspended state\n"
+                           "Load R3 Suspended - Loads the R3 test processes in a suspended state\n";
+
+    sys_req(WRITE, COM1, helpText, strlen(helpText));
+    //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
+}
+
+/*
+ * Shut down the operating system, and asks for confirmation
+ * Parameters: void
+ * Returns: void
+ */
+int shutdown(void)
+{
+    char *shutdCheck = "Are you sure you want to shut down? (y/n)\n>";
+    sys_req(WRITE, COM1, shutdCheck, strlen(shutdCheck)); // Confirmation to shut down
+
+    char confirm[50] = {0};
+    int nread = sys_req(READ, COM1, confirm, sizeof(confirm));
+
+    if (nread > 0 && confirm[0] == 'y') // Shutdown confirmed
+    {
+        char *confMsg = "Shutdown confirmed.\n";
+        sys_req(WRITE, COM1, confMsg, strlen(confMsg));
+        return 1;
+    }
+    else // Cancel shutdown
+    {
+        char *cancelMsg = "Shutdown canceled.\n";
+        sys_req(WRITE, COM1, cancelMsg, strlen(cancelMsg));
+        return 0;
+    }
+}
 
 /*
  * Writes a new line to ensure consistent formatting
@@ -300,11 +371,7 @@ void comhand(void)
                                      "\n\t"
                                       "-- r3 commands --\n\t"
                                       "\n\t"
-                                      "load r3\n\tload r3 suspended\n"
-                                      "\n\t"
-                                      "-- r4 commands --\n\t"
-                                      "\n\t"
-                                      "set alarm\n\tremove alarm\n";
+                                      "yield\n\tload r3\n\tload r3 suspended\n";
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 

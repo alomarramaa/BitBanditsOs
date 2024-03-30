@@ -253,7 +253,7 @@ struct pcb* pcb_allocate(void)
     // new_pcbPtr->exe_state = BLOCKED;
     // new_pcbPtr->disp_state = SUSPENDED;
     memset(new_pcbPtr->pcb_stack, 0, sizeof(new_pcbPtr->pcb_stack));
-    new_pcbPtr->stackPtr = &(new_pcbPtr->pcb_stack[PCB_STACK_SIZE - ESP_OFFSET]);
+    new_pcbPtr->stackPtr = new_pcbPtr->pcb_stack+PCB_STACK_SIZE-sizeof(struct context);
     new_pcbPtr->next_pcbPtr = NULL;
     new_pcbPtr->prev_pcbPtr = NULL;
 
