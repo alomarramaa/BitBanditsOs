@@ -65,7 +65,7 @@ void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority
         return;
     }
 
-    // Sets registers of stack starting with ESP and ending with EBP
+    // Sets registers of stack
    struct context *c = (struct context*)new_process->stackPtr;
    	// Segment registers
     c-> CS = 0x08;
@@ -87,7 +87,7 @@ void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority
 	c-> ECX = 0;
 	c-> EAX = 0;
 
-	// Status and control registers (also CS from Segment registers)
+	// Status and control registers 
 	c-> EIP = (int)proc_function;
 	c-> EFLAGS = 0x0202;
 

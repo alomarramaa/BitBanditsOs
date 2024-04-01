@@ -4,26 +4,7 @@
 #include <stddef.h>
 #include "sys_req.h"
 
-#define PCB_STACK_SIZE (1024 / sizeof(int))
-
-#define ESP_OFFSET (32 / 8)
-#define CS_OFFSET (16 / 8)
-#define DS_OFFSET (16 / 8)
-#define SS_OFFSET (16 / 8)
-#define ES_OFFSET (16 / 8)
-#define FS_OFFSET (16 / 8)
-#define GS_OFFSET (16 / 8)
-#define EAX_OFFSET (32 / 8)
-#define EBX_OFFSET (32 / 8)
-#define ECX_OFFSET (32 / 8)
-#define EDX_OFFSET (32 / 8)
-#define ESI_OFFSET (32 / 8)
-#define EDI_OFFSET (32 / 8)
-#define EFLAGS_OFFSET (32 / 8)
-#define EIP_OFFSET (32 / 8)
-#define EBP_OFFSET (32 / 8)
-
-#define EIP_TOTAL_OFFSET (ESP_OFFSET + CS_OFFSET + DS_OFFSET + SS_OFFSET + ES_OFFSET + FS_OFFSET + GS_OFFSET + EAX_OFFSET + EBX_OFFSET + ECX_OFFSET + EDX_OFFSET + ESI_OFFSET + EDI_OFFSET + EFLAGS_OFFSET + EIP_OFFSET)
+#define PCB_STACK_SIZE (1024)
 
 typedef enum queue_tag
 {
