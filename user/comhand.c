@@ -45,11 +45,11 @@ void load_r3(void)
     const char *loadMessage = "Loading unsuspended R3 processes into memory.\n";
     sys_req(WRITE, COM1, loadMessage, strlen(loadMessage));
 
-    r3_load_pcb(proc1, "Process_1", 5);
-    r3_load_pcb(proc2, "Process_2", 1);
-    r3_load_pcb(proc3, "Process_3", 9);
+    r3_load_pcb(proc1, "Process_1", 3);
+    r3_load_pcb(proc2, "Process_2", 3);
+    r3_load_pcb(proc3, "Process_3", 3);
     r3_load_pcb(proc4, "Process_4", 3);
-    r3_load_pcb(proc5, "Process_5", 1);
+    r3_load_pcb(proc5, "Process_5", 3);
 }
 
 void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority)
