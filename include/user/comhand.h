@@ -10,10 +10,11 @@ void yield(void);
 
 void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority);
 
-void create_proc(void);
-void load_create_proc(void (*proc_function)(void), char *proc_name, int proc_priority);
+void create_comhand_proc(void);
 
+void create_system_idle_proc(void);
 
+void load_proc(void (*proc_function)(void), char *proc_name, int proc_priority);
 
 void comhand(void);
 

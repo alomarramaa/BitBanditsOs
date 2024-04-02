@@ -94,9 +94,11 @@ void kmain(void)
 	klogv(COM1, "Transferring control to commhand...");
 
 	// Create a comhand pcb with the highest priority
-	create_proc();
+	create_comhand_proc();
 
 	// Create a system idle process running as the lowest priority (provided in sys_idle_process()
+
+	create_system_idle_proc();
 
 	// pcb* comhand_pcb = pcb_setup("command_handler", SYSTEM, 0);
 	// // Set the stack to contain the address of the comhand function
@@ -123,13 +125,19 @@ void kmain(void)
 	klogv(COM1, "Halting CPU...");
 }
 
-void create_proc(void)
+void create_comhand_proc(void)
 {
 
-	load_create_proc(comhand, "comhand", 0);
+	load_proc(comhand, "comhand", 0);
 }
 
-void load_create_proc(void (*proc_function)(void), char *proc_name, int proc_priority)
+void create_system_idle_proc(void)
+{
+
+	load_proc(sys_idle_process, "idle", 9);
+}
+
+void load_proc(void (*proc_function)(void), char *proc_name, int proc_priority)
 {
 
 	// Attempt to create a pcb for the given function
