@@ -7,7 +7,6 @@
 static struct context *initial_context = NULL;
 struct pcb *current_process;
 
-
 // Define the C function for handling the ISR
 struct context *sys_call(struct context *current_context)
 {
@@ -20,11 +19,7 @@ struct context *sys_call(struct context *current_context)
         {
             initial_context = current_context;
         }
-        if (current_process != NULL)
-        {
-            current_process->stackPtr = (int *)current_context;
-            pcb_insert(current_process);
-        }
+
         process_queue *ready_q = get_ready_queue();
         if (ready_q->queue_head != NULL)
         { // Update the stack ptr
@@ -32,9 +27,13 @@ struct context *sys_call(struct context *current_context)
             // Get first pcb in ready queue and remove it from the queue
             pcb *next_process = ready_q->queue_head;
             pcb_remove(next_process);
-          
-          
+
             // flip for R4
+            if (current_process != NULL)
+            {
+                current_process->stackPtr = (int *)current_context;
+                pcb_insert(current_process);
+            }
 
             // Put current process back into queue and update current process variable
             current_process = next_process;

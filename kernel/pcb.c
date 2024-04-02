@@ -253,7 +253,7 @@ struct pcb* pcb_allocate(void)
     // new_pcbPtr->exe_state = BLOCKED;
     // new_pcbPtr->disp_state = SUSPENDED;
     memset(new_pcbPtr->pcb_stack, 0, sizeof(new_pcbPtr->pcb_stack));
-    new_pcbPtr->stackPtr = &(new_pcbPtr->pcb_stack[PCB_STACK_SIZE - ESP_OFFSET]);
+    new_pcbPtr->stackPtr = new_pcbPtr->pcb_stack+PCB_STACK_SIZE-sizeof(struct context);
     new_pcbPtr->next_pcbPtr = NULL;
     new_pcbPtr->prev_pcbPtr = NULL;
 
@@ -265,43 +265,15 @@ int pcb_free(struct pcb* to_freePtr)
     return sys_free_mem(to_freePtr);
 }
 
-void pcb_stack_init(struct pcb* to_init)
-{
-    // Sets registers of stack starting with ESP and ending with EBP
-    *(to_init->stackPtr) = 0x0000;
-    to_init->stackPtr -= CS_OFFSET;
-    *(to_init->stackPtr) = 0x08;
-    to_init->stackPtr -= DS_OFFSET;
-    *(to_init->stackPtr) = 0x10;
-    to_init->stackPtr -= SS_OFFSET;
-    *(to_init->stackPtr) = 0x10;
-    to_init->stackPtr -= ES_OFFSET;
-    *(to_init->stackPtr) = 0x10;
-    to_init->stackPtr -= FS_OFFSET;
-    *(to_init->stackPtr) = 0x10;
-    to_init->stackPtr -= GS_OFFSET;
-    *(to_init->stackPtr) = 0x10;
-    to_init->stackPtr -= EAX_OFFSET;
-    *(to_init->stackPtr) = 0x0000;
-    to_init->stackPtr -= EBX_OFFSET;
-    *(to_init->stackPtr) = 0x0000;
-    to_init->stackPtr -= ECX_OFFSET;
-    *(to_init->stackPtr) = 0x0000;
-    to_init->stackPtr -= EDX_OFFSET;
-    *(to_init->stackPtr) = 0x0000;
-    to_init->stackPtr -= ESI_OFFSET;
-    *(to_init->stackPtr) = 0x0000;
-    to_init->stackPtr -= EDI_OFFSET;
-    *(to_init->stackPtr) = 0x0000;
-    to_init->stackPtr -= EFLAGS_OFFSET;
-    *(to_init->stackPtr) = 0x0202;
-    to_init->stackPtr -= EIP_OFFSET;
-    to_init->stackPtr -= EBP_OFFSET;
-    *(to_init->stackPtr) = 0x0000;
-}
-
 struct pcb* pcb_setup(char* new_process_name, class_type new_process_class, int new_process_priority)
 {
+    // Ensure a legal priority input
+    // if ((process_priority < 0 || process_priority > 9) ||
+    //     (process_priority == 0 && process_class == SYSTEM))
+    // {
+    //     return NULL;
+    // }
+
     // Allocate memory for the pcb and ensure proper allocation
     pcb* new_pcbPtr = pcb_allocate();
     if (new_pcbPtr == NULL)
@@ -331,8 +303,6 @@ struct pcb* pcb_setup(char* new_process_name, class_type new_process_class, int 
     new_pcbPtr->process_priority = new_process_priority;
     new_pcbPtr->exe_state = READY;
     new_pcbPtr->disp_state = NOT_SUSPENDED;
-    
-    pcb_stack_init(new_pcbPtr);
 
     return new_pcbPtr;
 }
