@@ -45,11 +45,11 @@ void load_r3(void)
     const char *loadMessage = "Loading unsuspended R3 processes into memory.\n";
     sys_req(WRITE, COM1, loadMessage, strlen(loadMessage));
 
-    r3_load_pcb(proc1, "Process_1", 5);
-    r3_load_pcb(proc2, "Process_2", 1);
-    r3_load_pcb(proc3, "Process_3", 9);
+    r3_load_pcb(proc1, "Process_1", 3);
+    r3_load_pcb(proc2, "Process_2", 3);
+    r3_load_pcb(proc3, "Process_3", 3);
     r3_load_pcb(proc4, "Process_4", 3);
-    r3_load_pcb(proc5, "Process_5", 1);
+    r3_load_pcb(proc5, "Process_5", 3);
 }
 
 void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority)
@@ -65,31 +65,31 @@ void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority
         return;
     }
 
-    // Sets registers of stack starting with ESP and ending with EBP
-   struct context *c = (struct context*)new_process->stackPtr;
-   	// Segment registers
-    c-> CS = 0x08;
-	c-> SS = 0x10;
-	c-> GS = 0x10;
-	c-> FS = 0x10;
-	c-> ES = 0x10;
-	c-> DS = 0x10;
+    // Sets registers of stack
+    struct context *c = (struct context *)new_process->stackPtr;
+    // Segment registers
+    c->CS = 0x08;
+    c->SS = 0x10;
+    c->GS = 0x10;
+    c->FS = 0x10;
+    c->ES = 0x10;
+    c->DS = 0x10;
 
-	// General-purpose registers
-	c-> EDI = 0;
-	c-> ESI = 0;
-    
-    c-> ESP = (int)new_process ->stackPtr;//top of pcb stack
-	c-> EBP = (int)new_process ->pcb_stack;//bottom of pcb stack
+    // General-purpose registers
+    c->EDI = 0;
+    c->ESI = 0;
 
-	c-> EBX = 0;
-	c-> EDX = 0;
-	c-> ECX = 0;
-	c-> EAX = 0;
+    c->ESP = (int)new_process->stackPtr;  // top of pcb stack
+    c->EBP = (int)new_process->pcb_stack; // bottom of pcb stack
 
-	// Status and control registers (also CS from Segment registers)
-	c-> EIP = (int)proc_function;
-	c-> EFLAGS = 0x0202;
+    c->EBX = 0;
+    c->EDX = 0;
+    c->ECX = 0;
+    c->EAX = 0;
+
+    // Status and control registers
+    c->EIP = (int)proc_function;
+    c->EFLAGS = 0x0202;
 
     pcb_insert(new_process);
 }
@@ -237,91 +237,6 @@ void clear(device dev)
 }
 
 /*
- * Prints the version of the MPX, as well as a compilation date.
- * Parameters: void
- * Returns: void
- */
-void version(void) // Prints version and compile date
-{
-    const char *version = "MPX Version R3\n";
-    const char *compileDate = "Compiled on: 3/22/24 \n";
-    sys_req(WRITE, COM1, version, strlen(version));
-    sys_req(WRITE, COM1, compileDate, strlen(compileDate));
-}
-
-/*
- * Prints all available commands as well as a description for the user.
- * Parameters: void
- * Returns: void
- */
-
-void help(void) // Prints all available commands
-{
-
-    const char *helpText = "Please type your command in all lowercase only. The following are all the commands available to use: \n"
-                           "\n"
-                           "---General Commands---\n\n"
-
-                           "Shutdown - Shut down the system\n"
-                           "Version - Display the current version & compilation date\n"
-                           "Help - Display all available commands\n"
-                           "Echo - Repeats previous message\n"
-                           "Get Date - Display current date\n"
-                           "Get Time -  Display current time\n"
-                           "Set Date - Set date to desired month/day/year\n"
-                           "Set Time -  Set time to desired hour/minute/second\n"
-                           "Clear - Clear the terminal & redisplay menu\n"
-                           "\n"
-                           "---PCB Commands---\n\n"
-                           "Delete PCB - Removes the requested process from queue\n"
-                           "Block PCB - Puts the process in blocked state\n"
-                           "Unblock PCB - Puts the process in the unblocked state\n"
-                           "Suspend PCB - Puts the process in the suspend state\n"
-                           "Resume PCB - Puts the process in the not suspended state\n"
-                           "Set PCB Priority - Changes a processes priority\n"
-                           "Show PCB - Displays the process's info\n"
-                           "Show Ready - Displays all process's info in ready queue\n"
-                           "Show Blocked - Displays all process's info in blocked queue\n"
-                           "Show All - Displays all process's info\n"
-
-                           "\n"
-                           "---R3 Commands---\n\n"
-                           "Yield - Yields the CPU. Any process in queue will finish first\n"
-                           "Load R3 - Loads the R3 test processes in a non-suspended state\n"
-                           "Load R3 Suspended - Loads the R3 test processes in a suspended state\n";
-
-    sys_req(WRITE, COM1, helpText, strlen(helpText));
-    //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));
-}
-
-/*
- * Shut down the operating system, and asks for confirmation
- * Parameters: void
- * Returns: void
- */
-int shutdown(void)
-{
-    char *shutdCheck = "Are you sure you want to shut down? (y/n)\n>";
-    sys_req(WRITE, COM1, shutdCheck, strlen(shutdCheck)); // Confirmation to shut down
-
-    char confirm[50] = {0};
-    int nread = sys_req(READ, COM1, confirm, sizeof(confirm));
-
-    if (nread > 0 && confirm[0] == 'y') // Shutdown confirmed
-    {
-        char *confMsg = "Shutdown confirmed.\n";
-        sys_req(WRITE, COM1, confMsg, strlen(confMsg));
-        return 1;
-    }
-    else // Cancel shutdown
-    {
-        char *cancelMsg = "Shutdown canceled.\n";
-        sys_req(WRITE, COM1, cancelMsg, strlen(cancelMsg));
-        return 0;
-    }
-}
-
-/*
  * Writes a new line to ensure consistent formatting
  * Parameters: void
  * Returns: void
@@ -368,7 +283,7 @@ void comhand(void)
                                       "--- pcb commands--\n\t"
                                       "\n\t"
                                       "delete pcb\n\tblock pcb\n\tunblock pcb\n\tsuspend pcb\n\tresume pcb\n\tset pcb priority\n\tshow pcb\n\tshow ready\n\tshow blocked\n\tshow all\n\t"
-                                     "\n\t"
+                                      "\n\t"
                                       "-- r3 commands --\n\t"
                                       "\n\t"
                                       "yield\n\tload r3\n\tload r3 suspended\n";
@@ -381,8 +296,9 @@ void comhand(void)
         sys_req(WRITE, COM1, "> ", 1); // Display prompt
 
         char buf[100] = {0};
-        
-        
+
+        sys_req(IDLE); // yield CPU before prompting for user input
+
         int nread = sys_req(READ, COM1, buf, sizeof(buf));
         sys_req(WRITE, COM1, buf, nread);
 
@@ -393,9 +309,8 @@ void comhand(void)
 
             if (shutdown() == 1)
             {
-                //pcb_free(); //empty pcb queue
+                // pcb_free(); //empty pcb queue
                 sys_req(EXIT);
-                
             }
         }
 
@@ -483,68 +398,58 @@ void comhand(void)
         {
             load_r3_suspended();
         }
-          else if (strcmp(buf, "set alarm") == 0)
+        else if (strcmp(buf, "set alarm") == 0)
         {
-            
+
             int hour, minute, seconds;
             char message[100];
-            char tempBuf[100] ; 
+            char tempBuf[100];
 
-            
             sys_req(WRITE, COM1, "Enter hour: \n", 14);
             int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             hour = atoi(tempBuf);
 
-            
             sys_req(WRITE, COM1, "\nEnter minute: \n", 17);
             nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             minute = atoi(tempBuf);
 
-            
             sys_req(WRITE, COM1, "\nEnter seconds: \n", 18);
             nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             seconds = atoi(tempBuf);
 
-            
             sys_req(WRITE, COM1, "\nEnter message: \n", 18);
             nread = sys_req(READ, COM1, message, sizeof(message));
             message[nread] = '\0';
 
-            
             addAlarm(hour, minute, seconds, message);
             sys_req(WRITE, COM1, "\nAlarm set.\n", 13);
         }
         else if (strcmp(buf, "remove alarm") == 0)
         {
-            
-            int hour, minute, seconds;
-            char tempBuf[100]; 
 
-            
+            int hour, minute, seconds;
+            char tempBuf[100];
+
             sys_req(WRITE, COM1, "Enter hour: \n", 12);
             int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             hour = atoi(tempBuf);
 
-            
             sys_req(WRITE, COM1, "\nEnter minute: \n", 17);
             nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             minute = atoi(tempBuf);
 
-            
             sys_req(WRITE, COM1, "\nEnter seconds: \n", 18);
             nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             seconds = atoi(tempBuf);
 
-            
             removeAlarm(hour, minute, seconds);
             sys_req(WRITE, COM1, "\nAlarm removed.\n", 17);
-
         }
 
         else // Unrecognised command
@@ -552,5 +457,6 @@ void comhand(void)
             char *errorMsg = "Improper command entered. Please try again. Ensure that the command is listed and in lowercase.\n";
             sys_req(WRITE, COM1, errorMsg, strlen(errorMsg));
         }
+        sys_req(IDLE); // yield CPU after prompting for user input
     }
 }

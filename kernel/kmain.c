@@ -93,20 +93,25 @@ void kmain(void)
 	// the system.
 	klogv(COM1, "Transferring control to commhand...");
 
-	// Create a comhand pcb with the lowest priority
-	pcb* comhand_pcb = pcb_setup("command_handler", SYSTEM, 0);
-	// Set the stack to contain the address of the comhand function
-	comhand_pcb->pcb_stack[PCB_STACK_SIZE - EIP_TOTAL_OFFSET] = (int) comhand;
-	pcb_insert(comhand_pcb);
+	// Create a comhand pcb with the highest priority
+	create_comhand_pcb();
 
-	// Create the system idle process pcb with the lowest priority
-	pcb* sys_idle_pcb = pcb_setup("system_idle_proc", SYSTEM, 9);
-	// Set the stack to contain the address of the system idle process function
-	sys_idle_pcb->pcb_stack[PCB_STACK_SIZE - EIP_TOTAL_OFFSET] = (int) sys_idle_process;
-	pcb_insert(sys_idle_pcb);
+	// Create a system idle process running as the lowest priority (provided in sys_idle_process()
+	create_system_idle_pcb();
+
+	// pcb* comhand_pcb = pcb_setup("command_handler", SYSTEM, 0);
+	// // Set the stack to contain the address of the comhand function
+	// comhand_pcb->pcb_stack[PCB_STACK_SIZE] = (int) comhand;
+	// pcb_insert(comhand_pcb);
+
+	// // Create the system idle process pcb with the lowest priority
+	// pcb* sys_idle_pcb = pcb_setup("system_idle_proc", SYSTEM, 9);
+	// // Set the stack to contain the address of the system idle process function
+	// sys_idle_pcb->pcb_stack[PCB_STACK_SIZE] = (int) sys_idle_process;
+	// pcb_insert(sys_idle_pcb);
 
 	// Give the comhand function control
-	__asm__ volatile ("int $0x60" :: "a"(IDLE));
+	__asm__ volatile("int $0x60" ::"a"(IDLE));
 
 	// 10) System Shutdown -- *headers to be determined by your design*
 	// After your command handler returns, take care of any clean up that
@@ -117,4 +122,61 @@ void kmain(void)
 	// Execution of kmain() will complete and return to where it was called
 	// in boot.s, which will then attempt to power off Qemu or halt the CPU.
 	klogv(COM1, "Halting CPU...");
+}
+
+void load_comhand_pcb(void (*comhand)(void), char *proc_name, int proc_priority)
+{
+
+	// Attempt to create a pcb for the given function
+	pcb *new_process = pcb_setup(proc_name, USER, proc_priority);
+
+	// Sets registers of stack
+	struct context *c = (struct context *)new_process->stackPtr;
+	c->FS = 0x10;
+	c->GS = 0x10;
+	c->DS = 0x10;
+	c->ES = 0x10;
+	c->CS = 0x8;
+	c->ESP = (int)(new_process->stackPtr);
+	c->EBP = (int)(new_process->pcb_stack);
+	c->EIP = (int)comhand;
+	c->EFLAGS = 0x202;
+
+	pcb_insert(new_process);
+}
+
+//Creates a comhand PCB with the highest priority
+void create_comhand_pcb(void)
+{
+
+	load_comhand_pcb(comhand, "comhand", 0);
+}
+
+void load_system_idle_pcb(void (*sys_idle_process)(void), char *proc_name, int proc_priority)
+{
+
+	// Attempt to create a pcb for the given function
+	pcb *new_process = pcb_setup(proc_name, SYSTEM, proc_priority);
+
+	// Sets registers of stack
+	struct context *c = (struct context *)new_process->stackPtr;
+	c->FS = 0x10;
+	c->GS = 0x10;
+	c->DS = 0x10;
+	c->ES = 0x10;
+	c->CS = 0x8;
+	c->ESP = (int)(new_process->stackPtr);
+	c->EBP = (int)(new_process->pcb_stack);
+	c->EIP = (int)sys_idle_process;
+	c->EFLAGS = 0x202;
+
+	pcb_insert(new_process);
+}
+
+
+//Creates a system idle PCB with the lowest priority
+void create_system_idle_pcb(void)
+{
+
+	load_system_idle_pcb(sys_idle_process, "idle", 9);
 }

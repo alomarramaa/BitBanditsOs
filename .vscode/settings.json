@@ -25,6 +25,9 @@
         "processes.h": "c",
         "time.h": "c",
         "string.h": "c",
-        "comhand.h": "c"
+        "comhand.h": "c",
+        "version.h": "c",
+        "stdlib.h": "c",
+        "date.h": "c"
     }
 }
