@@ -17,6 +17,7 @@
 #include <user/help.h>
 #include <user/version.h>
 #include <user/shutdown.h>
+#include <user/r5_user_commands.h>
 
 // Colors
 #define RED "\x1B[31m"
@@ -290,7 +291,12 @@ void comhand(void)
                                       "\n\t"
                                       "-- r4 commands --\n\t"
                                       "\n\t"
-                                      "set alarm\n\tremove alarm\n";
+                                      "set alarm\n\tremove alarm\n"
+                                      "\n\t"
+                                      "-- r5 commands --\n\t"
+                                      "\n\t"
+                                      "allocate memory\n\tfree memory\n\tshow allocated memory\n\tshow free memory\n\n";
+
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
 
@@ -454,6 +460,23 @@ void comhand(void)
 
             removeAlarm(hour, minute, seconds);
             sys_req(WRITE, COM1, "\nAlarm removed.\n", 17);
+        }
+
+        else if (strcmp(buf, "allocate memory") == 0)
+        {
+            allocate_memory();
+        }
+        else if (strcmp(buf, "free memory") == 0)
+        {
+            free_memory();
+        }
+        else if (strcmp(buf, "show allocated memory") == 0)
+        {
+            show_allocated_memory();
+        }
+        else if (strcmp(buf, "show free memory") == 0)
+        {
+            show_free_memory();
         }
 
         else // Unrecognised command

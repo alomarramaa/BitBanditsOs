@@ -8,8 +8,8 @@
  */
 void version(void) // Prints version and compile date
 {
-    const char *version = "\nMPX Version R4\n";
-    const char *compileDate = "Compiled on: 3/22/24 \n\n";
+    const char *version = "\nMPX Version R5\n";
+    const char *compileDate = "Compiled on: 4/12/24 \n\n";
     sys_req(WRITE, COM1, version, strlen(version));
     sys_req(WRITE, COM1, compileDate, strlen(compileDate));
 }

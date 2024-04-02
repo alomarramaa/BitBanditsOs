@@ -21,6 +21,8 @@ user/version.o: user/version.c include/user/version.h
 
 user/shutdown.o: user/shutdown.c include/user/shutdown.h
 
+user/r5_user_commands.o: user/r5_user_commands.c include/user/r5_user_commands.h
+
 USER_OBJECTS=\
 	user/core.o \
 	user/date.o \
@@ -31,5 +33,6 @@ USER_OBJECTS=\
 	user/user_pcb.o\
 	user/help.o\
 	user/version.o\
-	user/shutdown.o
+	user/shutdown.o\
+	user/r5_user_commands.o
 	
