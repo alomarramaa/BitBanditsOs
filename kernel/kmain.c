@@ -99,7 +99,6 @@ void kmain(void)
 	// Create a system idle process running as the lowest priority (provided in sys_idle_process()
 	create_system_idle_pcb();
 
-
 	// pcb* comhand_pcb = pcb_setup("command_handler", SYSTEM, 0);
 	// // Set the stack to contain the address of the comhand function
 	// comhand_pcb->pcb_stack[PCB_STACK_SIZE] = (int) comhand;
@@ -125,21 +124,14 @@ void kmain(void)
 	klogv(COM1, "Halting CPU...");
 }
 
-void create_comhand_pcb(void)
-{
-
-    load_comhand_pcb(comhand, "comhand", 0);
-
-}
-
 void load_comhand_pcb(void (*comhand)(void), char *proc_name, int proc_priority)
 {
 
-    // Attempt to create a pcb for the given function
-    pcb *new_process = pcb_setup(proc_name, USER, proc_priority);
+	// Attempt to create a pcb for the given function
+	pcb *new_process = pcb_setup(proc_name, USER, proc_priority);
 
-    // Sets registers of stack
-   struct context *c = (struct context*)new_process->stackPtr;
+	// Sets registers of stack
+	struct context *c = (struct context *)new_process->stackPtr;
 	c->FS = 0x10;
 	c->GS = 0x10;
 	c->DS = 0x10;
@@ -150,24 +142,24 @@ void load_comhand_pcb(void (*comhand)(void), char *proc_name, int proc_priority)
 	c->EIP = (int)comhand;
 	c->EFLAGS = 0x202;
 
-    pcb_insert(new_process);
+	pcb_insert(new_process);
 }
 
-void create_system_idle_pcb(void)
+//Creates a comhand PCB with the highest priority
+void create_comhand_pcb(void)
 {
 
-  load_system_idle_pcb(sys_idle_process, "idle", 9);
-
+	load_comhand_pcb(comhand, "comhand", 0);
 }
 
 void load_system_idle_pcb(void (*sys_idle_process)(void), char *proc_name, int proc_priority)
 {
 
-    // Attempt to create a pcb for the given function
-    pcb *new_process = pcb_setup(proc_name, SYSTEM, proc_priority);
+	// Attempt to create a pcb for the given function
+	pcb *new_process = pcb_setup(proc_name, SYSTEM, proc_priority);
 
-    // Sets registers of stack
-   struct context *c = (struct context*)new_process->stackPtr;
+	// Sets registers of stack
+	struct context *c = (struct context *)new_process->stackPtr;
 	c->FS = 0x10;
 	c->GS = 0x10;
 	c->DS = 0x10;
@@ -178,7 +170,13 @@ void load_system_idle_pcb(void (*sys_idle_process)(void), char *proc_name, int p
 	c->EIP = (int)sys_idle_process;
 	c->EFLAGS = 0x202;
 
-    pcb_insert(new_process);
+	pcb_insert(new_process);
 }
 
 
+//Creates a system idle PCB with the lowest priority
+void create_system_idle_pcb(void)
+{
+
+	load_system_idle_pcb(sys_idle_process, "idle", 9);
+}
