@@ -100,17 +100,6 @@ void kmain(void)
 
 	create_system_idle_proc();
 
-	// pcb* comhand_pcb = pcb_setup("command_handler", SYSTEM, 0);
-	// // Set the stack to contain the address of the comhand function
-	// comhand_pcb->pcb_stack[PCB_STACK_SIZE] = (int) comhand;
-	// pcb_insert(comhand_pcb);
-
-	// // Create the system idle process pcb with the lowest priority
-	// pcb* sys_idle_pcb = pcb_setup("system_idle_proc", SYSTEM, 9);
-	// // Set the stack to contain the address of the system idle process function
-	// sys_idle_pcb->pcb_stack[PCB_STACK_SIZE] = (int) sys_idle_process;
-	// pcb_insert(sys_idle_pcb);
-
 	// Give the comhand function control
 	__asm__ volatile("int $0x60" ::"a"(IDLE));
 
