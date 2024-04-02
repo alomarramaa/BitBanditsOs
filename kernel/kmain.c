@@ -94,10 +94,9 @@ void kmain(void)
 	klogv(COM1, "Transferring control to commhand...");
 
 	// Create a comhand pcb with the highest priority
-	create_comhand_pcb();
+	create_proc();
 
 	// Create a system idle process running as the lowest priority (provided in sys_idle_process()
-	create_system_idle_pcb();
 
 	// pcb* comhand_pcb = pcb_setup("command_handler", SYSTEM, 0);
 	// // Set the stack to contain the address of the comhand function
@@ -124,35 +123,13 @@ void kmain(void)
 	klogv(COM1, "Halting CPU...");
 }
 
-void load_comhand_pcb(void (*comhand)(void), char *proc_name, int proc_priority)
+void create_proc(void)
 {
 
-	// Attempt to create a pcb for the given function
-	pcb *new_process = pcb_setup(proc_name, USER, proc_priority);
-
-	// Sets registers of stack
-	struct context *c = (struct context *)new_process->stackPtr;
-	c->FS = 0x10;
-	c->GS = 0x10;
-	c->DS = 0x10;
-	c->ES = 0x10;
-	c->CS = 0x8;
-	c->ESP = (int)(new_process->stackPtr);
-	c->EBP = (int)(new_process->pcb_stack);
-	c->EIP = (int)comhand;
-	c->EFLAGS = 0x202;
-
-	pcb_insert(new_process);
+	load_create_proc(comhand, "comhand", 0);
 }
 
-//Creates a comhand PCB with the highest priority
-void create_comhand_pcb(void)
-{
-
-	load_comhand_pcb(comhand, "comhand", 0);
-}
-
-void load_system_idle_pcb(void (*sys_idle_process)(void), char *proc_name, int proc_priority)
+void load_create_proc(void (*proc_function)(void), char *proc_name, int proc_priority)
 {
 
 	// Attempt to create a pcb for the given function
@@ -160,23 +137,29 @@ void load_system_idle_pcb(void (*sys_idle_process)(void), char *proc_name, int p
 
 	// Sets registers of stack
 	struct context *c = (struct context *)new_process->stackPtr;
-	c->FS = 0x10;
+	// Segment registers
+	c->CS = 0x08;
+	c->SS = 0x10;
 	c->GS = 0x10;
-	c->DS = 0x10;
+	c->FS = 0x10;
 	c->ES = 0x10;
-	c->CS = 0x8;
-	c->ESP = (int)(new_process->stackPtr);
-	c->EBP = (int)(new_process->pcb_stack);
-	c->EIP = (int)sys_idle_process;
-	c->EFLAGS = 0x202;
+	c->DS = 0x10;
+
+	// General-purpose registers
+	c->EDI = 0;
+	c->ESI = 0;
+
+	c->ESP = (int)new_process->stackPtr;  // top of pcb stack
+	c->EBP = (int)new_process->pcb_stack; // bottom of pcb stack
+
+	c->EBX = 0;
+	c->EDX = 0;
+	c->ECX = 0;
+	c->EAX = 0;
+
+	// Status and control registers
+	c->EIP = (int)proc_function;
+	c->EFLAGS = 0x0202;
 
 	pcb_insert(new_process);
-}
-
-
-//Creates a system idle PCB with the lowest priority
-void create_system_idle_pcb(void)
-{
-
-	load_system_idle_pcb(sys_idle_process, "idle", 9);
 }

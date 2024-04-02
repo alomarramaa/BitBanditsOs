@@ -28,6 +28,9 @@
         "comhand.h": "c",
         "version.h": "c",
         "stdlib.h": "c",
-        "date.h": "c"
+        "date.h": "c",
+        "interrupts.h": "c",
+        "gdt.h": "c",
+        "vm.h": "c"
     }
 }
