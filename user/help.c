@@ -42,7 +42,11 @@ void help(void) // Prints all available commands
                            "---R4 Commands---\n\n"
                            "Set Alarm - Creates an alarm prompted by the user\n"
                            "Remove Alarm - Deletes an alarm selected by the user\n"
-                           "\n";
+                           "\n"
+                           "--R5 Commands--\n\n"
+                           "Allocate Memory - Allocates heap memory and prints (in hexadecimal) the address of the newly allocated block or an error message if allocation fails\n"
+                           "Free Memory - Frees heap memory or prints an error message if freeing fails\n"
+                           "Show Allocated Memory & Show Free Memory - Walks through the corresponding list, printing information for each block of memory such as start address of the block in hexadecimal and the size of the block (in decimal)\n";
 
     sys_req(WRITE, COM1, helpText, strlen(helpText));
     //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));

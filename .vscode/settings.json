@@ -31,6 +31,8 @@
         "date.h": "c",
         "interrupts.h": "c",
         "gdt.h": "c",
-        "vm.h": "c"
+        "vm.h": "c",
+        "memory.h": "c",
+        "r5_user_commands.h": "c"
     }
 }

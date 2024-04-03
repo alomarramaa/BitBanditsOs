@@ -85,6 +85,8 @@ void kmain(void)
 	// 8) MPX Modules -- *headers vary*
 	// Module specific initialization -- not all modules require this.
 	klogv(COM1, "Initializing MPX modules...");
+
+	//initialize_heap(50000);
 	// R5: sys_set_heap_functions(...);
 	// R4: create commhand and idle processes
 
@@ -99,17 +101,6 @@ void kmain(void)
 	// Create a system idle process running as the lowest priority (provided in sys_idle_process()
 
 	create_system_idle_proc();
-
-	// pcb* comhand_pcb = pcb_setup("command_handler", SYSTEM, 0);
-	// // Set the stack to contain the address of the comhand function
-	// comhand_pcb->pcb_stack[PCB_STACK_SIZE] = (int) comhand;
-	// pcb_insert(comhand_pcb);
-
-	// // Create the system idle process pcb with the lowest priority
-	// pcb* sys_idle_pcb = pcb_setup("system_idle_proc", SYSTEM, 9);
-	// // Set the stack to contain the address of the system idle process function
-	// sys_idle_pcb->pcb_stack[PCB_STACK_SIZE] = (int) sys_idle_process;
-	// pcb_insert(sys_idle_pcb);
 
 	// Give the comhand function control
 	__asm__ volatile("int $0x60" ::"a"(IDLE));
