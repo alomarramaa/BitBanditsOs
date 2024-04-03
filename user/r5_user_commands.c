@@ -6,6 +6,20 @@
 • The size of the allocation request (in decimal)*/
 void allocateMemory(void)
 {
+    // Allocate memory from the heap using the provided size
+    void *allocated_block = allocate_memory(size);
+    
+    // Check if allocation was successful
+    if (allocated_block != NULL) {
+        // Print the address of the allocated block in hexadecimal format
+        //printf("Allocated memory at address: %p\n", allocated_block);
+        const char *message = "Allocated memory at address: \n";
+        sys_req(WRITE, COM1, message, strlen(message));
+    } else {
+        // Print an error message if allocation fails
+        const char *message = "Error: Allocation failed. Insufficient memory or invalid size.\n";
+        sys_req(WRITE, COM1, message, strlen(message));
+    }
 }
 
 /*Frees heap memory by calling free memory() • Prints an error message if freeing fails
