@@ -464,19 +464,19 @@ void comhand(void)
 
         else if (strcmp(buf, "allocate memory") == 0)
         {
-            allocate_memory();
+            allocateMemory();
         }
         else if (strcmp(buf, "free memory") == 0)
         {
-            free_memory();
+            freeMemory();
         }
         else if (strcmp(buf, "show allocated memory") == 0)
         {
-            show_allocated_memory();
+            showAllocatedMemory();
         }
         else if (strcmp(buf, "show free memory") == 0)
         {
-            show_free_memory();
+            showFreeMemory();
         }
 
         else // Unrecognised command

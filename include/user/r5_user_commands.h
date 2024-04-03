@@ -4,9 +4,9 @@
 
 #include <string.h>
 
-void allocate_memory(void);
-void free_memory(void);
-void show_allocated_memory(void);
-void show_free_memory(void);
+void allocateMemory(void);
+void freeMemory(void);
+void showAllocatedMemory(void);
+void showFreeMemory(void);
 
 #endif
