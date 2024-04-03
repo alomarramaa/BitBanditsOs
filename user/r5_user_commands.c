@@ -27,6 +27,17 @@ void allocateMemory(void)
 • The address of the memory block (not MCB) to free (in hexadecimal)*/
 void freeMemory(void)
 {
+    // Free memory using the provided address
+    int result = free_memory(address);
+    
+    // Check if freeing was successful
+    if (result == 0) {
+        // Print a success message if freeing is successful
+        printf("Memory at address %p freed successfully.\n", address);
+    } else {
+        // Print an error message if freeing fails
+        printf("Error: Failed to free memory at address %p.\n", address);
+    }
 }
 
 /*
@@ -35,8 +46,27 @@ void freeMemory(void)
 • The start address of the block (not the MCB address) (in hexadecimal) • The size of the block (in decimal)*/
 void showAllocatedMemory(void)
 {
+    MemoryControlBlock *current_block = allocated_list; // Start from the head of the allocated list
+    
+    // Iterate through the allocated list
+    while (current_block != NULL) {
+        // Print information for the current allocated memory block
+        printf("Start Address: %p, Size: %zu bytes\n", current_block->start_address, current_block->size);
+        
+        // Move to the next block in the allocated list
+        current_block = current_block->next;
+    }
 }
 
-void showFreeMemory(void)
+void showFreeMemory(void) 
 {
+    MemoryControlBlock *current_block = free_list; // Start from the head of the free list
+    
+    // Iterate through the free list
+    while (current_block != NULL) {
+        // Print information for the current free memory block
+        printf("Start Address: %p, Size: %zu bytes\n", current_block->start_address, current_block->size);
+        
+        // Move to the next block in the free list
+        current_block = current_block->next;
 }
