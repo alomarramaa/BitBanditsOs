@@ -3,12 +3,12 @@
 
 #include <string.h>
 
-void allocateMemory(HeapManager *heap_manager, size_t size);
+void allocateMemory(struct HeapManager *heap_manager, size_t size);
 
-void freeMemory(HeapManager *heap_manager, void *address);
+void freeMemory(struct HeapManager *heap_manager, void *address);
 
-void showAllocatedMemory(HeapManager *heap_manager);
+void showAllocatedMemory(struct HeapManager *heap_manager);
 
-void showFreeMemory(HeapManager *heap_manager);
+void showFreeMemory(struct HeapManager *heap_manager);
 
 #endif
