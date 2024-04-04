@@ -2,6 +2,7 @@
 #include <mpx/library.h> 
 #include <user/r5_user_commands.h>
 #include <sys_req.h>
+#include <mpx/io.h>
 
 /*Allocates heap memory by calling allocate memory() and prints (in hexadecimal) the address of the newly allocated block (not the MCB address), or an error message if allocation fails
 • Parameters:
@@ -15,9 +16,13 @@ void allocateMemory(HeapManager *heap_manager, size_t size)
     if (allocated_block != NULL) {
         // Print the address of the allocated block in hexadecimal format
        // Print the address of the allocated block
-        char message[100];
-        sprintf(message, "Allocated memory at address: %p\n", allocated_block);
+        char* message = "Allocated memory at address: ";
         sys_req(WRITE, COM1, message, strlen(message));
+        itoa(allocated_block, message);
+        sys_req(WRITE, COM1, message, strlen(message));
+        message = "\n";
+        sys_req(WRITE, COM1, message, strlen(message));
+
     } else {
         // Print an error message if allocation fails
        const char *message = "Error: Allocation failed. Insufficient memory or invalid size.\n";
@@ -36,12 +41,19 @@ void freeMemory(HeapManager *heap_manager, void *address)
      // Check if freeing was successful
     if (result == 0) {
         // Print a success message if freeing is successful
-        char message[100];
-        sprintf(message, "Memory at address %p freed successfully.\n", address);
+        char* message = "Memory at address ";
+        sys_req(WRITE, COM1, message, strlen(message));
+        itoa(address, message);
+        sys_req(WRITE, COM1, message, strlen(message));
+        message = " freed successfully\n";
         sys_req(WRITE, COM1, message, strlen(message));
     } else {
         // Print an error message if freeing fails
-        const char *message = "Error: Failed to free memory at address %p.\n";
+        char* message = "Error: Failed to free memory at address ";
+        sys_req(WRITE, COM1, message, strlen(message));
+        itoa(address, message);
+        sys_req(WRITE, COM1, message, strlen(message));
+        message = "\n";
         sys_req(WRITE, COM1, message, strlen(message));
     }
 }
@@ -57,8 +69,15 @@ void showAllocatedMemory(HeapManager *heap_manager)
     // Iterate through the allocated list
     while (current_block != NULL) {
         // Print information for the current allocated memory block
-        char message[100];
-        sprintf(message, "Start Address: %p, Size: %zu bytes\n", current_block->start_address, current_block->size);
+        char* message = "Start Address: ";
+        sys_req(WRITE, COM1, message, strlen(message));
+        itoa(current_block->start_address, message);
+        sys_req(WRITE, COM1, message, strlen(message));
+        message = " , Size: ";
+        sys_req(WRITE, COM1, message, strlen(message));
+        itoa(current_block->size, message);
+        sys_req(WRITE, COM1, message, strlen(message));
+        message = " bytes\n";
         sys_req(WRITE, COM1, message, strlen(message));
         
         // Move to the next block in the allocated list
@@ -73,8 +92,15 @@ void showFreeMemory(HeapManager *heap_manager)
     // Iterate through the free list
     while (current_block != NULL) {
         // Print information for the current free memory block
-        char message[100];
-        sprintf(message, "Start Address: %p, Size: %zu bytes\n", current_block->start_address, current_block->size);
+        char* message = "Start Address: ";
+        sys_req(WRITE, COM1, message, strlen(message));
+        itoa(current_block->start_address, message);
+        sys_req(WRITE, COM1, message, strlen(message));
+        message = " , Size: ";
+        sys_req(WRITE, COM1, message, strlen(message));
+        itoa(current_block->size, message);
+        sys_req(WRITE, COM1, message, strlen(message));
+        message = " bytes\n";
         sys_req(WRITE, COM1, message, strlen(message));
         
         // Move to the next block in the free list
