@@ -1,7 +1,7 @@
 
+#include <mpx/library.h> 
 #include <user/r5_user_commands.h>
 #include <sys_req.h>
-#include <mpx/library.h>
 
 /*Allocates heap memory by calling allocate memory() and prints (in hexadecimal) the address of the newly allocated block (not the MCB address), or an error message if allocation fails
 • Parameters:
