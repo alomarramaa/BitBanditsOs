@@ -2,6 +2,7 @@
 #define _R5_USER_COMMANDS_H
 
 #include <string.h>
+#include <mpx/library.h>
 
 void allocateMemory(struct HeapManager *heap_manager, size_t size);
 
