@@ -13,7 +13,7 @@ typedef struct mcb {
 } MCB;
 
 // Define heap manager data structure
-typedef struct {
+typedef struct HeapManager{
     MCB *free_list;      // List of free memory blocks
     MCB *allocated_list; // List of allocated memory blocks
 } HeapManager;
