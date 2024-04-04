@@ -4,28 +4,13 @@
 #include <string.h>
 #include "sys_req.h"
 
-// Define the structure of the Memory Control Block.
-typedef struct mcb {
-    void *start_address;  // Base address of usable memory
-    size_t size;          // Size of the block in bytes
-    struct mcb *next;     // Pointer to the nect MCB in the list
-    struct mcb *prev;     // Pointer to the previos MCB in the list
-    int is_free;          // Flag indicating whether the block is free or allocated
-} MCB;  
-
-// Define heap manager data structure
-typedef struct {
-    MCB *free_list;      // List of free memory blocks
-    MCB *allocated_list; // List of allocated memory blocks
-} HeapManager;
-
 // Function to initialize the heap manager
 void initialize_heap(HeapManager *hm, size_t heap_size) {
     // Allocate memory for the heap using kmalloc()
     void *heap_memory = kmalloc(heap_size, 0, NULL);
     if (heap_memory == NULL) {
         // Handle error: unable to allocate memory for the heap
-        sys_req(WRITE, COM1, "Error: Unable to allocate memory for the heap.\n");
+        sys_req(WRITE, COM1, "Error: Unable to allocate memory for the heap.\n", strlen("Error: Unable to allocate memory for the heap.\n"));
         return;
     }
     
