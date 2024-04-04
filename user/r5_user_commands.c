@@ -18,7 +18,7 @@ void allocateMemory(struct HeapManager *heap_manager, size_t size)
        // Print the address of the allocated block
         char* message = "Allocated memory at address: ";
         sys_req(WRITE, COM1, message, strlen(message));
-        itoa(allocated_block, message);
+        itoa((int)allocated_block, message);
         sys_req(WRITE, COM1, message, strlen(message));
         message = "\n";
         sys_req(WRITE, COM1, message, strlen(message));
@@ -43,7 +43,7 @@ void freeMemory(struct HeapManager *heap_manager, void *address)
         // Print a success message if freeing is successful
         char* message = "Memory at address ";
         sys_req(WRITE, COM1, message, strlen(message));
-        itoa(address, message);
+        itoa((int)address, message);
         sys_req(WRITE, COM1, message, strlen(message));
         message = " freed successfully\n";
         sys_req(WRITE, COM1, message, strlen(message));
@@ -51,7 +51,7 @@ void freeMemory(struct HeapManager *heap_manager, void *address)
         // Print an error message if freeing fails
         char* message = "Error: Failed to free memory at address ";
         sys_req(WRITE, COM1, message, strlen(message));
-        itoa(address, message);
+        itoa((int)address, message);
         sys_req(WRITE, COM1, message, strlen(message));
         message = "\n";
         sys_req(WRITE, COM1, message, strlen(message));
@@ -71,7 +71,7 @@ void showAllocatedMemory(struct HeapManager *heap_manager)
         // Print information for the current allocated memory block
         char* message = "Start Address: ";
         sys_req(WRITE, COM1, message, strlen(message));
-        itoa(current_block->start_address, message);
+        itoa((int)current_block->start_address, message);
         sys_req(WRITE, COM1, message, strlen(message));
         message = " , Size: ";
         sys_req(WRITE, COM1, message, strlen(message));
@@ -94,7 +94,7 @@ void showFreeMemory(struct HeapManager *heap_manager)
         // Print information for the current free memory block
         char* message = "Start Address: ";
         sys_req(WRITE, COM1, message, strlen(message));
-        itoa(current_block->start_address, message);
+        itoa((int)current_block->start_address, message);
         sys_req(WRITE, COM1, message, strlen(message));
         message = " , Size: ";
         sys_req(WRITE, COM1, message, strlen(message));
