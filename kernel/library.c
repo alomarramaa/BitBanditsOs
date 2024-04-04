@@ -1,6 +1,8 @@
 #include <mpx/library.h>
 #include <stddef.h>
 #include <mpx/vm.h>
+#include <string.h>
+#include "sys_req.h"
 
 // Define the structure of the Memory Control Block.
 typedef struct mcb {
@@ -23,13 +25,13 @@ void initialize_heap(HeapManager *hm, size_t heap_size) {
     void *heap_memory = kmalloc(heap_size, 0, NULL);
     if (heap_memory == NULL) {
         // Handle error: unable to allocate memory for the heap
-        sys_req(WRITE, COM1, "Error: Unable to allocate memory for the heap.\n", strlen("Error: Unable to allocate memory for the heap.\n"));
+        sys_req(WRITE, COM1, "Error: Unable to allocate memory for the heap.\n");
         return;
     }
     
     // Create an MCB for the heap block
     MCB *heap_mcb = (MCB *)heap_memory;
-    heap_mcb->start_address = heap_memory + sizeof(MCB); // Skip MCB itself
+    heap_mcb->start_address = (char*)heap_memory + sizeof(MCB); // Skip MCB itself
     heap_mcb->size = heap_size - sizeof(MCB);
     heap_mcb->next = NULL;
     heap_mcb->prev = NULL;
