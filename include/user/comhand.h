@@ -6,7 +6,7 @@
 #include "date.h"
 #include "time.h"
 
-extern struct HeapManager hm;
+struct HeapManager hm;
 
 void yield(void);
 
