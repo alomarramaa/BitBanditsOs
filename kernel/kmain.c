@@ -8,6 +8,7 @@
 #include <user/date.h>
 #include <processes.h>
 #include <mpx/pcb.h>
+#include <mpx/library.h>
 
 #include <user/comhand.h>
 
@@ -86,7 +87,8 @@ void kmain(void)
 	// Module specific initialization -- not all modules require this.
 	klogv(COM1, "Initializing MPX modules...");
 
-	//initialize_heap(50000);
+	struct HeapManager hm;
+	initialize_heap(&hm, 50000);
 	// R5: sys_set_heap_functions(...);
 	// R4: create commhand and idle processes
 
