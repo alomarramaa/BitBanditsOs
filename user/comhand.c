@@ -256,6 +256,7 @@ void writeNewLine(void)
  */
 void comhand(void)
 {
+    /***************/
     // Welcome message
     const char *asciiArt =
         RED "\nWelcome to " RESET
@@ -464,19 +465,19 @@ void comhand(void)
 
         else if (strcmp(buf, "allocate memory") == 0)
         {
-            allocateMemory();
+            allocateMemory(&hm, hm.free_list->size);
         }
         else if (strcmp(buf, "free memory") == 0)
         {
-            freeMemory();
+            freeMemory(&hm, hm.allocated_list->start_address);
         }
         else if (strcmp(buf, "show allocated memory") == 0)
         {
-            showAllocatedMemory();
+            showAllocatedMemory(&hm);
         }
         else if (strcmp(buf, "show free memory") == 0)
         {
-            showFreeMemory();
+            showFreeMemory(&hm);
         }
 
         else // Unrecognised command
