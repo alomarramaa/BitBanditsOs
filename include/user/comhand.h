@@ -6,6 +6,8 @@
 #include "date.h"
 #include "time.h"
 
+extern struct HeapManager hm;
+
 void yield(void);
 
 void r3_load_pcb(void (*proc_function)(void), char *proc_name, int proc_priority);
