@@ -74,13 +74,24 @@ void freeMemory(struct HeapManager *heap_manager, void *address)
  Each command walks through the corresponding list, printing information for each block of memory */
 void showAllocatedMemory(struct HeapManager *heap_manager)
 {
+    if (heap_manager->allocated_list == NULL)
+    {
+        char *message = "There is no memory allocated currently.\n";
+        sys_req(WRITE, COM1, message, strlen(message));
+        return;
+    }
+
     MCB *current_block = heap_manager->allocated_list; // Start from the head of the allocated list
 
-    // Iterate through the allocated list
-    if (current_block != NULL)
+    int i = 1; // Index to separate various blocks
+    char* message = "Allocated Block ";
+    while (current_block != NULL)
     {
-        // Print information for the current allocated memory block
-        char *message = "Start Address: ";
+        // Print relevant information of current block
+        sys_req(WRITE, COM1, message, strlen(message));
+        itoa(i, message);
+        sys_req(WRITE, COM1, message, strlen(message));
+        char *message = "\nStart Address: ";
         sys_req(WRITE, COM1, message, strlen(message));
         itoa((int)current_block->start_address, message);
         sys_req(WRITE, COM1, message, strlen(message));
@@ -90,26 +101,40 @@ void showAllocatedMemory(struct HeapManager *heap_manager)
         sys_req(WRITE, COM1, message, strlen(message));
         message = " bytes\n";
         sys_req(WRITE, COM1, message, strlen(message));
-
-        // Move to the next block in the allocated list
-        current_block = current_block->next;
-    }
-    else
-    {
-        char *message = "There is no allocated memory to show. Please allocate memory and try again.\n";
+        message = "-------------\n";
         sys_req(WRITE, COM1, message, strlen(message));
+
+        // Increment through the list
+        i++;
+        current_block = current_block->rel_next;
     }
+
+    message = "End of Allocated List\n";
+    sys_req(WRITE, COM1, message, strlen(message));
+
+    return;
 }
 
 void showFreeMemory(struct HeapManager *heap_manager)
 {
-    MCB *current_block = heap_manager->free_list; // Start from the head of the free list
-
-    // Iterate through the free list
-    if (current_block != NULL)
+    if (heap_manager->free_list == NULL)
     {
-        // Print information for the current free memory block
-        char *message = "Start Address: ";
+        char *message = "There is no free memory currently.\n";
+        sys_req(WRITE, COM1, message, strlen(message));
+        return;
+    }
+
+    MCB *current_block = heap_manager->allocated_list; // Start from the head of the allocated list
+
+    int i = 1; // Index to separate various blocks
+    char* message = "Free Block ";
+    while (current_block != NULL)
+    {
+        // Print relevant information of current block
+        sys_req(WRITE, COM1, message, strlen(message));
+        itoa(i, message);
+        sys_req(WRITE, COM1, message, strlen(message));
+        char *message = "\nStart Address: ";
         sys_req(WRITE, COM1, message, strlen(message));
         itoa((int)current_block->start_address, message);
         sys_req(WRITE, COM1, message, strlen(message));
@@ -119,13 +144,16 @@ void showFreeMemory(struct HeapManager *heap_manager)
         sys_req(WRITE, COM1, message, strlen(message));
         message = " bytes\n";
         sys_req(WRITE, COM1, message, strlen(message));
-
-        // Move to the next block in the free list
-        current_block = current_block->next;
-    }
-
-    else {
-           char *message = "There is no free memory to show. Please free memory before trying again.\n";
+        message = "-------------\n";
         sys_req(WRITE, COM1, message, strlen(message));
+
+        // Increment through the list
+        i++;
+        current_block = current_block->rel_next;
     }
+
+    message = "End of Allocated List\n";
+    sys_req(WRITE, COM1, message, strlen(message));
+
+    return;
 }
