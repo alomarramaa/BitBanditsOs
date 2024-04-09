@@ -4,10 +4,19 @@
 #include <sys_req.h>
 #include <mpx/io.h>
 
+#define MAX_MEMORY (50000 - sizeof(MCB))
+
 /*Allocates heap memory and prints (in hexadecimal) the address of the newly allocated block, or an error message if allocation fails
 • Parameters: The size of the allocation request (in decimal)*/
 void allocateMemory(struct HeapManager *heap_manager, size_t size)
 {
+    if (size > MAX_MEMORY || size <= 0)
+    {
+        // Print an error message if size input is invalid
+        const char *message = "Error: Allocation failed. Size entered must be between 0 and max memory (not inclusive).\n";
+        sys_req(WRITE, COM1, message, strlen(message));
+    }
+
     // Allocate memory from the heap using the provided size
     void *allocated_block = allocate_memory(heap_manager, size);
 
@@ -25,7 +34,7 @@ void allocateMemory(struct HeapManager *heap_manager, size_t size)
     else
     {
         // Print an error message if allocation fails
-        const char *message = "Error: Allocation failed. Insufficient memory or invalid size.\n";
+        const char *message = "Error: Allocation failed. Insufficient memory available.\n";
         sys_req(WRITE, COM1, message, strlen(message));
     }
 }

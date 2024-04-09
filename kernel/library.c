@@ -39,9 +39,10 @@ void *allocate_memory(HeapManager *heap_manager, size_t size)
 {
     // Traverse the free list to find the first free block with sufficient size
     MCB *curr_block = heap_manager->free_list;
+
     while (curr_block != NULL) 
     {
-        if (curr_block->is_free && curr_block->size >= size) 
+        if (curr_block->is_free && curr_block->size >= size + sizeof(MCB)) 
         {
             // Allocate from this block
             if (curr_block->size > size + sizeof(MCB))
@@ -50,37 +51,96 @@ void *allocate_memory(HeapManager *heap_manager, size_t size)
                 MCB *new_block = (MCB *)((char *)curr_block->start_address + size);
                 new_block->start_address = (char *)curr_block->start_address + size + sizeof(MCB);
                 new_block->size = curr_block->size - size - sizeof(MCB);
+
+                // Add new block into overall list after current block
                 new_block->next = curr_block->next;
                 new_block->prev = curr_block;
-                new_block->is_free = 1;
-
                 if (curr_block->next != NULL)
                 {
                     curr_block->next->prev = new_block;
                 }
                 curr_block->next = new_block;
-                curr_block->size = size;
-            }
-            curr_block->is_free = 0; // Mark the block as allocated
+                
+                // Insert the new block into the free list in place of the block
+                // being allocated
+                new_block->rel_next = curr_block->rel_next;
+                new_block->rel_prev = curr_block->rel_prev;
+                if (curr_block->rel_next != NULL)
+                {
+                    curr_block->rel_next->rel_prev = new_block;
+                }
+                if (curr_block->rel_prev != NULL)
+                {
+                    curr_block->rel_prev->rel_next = new_block;
+                }
 
-            // Remove the allocated block from the free list
-            if (curr_block->prev != NULL)
-            {
-                curr_block->prev->next = curr_block->next;
+                curr_block->size = size;
+                new_block->is_free = 1;
             }
             else
             {
-                heap_manager->free_list = curr_block->next;
-            }
-            if (curr_block->next != NULL)
-            {
-                curr_block->next->prev = curr_block->prev;
+                // Remove block from free list
+                if (curr_block->rel_prev == NULL)
+                {
+                    // Current block is the head of the free list
+                    heap_manager->free_list = curr_block->rel_next;
+                }
+                else
+                {
+                    curr_block->rel_prev->rel_next = curr_block->rel_next;
+                }
+                
+                if (curr_block->rel_next != NULL)
+                {
+                    curr_block->rel_next->rel_prev = curr_block->rel_prev;
+                }
             }
 
             // Add the allocated block to the allocated list
-            curr_block->next = heap_manager->allocated_list;
-            heap_manager->allocated_list = curr_block;
-            
+            if (heap_manager->allocated_list == NULL)
+            {
+                heap_manager->allocated_list = curr_block;
+                curr_block->rel_next = NULL;
+                curr_block->rel_prev = NULL;
+            }
+            else
+            {
+                MCB* allocated_index = heap_manager->allocated_list;
+                if (allocated_index->start_address > curr_block->start_address)
+                {
+                    curr_block->rel_next = allocated_index;
+                    allocated_index->rel_prev = curr_block;
+                    heap_manager->allocated_list = curr_block;
+                    curr_block->is_free = 0;
+                }
+                else
+                {
+                    while (allocated_index->rel_next != NULL)
+                    {
+                        if (allocated_index->rel_next->start_address > curr_block->start_address)
+                        {
+                            allocated_index->rel_next->rel_prev = curr_block;
+                            curr_block->rel_next = allocated_index->rel_next;
+                            curr_block->rel_prev = allocated_index;
+                            allocated_index->rel_next = curr_block;
+
+                            curr_block->is_free = 0;
+                            break;
+                        }
+
+                        allocated_index = allocated_index->rel_next;
+                    }
+
+                    if (curr_block->is_free)
+                    {
+                        allocated_index->rel_next = curr_block;
+                        curr_block->rel_prev = allocated_index;
+                        curr_block->rel_next = NULL;
+                        curr_block->is_free = 0;
+                    }
+                }
+            }
+
             // Return the start address of the allocated block
             return curr_block->start_address;
         }

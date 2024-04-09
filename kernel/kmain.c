@@ -11,6 +11,8 @@
 #include <user/comhand.h>
 #include <mpx/library.h>
 
+#define HEAP_SIZE 50000
+
 struct HeapManager hm;
 
 static void klogv(device dev, const char *msg)
@@ -134,7 +136,7 @@ void kmain(void)
 	// 8) MPX Modules -- *headers vary*
 	// Module specific initialization -- not all modules require this.
 	klogv(COM1, "Initializing MPX modules...");
-	initialize_heap(&hm, 50000);
+	initialize_heap(&hm, HEAP_SIZE);
 	// R5: sys_set_heap_functions(...);
 	// R4: create commhand and idle processes
 
