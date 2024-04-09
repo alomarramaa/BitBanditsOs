@@ -73,6 +73,11 @@ void *allocate_memory(HeapManager *heap_manager, size_t size)
                 {
                     curr_block->rel_prev->rel_next = new_block;
                 }
+                else
+                {
+                    //Curr block is head of free list
+                    heap_manager->free_list = new_block;
+                }
 
                 curr_block->size = size;
                 new_block->is_free = 1;
