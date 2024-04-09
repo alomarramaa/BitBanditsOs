@@ -5,7 +5,8 @@
 #include "sys_req.h"
 
 // Function to initialize the heap manager
-void initialize_heap(HeapManager *heap_manager, size_t heap_size) {
+void initialize_heap(HeapManager *heap_manager, size_t heap_size) 
+{
     // Allocate memory for the heap using kmalloc()
     void *heap_memory = kmalloc(heap_size, 0, NULL);
     if (heap_memory == NULL)
