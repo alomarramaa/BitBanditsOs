@@ -11,7 +11,7 @@
 #include <user/comhand.h>
 #include <mpx/library.h>
 
-extern struct HeapManager hm;
+//extern struct HeapManager hm;
 
 static void klogv(device dev, const char *msg)
 {
