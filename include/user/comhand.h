@@ -6,7 +6,7 @@
 #include "date.h"
 #include "time.h"
 
-static struct HeapManager hm = {.allocated_list = NULL, .free_list = NULL};
+struct HeapManager hm = {.allocated_list = NULL, .free_list = NULL};
 
 void yield(void);
 
