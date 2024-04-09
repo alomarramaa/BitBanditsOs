@@ -4,9 +4,8 @@
 #include <sys_req.h>
 #include <mpx/io.h>
 
-/*Allocates heap memory by calling allocate memory() and prints (in hexadecimal) the address of the newly allocated block (not the MCB address), or an error message if allocation fails
-• Parameters:
-• The size of the allocation request (in decimal)*/
+/*Allocates heap memory and prints (in hexadecimal) the address of the newly allocated block, or an error message if allocation fails
+• Parameters: The size of the allocation request (in decimal)*/
 void allocateMemory(struct HeapManager *heap_manager, size_t size)
 {
     // Allocate memory from the heap using the provided size
@@ -16,7 +15,6 @@ void allocateMemory(struct HeapManager *heap_manager, size_t size)
     if (allocated_block != NULL)
     {
         // Print the address of the allocated block in hexadecimal format
-        // Print the address of the allocated block
         char *message = "Allocated memory at address: ";
         sys_req(WRITE, COM1, message, strlen(message));
         itoa((int)allocated_block, message);
@@ -32,9 +30,8 @@ void allocateMemory(struct HeapManager *heap_manager, size_t size)
     }
 }
 
-/*Frees heap memory by calling free memory() • Prints an error message if freeing fails
-• Parameters:
-• The address of the memory block (not MCB) to free (in hexadecimal)*/
+/*Frees heap memory or prints an error message if freeing fails
+ Parameters: The address of the memory block to free (in hexadecimal)*/
 void freeMemory(struct HeapManager *heap_manager, void *address)
 {
     // Free memory using the provided address
@@ -64,9 +61,7 @@ void freeMemory(struct HeapManager *heap_manager, void *address)
 }
 
 /*
- Each command walks through the corresponding list, printing information for each block of memory
-• Information needs to include:
-• The start address of the block (not the MCB address) (in hexadecimal) • The size of the block (in decimal)*/
+ Each command walks through the corresponding list, printing information for each block of memory */
 void showAllocatedMemory(struct HeapManager *heap_manager)
 {
     MCB *current_block = heap_manager->allocated_list; // Start from the head of the allocated list
