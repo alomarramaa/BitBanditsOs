@@ -7,8 +7,10 @@
 typedef struct mcb {
     void *start_address;  // Base address of usable memory
     size_t size;          // Size of the block in bytes
-    struct mcb *next;     // Pointer to the next MCB in the list
-    struct mcb *prev;     // Pointer to the previous MCB in the list
+    struct mcb *next;     // Pointer to the next MCB in the full list
+    struct mcb *prev;     // Pointer to the previous MCB in the full list
+    struct mcb *rel_next; // Pointer to the next MCB in the relative list (free/allocated)
+    struct mcb *rel_prev; // Pointer to the previous MCB in the ralative list (free/allocated)
     int is_free;          // Flag indicating whether the block is free or allocated
 } MCB;
 

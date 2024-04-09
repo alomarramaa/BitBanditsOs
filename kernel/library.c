@@ -23,6 +23,8 @@ void initialize_heap(HeapManager *heap_manager, size_t heap_size)
     heap_mcb->size = heap_size - sizeof(MCB);
     heap_mcb->next = NULL;
     heap_mcb->prev = NULL;
+    heap_mcb->rel_next = NULL;
+    heap_mcb->rel_prev = NULL;
     heap_mcb->is_free = 1; // Initially, the entire block is free
 
     // Add the MCB to the free list
