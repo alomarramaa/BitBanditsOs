@@ -8,6 +8,7 @@
 #include <user/date.h>
 #include <processes.h>
 #include <mpx/pcb.h>
+#include <user/comhand.h>
 #include <mpx/library.h>
 
 struct HeapManager* heap_man = &hm;
@@ -18,6 +19,53 @@ static void klogv(device dev, const char *msg)
 	serial_out(dev, prefix, strlen(prefix));
 	serial_out(dev, msg, strlen(msg));
 	serial_out(dev, "\r\n", 2);
+}
+
+void load_proc(void (*proc_function)(void), char *proc_name, int proc_priority)
+{
+
+	// Attempt to create a pcb for the given function
+	pcb *new_process = pcb_setup(proc_name, SYSTEM, proc_priority);
+
+	// Sets registers of stack
+	struct context *c = (struct context *)new_process->stackPtr;
+	// Segment registers
+	c->CS = 0x08;
+	c->SS = 0x10;
+	c->GS = 0x10;
+	c->FS = 0x10;
+	c->ES = 0x10;
+	c->DS = 0x10;
+
+	// General-purpose registers
+	c->EDI = 0;
+	c->ESI = 0;
+
+	c->ESP = (int)new_process->stackPtr;  // top of pcb stack
+	c->EBP = (int)new_process->pcb_stack; // bottom of pcb stack
+
+	c->EBX = 0;
+	c->EDX = 0;
+	c->ECX = 0;
+	c->EAX = 0;
+
+	// Status and control registers
+	c->EIP = (int)proc_function;
+	c->EFLAGS = 0x0202;
+
+	pcb_insert(new_process);
+}
+
+void create_system_idle_proc(void)
+{
+
+	load_proc(sys_idle_process, "idle", 9);
+}
+
+void create_comhand_proc(void)
+{
+
+	load_proc(comhand, "comhand", 0);
 }
 
 void kmain(void)
@@ -114,51 +162,4 @@ void kmain(void)
 	// Execution of kmain() will complete and return to where it was called
 	// in boot.s, which will then attempt to power off Qemu or halt the CPU.
 	klogv(COM1, "Halting CPU...");
-}
-
-void create_comhand_proc(void)
-{
-
-	load_proc(comhand, "comhand", 0);
-}
-
-void create_system_idle_proc(void)
-{
-
-	load_proc(sys_idle_process, "idle", 9);
-}
-
-void load_proc(void (*proc_function)(void), char *proc_name, int proc_priority)
-{
-
-	// Attempt to create a pcb for the given function
-	pcb *new_process = pcb_setup(proc_name, SYSTEM, proc_priority);
-
-	// Sets registers of stack
-	struct context *c = (struct context *)new_process->stackPtr;
-	// Segment registers
-	c->CS = 0x08;
-	c->SS = 0x10;
-	c->GS = 0x10;
-	c->FS = 0x10;
-	c->ES = 0x10;
-	c->DS = 0x10;
-
-	// General-purpose registers
-	c->EDI = 0;
-	c->ESI = 0;
-
-	c->ESP = (int)new_process->stackPtr;  // top of pcb stack
-	c->EBP = (int)new_process->pcb_stack; // bottom of pcb stack
-
-	c->EBX = 0;
-	c->EDX = 0;
-	c->ECX = 0;
-	c->EAX = 0;
-
-	// Status and control registers
-	c->EIP = (int)proc_function;
-	c->EFLAGS = 0x0202;
-
-	pcb_insert(new_process);
 }
