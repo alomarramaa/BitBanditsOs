@@ -107,6 +107,7 @@ void *allocate_memory(HeapManager *heap_manager, size_t size)
                 heap_manager->allocated_list = curr_block;
                 curr_block->rel_next = NULL;
                 curr_block->rel_prev = NULL;
+                curr_block->is_free = 0;
             }
             else
             {
