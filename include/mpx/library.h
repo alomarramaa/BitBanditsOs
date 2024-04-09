@@ -18,7 +18,7 @@ typedef struct HeapManager{
     MCB *allocated_list; // List of allocated memory blocks
 } HeapManager;
 
-struct HeapManager hm;
+extern struct HeapManager hm;
 
 /*
 Allocates all memory available to your memory manager as a single, large free block using kmalloc()

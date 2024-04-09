@@ -78,18 +78,18 @@ void *allocate_memory(HeapManager *heap_manager, size_t size) {
     return NULL;
 }
 
-int free_memory(HeapManager *hm, void *ptr) {
+int free_memory(HeapManager *heap_manager, void *ptr) {
     // Find the MCB associated with the provided memory address
-    MCB *curr_block = hm->allocated_list;
+    MCB *curr_block = heap_manager->allocated_list;
     while (curr_block != NULL) {
         if (curr_block->start_address == ptr) {
             // Mark the block as free
             curr_block->is_free = 1;
             
             // Add the freed block to the free list
-            curr_block->next = hm->free_list;
+            curr_block->next = heap_manager->free_list;
             curr_block->prev = NULL;
-            hm->free_list = curr_block;
+            heap_manager->free_list = curr_block;
             
             // Merge adjacent free blocks if necessary
             if (curr_block->prev != NULL && curr_block->prev->is_free) {
@@ -117,7 +117,7 @@ int free_memory(HeapManager *hm, void *ptr) {
             if (curr_block->prev != NULL) {
                 curr_block->prev->next = curr_block->next;
             } else {
-                hm->allocated_list = curr_block->next;
+                heap_manager->allocated_list = curr_block->next;
             }
             if (curr_block->next != NULL) {
                 curr_block->next->prev = curr_block->prev;

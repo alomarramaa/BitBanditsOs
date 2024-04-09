@@ -26,6 +26,8 @@
 #define BLUE "\x1B[34m"
 #define RESET "\x1B[0m"
 
+struct HeapManager hm;
+
 /*
  * Cause the Command Handler to yield the CPU
  * Returns: void
