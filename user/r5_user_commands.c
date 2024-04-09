@@ -124,7 +124,7 @@ void showFreeMemory(struct HeapManager *heap_manager)
         return;
     }
 
-    MCB *current_block = heap_manager->allocated_list; // Start from the head of the allocated list
+    MCB *current_block = heap_manager->free_list; // Start from the head of the allocated list
 
     int i = 1; // Index to separate various blocks
     char* message = "Free Block ";
@@ -152,7 +152,7 @@ void showFreeMemory(struct HeapManager *heap_manager)
         current_block = current_block->rel_next;
     }
 
-    message = "End of Allocated List\n";
+    message = "End of Free List\n";
     sys_req(WRITE, COM1, message, strlen(message));
 
     return;
