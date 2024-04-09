@@ -8,7 +8,7 @@
 #include <user/date.h>
 #include <processes.h>
 #include <mpx/pcb.h>
-#include <user/comhand.h>
+#include "user/comhand.h"
 #include <mpx/library.h>
 
 static void klogv(device dev, const char *msg)
