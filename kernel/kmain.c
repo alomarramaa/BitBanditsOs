@@ -9,7 +9,7 @@
 #include <processes.h>
 #include <mpx/pcb.h>
 #include <user/comhand.h>
-#include <mpx/library.h>
+#include "mpx/library.h"
 
 struct HeapManager* heap_man = &hm;
 

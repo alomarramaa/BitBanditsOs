@@ -16,7 +16,7 @@
 #include <user/help.h>
 #include <user/version.h>
 #include <user/shutdown.h>
-#include <mpx/library.h>
+#include "mpx/library.h"
 #include <user/r5_user_commands.h>
 
 // Colors
