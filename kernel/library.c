@@ -42,7 +42,7 @@ void *allocate_memory(HeapManager *heap_manager, size_t size)
 
     while (curr_block != NULL) 
     {
-        if (curr_block->is_free && curr_block->size >= size + sizeof(MCB)) 
+        if (curr_block->is_free && curr_block->size >= size) 
         {
             // Allocate from this block
             if (curr_block->size > size + sizeof(MCB))
