@@ -5,7 +5,7 @@
 #include "sys_req.h"
 
 // Function to initialize the heap manager
-void initialize_heap(HeapManager *hm, size_t heap_size) {
+void initialize_heap(HeapManager *heap_manager, size_t heap_size) {
     // Allocate memory for the heap using kmalloc()
     void *heap_memory = kmalloc(heap_size, 0, NULL);
     if (heap_memory == NULL) {
@@ -23,16 +23,16 @@ void initialize_heap(HeapManager *hm, size_t heap_size) {
     heap_mcb->is_free = 1; // Initially, the entire block is free
     
     // Add the MCB to the free list
-    hm->free_list = heap_mcb;
+    heap_manager->free_list = heap_mcb;
     
     // Initialize the allocated list to be empty
-    hm->allocated_list = NULL;
+    heap_manager->allocated_list = NULL;
 }
 
 // Function to allocate memory from the heap
-void *allocate_memory(HeapManager *hm, size_t size) {
+void *allocate_memory(HeapManager *heap_manager, size_t size) {
     // Traverse the free list to find the first free block with sufficient size
-    MCB *curr_block = hm->free_list;
+    MCB *curr_block = heap_manager->free_list;
     while (curr_block != NULL) {
         if (curr_block->is_free && curr_block->size >= size) {
             // Allocate from this block
@@ -57,15 +57,15 @@ void *allocate_memory(HeapManager *hm, size_t size) {
             if (curr_block->prev != NULL) {
                 curr_block->prev->next = curr_block->next;
             } else {
-                hm->free_list = curr_block->next;
+                heap_manager->free_list = curr_block->next;
             }
             if (curr_block->next != NULL) {
                 curr_block->next->prev = curr_block->prev;
             }
             
             // Add the allocated block to the allocated list
-            curr_block->next = hm->allocated_list;
-            hm->allocated_list = curr_block;
+            curr_block->next = heap_manager->allocated_list;
+            heap_manager->allocated_list = curr_block;
             
             // Return the start address of the allocated block
             return curr_block->start_address;

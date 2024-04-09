@@ -29,7 +29,7 @@ Allocates all memory available to your memory manager as a single, large free bl
 • Returns:
 • None*/
 
-void initialize_heap(HeapManager *hm, size_t heap_size);
+void initialize_heap(HeapManager *heap_manager, size_t heap_size);
 
 /*Allocates memory from the heap (demonstrated using first-fit)
 • Splits a free memory block in two if necessary, initializing and/or updating
@@ -41,7 +41,7 @@ the corresponding MCBs
 • NULL on error
 • A pointer to the start address of the newly allocated block (not the MCB
 address)*/
-void *allocate_memory(HeapManager *hm, size_t heap_size);
+void *allocate_memory(HeapManager *heap_manager, size_t heap_size);
 
 /* Frees allocated memory, placing the associated block on the free list
 • If the freed block is adjacent to any other free blocks, they must be merged
@@ -52,7 +52,7 @@ into a single free block
 • 0 on success
 • non-zero on error*/
 
-int free_memory(HeapManager *hm, void *ptr);
+int free_memory(HeapManager *heap_manager, void *ptr);
 
 
 
