@@ -470,8 +470,7 @@ void comhand(void)
             size_t new_block_size;
             char tempBuf[100];
 
-            char* request = "Enter the size of the block you wish to allocate (in bytes): \n";
-            sys_req(WRITE, COM1, request, sizeof(request));
+            sys_req(WRITE, COM1, "Enter the size of the block you wish to allocate (in bytes): \n", 63);
             int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             new_block_size = atoi(tempBuf);

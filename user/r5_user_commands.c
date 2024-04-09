@@ -15,6 +15,7 @@ void allocateMemory(struct HeapManager *heap_manager, size_t size)
         // Print an error message if size input is invalid
         const char *message = "Error: Allocation failed. Size entered must be between 0 and max memory (not inclusive).\n";
         sys_req(WRITE, COM1, message, strlen(message));
+        return;
     }
 
     // Allocate memory from the heap using the provided size
