@@ -478,18 +478,18 @@ void comhand(void)
             tempBuf[nread] = '\0';
             new_block_size = atoi(tempBuf);
 
-            allocateMemory(&hm, new_block_size);
+            allocateMemory(new_block_size);
         }
         else if (strcmp(buf, "free memory") == 0)
         {
             char tempBuf[100];
             
-            sys_req(WRITE, COM1, "Enter the memory address you wish to free: \n", 45);
+            sys_req(WRITE, COM1, "Enter the memory address you wish to free (in hex): \n", 54);
             int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             void *address_to_free = (void *)atoi(tempBuf);
     
-            freeMemory(&hm, address_to_free);
+            freeMemory(address_to_free);
         }
         else if (strcmp(buf, "show allocated memory") == 0)
         {

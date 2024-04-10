@@ -4,16 +4,18 @@
 #include <string.h>
 #include "sys_req.h"
 
+struct HeapManager* heap_manager = &hm;
+
 // Function to initialize the heap manager
-void initialize_heap(HeapManager *heap_manager, size_t heap_size) 
+void initialize_heap(size_t heap_size) 
 {
     // Allocate memory for the heap using kmalloc()
     void *heap_memory = kmalloc(heap_size, 0, NULL);
     if (heap_memory == NULL)
     {
         // Handle error: unable to allocate memory for the heap
-        char *message = "Error: Unable to allocate memory for the heap.\n";
-        sys_req(WRITE, COM1, message, strlen(message));
+        //char *message = "Error: Unable to allocate memory for the heap.\n";
+        //sys_req(WRITE, COM1, message, strlen(message));
         return;
     }
 
@@ -35,7 +37,7 @@ void initialize_heap(HeapManager *heap_manager, size_t heap_size)
 }
 
 // Function to allocate memory from the heap
-void *allocate_memory(HeapManager *heap_manager, size_t size)
+void *allocate_memory(size_t size)
 {
     // Traverse the free list to find the first free block with sufficient size
     MCB *curr_block = heap_manager->free_list;
@@ -154,12 +156,12 @@ void *allocate_memory(HeapManager *heap_manager, size_t size)
     }
 
     // If no suitable block found, return NULL
-    char *message = "Error: No suitable block found.\n";
-    sys_req(WRITE, COM1, message, strlen(message));
+    //char *message = "Error: No suitable block found.\n";
+    //sys_req(WRITE, COM1, message, strlen(message));
     return NULL;
 }
 
-int free_memory(HeapManager *heap_manager, void *ptr)
+int free_memory(void *ptr)
 {
     // Find the MCB associated with the provided memory address
     MCB *curr_block = heap_manager->allocated_list;
@@ -167,52 +169,110 @@ int free_memory(HeapManager *heap_manager, void *ptr)
     {
         if (curr_block->start_address == ptr)
         {
-            // Mark the block as free
-            curr_block->is_free = 1;
-
-            // Add the freed block to the free list
-            curr_block->next = heap_manager->free_list;
-            curr_block->prev = NULL;
-            heap_manager->free_list = curr_block;
-            
-            // Merge adjacent free blocks if necessary
-            if (curr_block->prev != NULL && curr_block->prev->is_free)
-            {
-                // Merge with previous block
-                curr_block->prev->size += curr_block->size + sizeof(MCB);
-                curr_block->prev->next = curr_block->next;
-
-                if (curr_block->next != NULL)
-                {
-                    curr_block->next->prev = curr_block->prev;
-                }
-
-                curr_block = curr_block->prev;
-            }
-            if (curr_block->next != NULL && curr_block->next->is_free)
-            {
-                // Merge with next block
-                curr_block->size += curr_block->next->size + sizeof(MCB);
-                curr_block->next = curr_block->next->next;
-
-                if (curr_block->next != NULL)
-                {
-                    curr_block->next->prev = curr_block;
-                }
-            }
-
             // Remove the freed block from the allocated list
-            if (curr_block->prev != NULL)
+            if (curr_block->rel_prev != NULL)
             {
-                curr_block->prev->next = curr_block->next;
+                curr_block->rel_prev->rel_next = curr_block->rel_next;
             }
             else
             {
-                heap_manager->allocated_list = curr_block->next;
+                heap_manager->allocated_list = curr_block->rel_next;
             }
-            if (curr_block->next != NULL)
+            if (curr_block->rel_next != NULL)
             {
-                curr_block->next->prev = curr_block->prev;
+                curr_block->rel_next->rel_prev = curr_block->rel_prev;
+            }
+            curr_block->rel_next = NULL;
+            curr_block->rel_prev = NULL;
+
+            // Set block as free
+            curr_block->is_free = 1;
+
+            // // Add the freed block to the free list
+            // curr_block->next = heap_manager->free_list;
+            // curr_block->prev = NULL;
+            // heap_manager->free_list = curr_block;
+
+            // Add to free list
+            MCB* index = heap_manager->free_list;
+            if (index == NULL || index->start_address > curr_block->start_address)
+            {
+                // Becomes head of free list
+                heap_manager->free_list = curr_block;
+                if (index != NULL)
+                {
+                    curr_block->rel_next = index;
+                    index->rel_prev = curr_block;
+                }
+            }
+            else
+            {
+                while (index != NULL)
+                {
+                    if (index->start_address > curr_block->start_address)
+                    {
+                        index->rel_prev->rel_next = curr_block;
+                        curr_block->rel_prev = index->rel_prev;
+                        curr_block->rel_next = index;
+                        index->rel_prev = curr_block;
+                        break;
+                    }
+                    else if (index->rel_next == NULL)
+                    {
+                        index->rel_next = curr_block;
+                        curr_block->rel_prev = index;
+                        break;
+                    }
+
+                    index = index->rel_next;
+                }
+            }
+            
+            // Merge adjacent free blocks if necessary
+            if (curr_block->next != NULL && curr_block->next->is_free)
+            {
+                // Merge with next block
+                curr_block->size += curr_block->next->size;
+
+                curr_block->rel_next = curr_block->next->rel_next;
+                if (curr_block->next->rel_next != NULL)
+                {
+                    curr_block->next->rel_next->rel_prev = curr_block;
+                }
+                curr_block->next->rel_next = NULL;
+                curr_block->next->rel_prev = NULL;
+
+                MCB* temp = curr_block->next;
+                if (curr_block->next->next != NULL)
+                {
+                    curr_block->next->next->prev = curr_block;
+                }
+                curr_block->next = curr_block->next->next;
+                temp->next = NULL;
+                temp->prev = NULL;
+            }
+            if (curr_block->prev != NULL && curr_block->prev->is_free)
+            {
+                // Merge with previous block
+                curr_block = curr_block->prev;
+                curr_block->size += curr_block->next->size;
+
+                curr_block->rel_next = curr_block->next->rel_next;
+                if (curr_block->next->rel_next != NULL)
+                {
+                    curr_block->next->rel_next->rel_prev = curr_block;
+                }
+                curr_block->next->rel_next = NULL;
+                curr_block->next->rel_prev = NULL;
+
+                MCB* temp = curr_block->next;
+                if (curr_block->next->next != NULL)
+                {
+                    curr_block->next->next->prev = curr_block;
+                }
+                curr_block->next = curr_block->next->next;
+                temp->next = NULL;
+                temp->prev = NULL;
             }
 
             // Return success
@@ -222,7 +282,7 @@ int free_memory(HeapManager *heap_manager, void *ptr)
     }
 
     // If the provided memory address is not found in the allocated list, return error
-    char *message = "Error: Provided memory address is not found.\n";
-    sys_req(WRITE, COM1, message, strlen(message));
+    //char *message = "Error: Provided memory address is not found.\n";
+    //sys_req(WRITE, COM1, message, strlen(message));
     return -1;
 }
