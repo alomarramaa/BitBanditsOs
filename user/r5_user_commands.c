@@ -92,7 +92,7 @@ void showAllocatedMemory(struct HeapManager *heap_manager)
         sys_req(WRITE, COM1, r5_message, strlen(r5_message));
         itoa(i, r5_message);
         sys_req(WRITE, COM1, r5_message, strlen(r5_message));
-        char *message = "\nStart Address: ";
+        r5_message = "\nStart Address: ";
         sys_req(WRITE, COM1, r5_message, strlen(r5_message));
         itoa((int)current_block->start_address, r5_message);
         sys_req(WRITE, COM1, r5_message, strlen(r5_message));
@@ -136,7 +136,7 @@ void showFreeMemory(struct HeapManager *heap_manager)
         sys_req(WRITE, COM1, message2, strlen(message2));
         itoa(i, message2);
         sys_req(WRITE, COM1, message2, strlen(message2));
-        char *message2 = "\nStart Address: ";
+        message2 = "\nStart Address: ";
         sys_req(WRITE, COM1, message2, strlen(message2));
         itoa((int)current_block->start_address, message2);
         sys_req(WRITE, COM1, message2, strlen(message2));
