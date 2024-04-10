@@ -25,12 +25,11 @@ void allocateMemory(struct HeapManager *heap_manager, size_t size)
     if (allocated_block != NULL)
     {
         // Print the address of the allocated block in hexadecimal format
-        char *message = "Allocated memory at address: ";
-        sys_req(WRITE, COM1, message, strlen(message));
-        itoa((int)allocated_block, message);
-        sys_req(WRITE, COM1, message, strlen(message));
-        message = "\n";
-        sys_req(WRITE, COM1, message, strlen(message));
+        char *address;
+        sys_req(WRITE, COM1, "Allocated memory at address: ", 30);
+        itoa((int)allocated_block, address);
+        sys_req(WRITE, COM1, address, strlen(address));
+        sys_req(WRITE, COM1, "\n", 2);
     }
     else
     {
@@ -84,34 +83,27 @@ void showAllocatedMemory(struct HeapManager *heap_manager)
     MCB *current_block = heap_manager->allocated_list; // Start from the head of the allocated list
 
     int i = 1; // Index to separate various blocks
-    char* r5_message;
+    char* buffer;
     while (current_block != NULL)
     {
         // Print relevant information of current block
-        r5_message = "Allocated Memory Block ";
-        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
-        itoa(i, r5_message);
-        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
-        r5_message = "\nStart Address: ";
-        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
-        itoa((int)current_block->start_address, r5_message);
-        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
-        r5_message = "\nSize: ";
-        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
-        itoa(current_block->size, r5_message);
-        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
-        r5_message = " bytes\n";
-        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
-        r5_message = "-------------\n";
-        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
+        sys_req(WRITE, COM1, "Allocated Memory Block ", 24);
+        itoa(i, buffer);
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+        sys_req(WRITE, COM1, "\nStart Address: ", 17);
+        itoa((int)current_block->start_address, buffer);
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+        sys_req(WRITE, COM1, "\nSize: ", 8);
+        itoa(current_block->size, buffer);
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+        sys_req(WRITE, COM1, " bytes\n", 8);
+        sys_req(WRITE, COM1, "-------------\n", 15);
 
         // Increment through the list
         i++;
         current_block = current_block->rel_next;
     }
-
-    r5_message = "End of Allocated List\n";
-    sys_req(WRITE, COM1, r5_message, strlen(r5_message));
+    sys_req(WRITE, COM1, "End of Allocated List\n", 23);
 
     return;
 }
@@ -128,34 +120,27 @@ void showFreeMemory(struct HeapManager *heap_manager)
     MCB *current_block = heap_manager->free_list; // Start from the head of the allocated list
 
     int i = 1; // Index to separate various blocks
-    char* message2;
+    char* buffer;
     while (current_block != NULL)
     {
         // Print relevant information of current block
-        message2 = "Free Memory Block ";
-        sys_req(WRITE, COM1, message2, strlen(message2));
-        itoa(i, message2);
-        sys_req(WRITE, COM1, message2, strlen(message2));
-        message2 = "\nStart Address: ";
-        sys_req(WRITE, COM1, message2, strlen(message2));
-        itoa((int)current_block->start_address, message2);
-        sys_req(WRITE, COM1, message2, strlen(message2));
-        message2 = "\nSize: ";
-        sys_req(WRITE, COM1, message2, strlen(message2));
-        itoa(current_block->size, message2);
-        sys_req(WRITE, COM1, message2, strlen(message2));
-        message2 = " bytes\n";
-        sys_req(WRITE, COM1, message2, strlen(message2));
-        message2 = "-------------\n";
-        sys_req(WRITE, COM1, message2, strlen(message2));
+        sys_req(WRITE, COM1, "Allocated Memory Block ", 24);
+        itoa(i, buffer);
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+        sys_req(WRITE, COM1, "\nStart Address: ", 17);
+        itoa((int)current_block->start_address, buffer);
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+        sys_req(WRITE, COM1, "\nSize: ", 8);
+        itoa(current_block->size, buffer);
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+        sys_req(WRITE, COM1, " bytes\n", 8);
+        sys_req(WRITE, COM1, "-------------\n", 15);
 
         // Increment through the list
         i++;
         current_block = current_block->rel_next;
     }
-
-    message2 = "End of Free List\n";
-    sys_req(WRITE, COM1, message2, strlen(message2));
+    sys_req(WRITE, COM1, "End of Free List\n", 18);
 
     return;
 }
