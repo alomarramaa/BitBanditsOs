@@ -15,12 +15,16 @@ void checkAlarm(void);
 
 void showAlarms(void);
 
-void createAlarm(void);
+void createAlarm(int hour, int minute, int seconds, char* message);
 
 void addAlarm(int hour, int minute, int seconds, char* message);
 
-void removeAlarm(int hour, int minute, int seconds);
+//void removeAlarm(int hour, int minute, int seconds);
 
 extern struct alarm *alarmsHead;
 
+void removeAlarm(int index);
 
+void setAlarm(char* hours, char* minutes, char* seconds);
+
+int findAlarmIndex(int hour, int minute, int seconds);

@@ -413,7 +413,6 @@ void comhand(void)
         }
         else if (strcmp(buf, "set alarm") == 0)
         {
-
             int hour, minute, seconds;
             char message[100];
             char tempBuf[100];
@@ -437,12 +436,11 @@ void comhand(void)
             nread = sys_req(READ, COM1, message, sizeof(message));
             message[nread] = '\0';
 
-            addAlarm(hour, minute, seconds, message);
+            createAlarm(hour, minute, seconds, message);
             sys_req(WRITE, COM1, "\nAlarm set.\n", 13);
         }
         else if (strcmp(buf, "remove alarm") == 0)
         {
-
             int hour, minute, seconds;
             char tempBuf[100];
 
@@ -461,10 +459,15 @@ void comhand(void)
             tempBuf[nread] = '\0';
             seconds = atoi(tempBuf);
 
-            removeAlarm(hour, minute, seconds);
-            sys_req(WRITE, COM1, "\nAlarm removed.\n", 17);
+            // Find the index of the alarm based on the time
+            int index = findAlarmIndex(hour, minute, seconds);
+            if (index != -1) {
+                removeAlarm(index);
+                sys_req(WRITE, COM1, "\nAlarm removed.\n", 17);
+            } else {
+                sys_req(WRITE, COM1, "\nAlarm not found.\n", 18);
+            }
         }
-
         else if (strcmp(buf, "allocate memory") == 0)
         {
             size_t new_block_size;
