@@ -483,11 +483,11 @@ void comhand(void)
         }
         else if (strcmp(buf, "show allocated memory") == 0)
         {
-            showAllocatedMemory();
+            showAllocatedMemory(&hm);
         }
         else if (strcmp(buf, "show free memory") == 0)
         {
-            showFreeMemory();
+            showFreeMemory(&hm);
         }
 
         else // Unrecognised command

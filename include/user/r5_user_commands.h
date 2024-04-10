@@ -8,8 +8,8 @@ void allocateMemory(size_t size);
 
 void freeMemory(void *address);
 
-void showAllocatedMemory();
+void showAllocatedMemory(struct HeapManager *heap_manager);
 
-void showFreeMemory();
+void showFreeMemory(struct HeapManager *heap_manager);
 
 #endif
