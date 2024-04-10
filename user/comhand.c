@@ -479,7 +479,14 @@ void comhand(void)
         }
         else if (strcmp(buf, "free memory") == 0)
         {
-            freeMemory(&hm, hm.allocated_list->start_address);
+            char tempBuf[100];
+            
+            sys_req(WRITE, COM1, "Enter the memory address you wish to free: \n", 45);
+            int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
+            tempBuf[nread] = '\0';
+            void *address_to_free = (void *)atoi(tempBuf);
+    
+            freeMemory(&hm, address_to_free);
         }
         else if (strcmp(buf, "show allocated memory") == 0)
         {
