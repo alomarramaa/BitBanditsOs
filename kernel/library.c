@@ -4,6 +4,8 @@
 #include <string.h>
 #include "sys_req.h"
 
+struct HeapManager* heap_manager = &hm;
+
 // Function to initialize the heap manager
 void initialize_heap(size_t heap_size) 
 {

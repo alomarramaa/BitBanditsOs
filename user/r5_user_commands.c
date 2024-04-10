@@ -6,6 +6,8 @@
 
 #define MAX_MEMORY (50000 - sizeof(MCB))
 
+struct HeapManager* heap_manager = &hm;
+
 /*Allocates heap memory and prints (in hexadecimal) the address of the newly allocated block, or an error message if allocation fails
 • Parameters: The size of the allocation request (in decimal)*/
 void allocateMemory(size_t size)

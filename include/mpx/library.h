@@ -22,7 +22,6 @@ typedef struct HeapManager{
 
 extern struct HeapManager hm;
 
-extern struct HeapManager* heap_manager = &hm;
 
 /*
 Allocates all memory available to your memory manager as a single, large free block using kmalloc()
