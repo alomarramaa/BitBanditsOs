@@ -50,22 +50,20 @@ void freeMemory(void *address)
     if (result == 0)
     {
         // Print a success message if freeing is successful
-        char *message = "Memory at address ";
-        sys_req(WRITE, COM1, message, strlen(message));
-        itoa((int)address, message);
-        sys_req(WRITE, COM1, message, strlen(message));
-        message = " freed successfully\n";
-        sys_req(WRITE, COM1, message, strlen(message));
+        char buffer[100];
+        sys_req(WRITE, COM1, "Memory at address ", 19);
+        itoa((int)address, buffer);
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+        sys_req(WRITE, COM1, " freed successfully\n", 21);
     }
     else
     {
         // Print an error message if freeing fails
-        char *message = "Error: Failed to free memory at address ";
-        sys_req(WRITE, COM1, message, strlen(message));
-        itoa((int)address, message);
-        sys_req(WRITE, COM1, message, strlen(message));
-        message = "\n";
-        sys_req(WRITE, COM1, message, strlen(message));
+        char err_buff[100];
+        sys_req(WRITE, COM1, "Error: Failed to free memory at address ", 41);
+        itoa((int)address, err_buff);
+        sys_req(WRITE, COM1, err_buff, strlen(err_buff));
+        sys_req(WRITE, COM1, "\n Please ensure entered address matches the address of the block you wish to free.\n", 84);
     }
 }
 
@@ -112,7 +110,7 @@ void showFreeMemory(struct HeapManager *heap_manager)
 {
     if (heap_manager->free_list == NULL)
     {
-        char *message = "There is no free memory currently.\n";
+        char *message = "There is currently no free memory .\n";
         sys_req(WRITE, COM1, message, strlen(message));
         return;
     }
@@ -124,7 +122,7 @@ void showFreeMemory(struct HeapManager *heap_manager)
     while (current_block != NULL)
     {
         // Print relevant information of current block
-        sys_req(WRITE, COM1, "Free Memory Block ", 24);
+        sys_req(WRITE, COM1, "Free Memory Block ", 19);
         itoa(i, buffer);
         sys_req(WRITE, COM1, buffer, strlen(buffer));
         sys_req(WRITE, COM1, "\nStart Address: ", 17);
