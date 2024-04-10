@@ -124,7 +124,7 @@ void showFreeMemory(struct HeapManager *heap_manager)
     while (current_block != NULL)
     {
         // Print relevant information of current block
-        sys_req(WRITE, COM1, "Allocated Memory Block ", 24);
+        sys_req(WRITE, COM1, "Free Memory Block ", 24);
         itoa(i, buffer);
         sys_req(WRITE, COM1, buffer, strlen(buffer));
         sys_req(WRITE, COM1, "\nStart Address: ", 17);

@@ -137,7 +137,7 @@ void kmain(void)
 	// Module specific initialization -- not all modules require this.
 	klogv(COM1, "Initializing MPX modules...");
 	initialize_heap(&hm, HEAP_SIZE);
-	// R5: sys_set_heap_functions(...);
+	sys_set_heap_functions(allocate_memory, free_memory);
 	// R4: create commhand and idle processes
 
 	// 9) YOUR command handler -- *create and #include an appropriate .h file*
