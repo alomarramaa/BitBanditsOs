@@ -446,7 +446,7 @@ void comhand(void)
             int hour, minute, seconds;
             char tempBuf[100];
 
-            sys_req(WRITE, COM1, "Enter hour: \n", 12);
+            sys_req(WRITE, COM1, "Enter hour: \n", 14);
             int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             hour = atoi(tempBuf);
