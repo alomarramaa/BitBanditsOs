@@ -84,33 +84,34 @@ void showAllocatedMemory(struct HeapManager *heap_manager)
     MCB *current_block = heap_manager->allocated_list; // Start from the head of the allocated list
 
     int i = 1; // Index to separate various blocks
-    char* message = "Allocated Block ";
+    char* r5_message;
     while (current_block != NULL)
     {
         // Print relevant information of current block
-        sys_req(WRITE, COM1, message, strlen(message));
-        itoa(i, message);
-        sys_req(WRITE, COM1, message, strlen(message));
+        r5_message = "Allocated Memory Block ";
+        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
+        itoa(i, r5_message);
+        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
         char *message = "\nStart Address: ";
-        sys_req(WRITE, COM1, message, strlen(message));
-        itoa((int)current_block->start_address, message);
-        sys_req(WRITE, COM1, message, strlen(message));
-        message = "\nSize: ";
-        sys_req(WRITE, COM1, message, strlen(message));
-        itoa(current_block->size, message);
-        sys_req(WRITE, COM1, message, strlen(message));
-        message = " bytes\n";
-        sys_req(WRITE, COM1, message, strlen(message));
-        message = "-------------\n";
-        sys_req(WRITE, COM1, message, strlen(message));
+        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
+        itoa((int)current_block->start_address, r5_message);
+        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
+        r5_message = "\nSize: ";
+        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
+        itoa(current_block->size, r5_message);
+        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
+        r5_message = " bytes\n";
+        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
+        r5_message = "-------------\n";
+        sys_req(WRITE, COM1, r5_message, strlen(r5_message));
 
         // Increment through the list
         i++;
         current_block = current_block->rel_next;
     }
 
-    message = "End of Allocated List\n";
-    sys_req(WRITE, COM1, message, strlen(message));
+    r5_message = "End of Allocated List\n";
+    sys_req(WRITE, COM1, r5_message, strlen(r5_message));
 
     return;
 }
@@ -127,33 +128,34 @@ void showFreeMemory(struct HeapManager *heap_manager)
     MCB *current_block = heap_manager->free_list; // Start from the head of the allocated list
 
     int i = 1; // Index to separate various blocks
-    char* message = "Free Block ";
+    char* message2;
     while (current_block != NULL)
     {
         // Print relevant information of current block
-        sys_req(WRITE, COM1, message, strlen(message));
-        itoa(i, message);
-        sys_req(WRITE, COM1, message, strlen(message));
-        char *message = "\nStart Address: ";
-        sys_req(WRITE, COM1, message, strlen(message));
-        itoa((int)current_block->start_address, message);
-        sys_req(WRITE, COM1, message, strlen(message));
-        message = "\nSize: ";
-        sys_req(WRITE, COM1, message, strlen(message));
-        itoa(current_block->size, message);
-        sys_req(WRITE, COM1, message, strlen(message));
-        message = " bytes\n";
-        sys_req(WRITE, COM1, message, strlen(message));
-        message = "-------------\n";
-        sys_req(WRITE, COM1, message, strlen(message));
+        message2 = "Free Memory Block ";
+        sys_req(WRITE, COM1, message2, strlen(message2));
+        itoa(i, message2);
+        sys_req(WRITE, COM1, message2, strlen(message2));
+        char *message2 = "\nStart Address: ";
+        sys_req(WRITE, COM1, message2, strlen(message2));
+        itoa((int)current_block->start_address, message2);
+        sys_req(WRITE, COM1, message2, strlen(message2));
+        message2 = "\nSize: ";
+        sys_req(WRITE, COM1, message2, strlen(message2));
+        itoa(current_block->size, message2);
+        sys_req(WRITE, COM1, message2, strlen(message2));
+        message2 = " bytes\n";
+        sys_req(WRITE, COM1, message2, strlen(message2));
+        message2 = "-------------\n";
+        sys_req(WRITE, COM1, message2, strlen(message2));
 
         // Increment through the list
         i++;
         current_block = current_block->rel_next;
     }
 
-    message = "End of Free List\n";
-    sys_req(WRITE, COM1, message, strlen(message));
+    message2 = "End of Free List\n";
+    sys_req(WRITE, COM1, message2, strlen(message2));
 
     return;
 }
