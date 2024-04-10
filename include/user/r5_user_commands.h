@@ -4,12 +4,12 @@
 #include <string.h>
 #include <mpx/library.h>
 
-void allocateMemory(struct HeapManager *heap_manager, size_t size);
+void allocateMemory(size_t size);
 
-void freeMemory(struct HeapManager *heap_manager, void *address);
+void freeMemory(void *address);
 
-void showAllocatedMemory(struct HeapManager *heap_manager);
+void showAllocatedMemory();
 
-void showFreeMemory(struct HeapManager *heap_manager);
+void showFreeMemory();
 
 #endif

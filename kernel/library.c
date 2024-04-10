@@ -5,7 +5,7 @@
 #include "sys_req.h"
 
 // Function to initialize the heap manager
-void initialize_heap(HeapManager *heap_manager, size_t heap_size) 
+void initialize_heap(size_t heap_size) 
 {
     // Allocate memory for the heap using kmalloc()
     void *heap_memory = kmalloc(heap_size, 0, NULL);
@@ -35,7 +35,7 @@ void initialize_heap(HeapManager *heap_manager, size_t heap_size)
 }
 
 // Function to allocate memory from the heap
-void *allocate_memory(HeapManager *heap_manager, size_t size)
+void *allocate_memory(size_t size)
 {
     // Traverse the free list to find the first free block with sufficient size
     MCB *curr_block = heap_manager->free_list;
@@ -159,7 +159,7 @@ void *allocate_memory(HeapManager *heap_manager, size_t size)
     return NULL;
 }
 
-int free_memory(HeapManager *heap_manager, void *ptr)
+int free_memory(void *ptr)
 {
     // Find the MCB associated with the provided memory address
     MCB *curr_block = heap_manager->allocated_list;

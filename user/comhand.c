@@ -475,19 +475,19 @@ void comhand(void)
             tempBuf[nread] = '\0';
             new_block_size = atoi(tempBuf);
 
-            allocateMemory(&hm, new_block_size);
+            allocateMemory(new_block_size);
         }
         else if (strcmp(buf, "free memory") == 0)
         {
-            freeMemory(&hm, hm.allocated_list->start_address);
+            freeMemory(hm.allocated_list->start_address);
         }
         else if (strcmp(buf, "show allocated memory") == 0)
         {
-            showAllocatedMemory(&hm);
+            showAllocatedMemory();
         }
         else if (strcmp(buf, "show free memory") == 0)
         {
-            showFreeMemory(&hm);
+            showFreeMemory();
         }
 
         else // Unrecognised command

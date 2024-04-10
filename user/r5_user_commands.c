@@ -8,7 +8,7 @@
 
 /*Allocates heap memory and prints (in hexadecimal) the address of the newly allocated block, or an error message if allocation fails
 • Parameters: The size of the allocation request (in decimal)*/
-void allocateMemory(struct HeapManager *heap_manager, size_t size)
+void allocateMemory(size_t size)
 {
     if (size > MAX_MEMORY || size <= 0)
     {
@@ -19,7 +19,7 @@ void allocateMemory(struct HeapManager *heap_manager, size_t size)
     }
 
     // Allocate memory from the heap using the provided size
-    void *allocated_block = allocate_memory(heap_manager, size);
+    void *allocated_block = allocate_memory(size);
 
     // Check if allocation was successful
     if (allocated_block != NULL)
@@ -41,10 +41,10 @@ void allocateMemory(struct HeapManager *heap_manager, size_t size)
 
 /*Frees heap memory or prints an error message if freeing fails
  Parameters: The address of the memory block to free (in hexadecimal)*/
-void freeMemory(struct HeapManager *heap_manager, void *address)
+void freeMemory(void *address)
 {
     // Free memory using the provided address
-    int result = free_memory(heap_manager, address);
+    int result = free_memory(address);
 
     // Check if freeing was successful
     if (result == 0)
@@ -71,7 +71,7 @@ void freeMemory(struct HeapManager *heap_manager, void *address)
 
 /*
  Each command walks through the corresponding list, printing information for each block of memory */
-void showAllocatedMemory(struct HeapManager *heap_manager)
+void showAllocatedMemory()
 {
     if (heap_manager->allocated_list == NULL)
     {
@@ -108,7 +108,7 @@ void showAllocatedMemory(struct HeapManager *heap_manager)
     return;
 }
 
-void showFreeMemory(struct HeapManager *heap_manager)
+void showFreeMemory()
 {
     if (heap_manager->free_list == NULL)
     {
