@@ -14,6 +14,7 @@
 #define HEAP_SIZE 50000
 
 struct HeapManager hm;
+struct HeapManager* heap_manager;
 
 static void klogv(device dev, const char *msg)
 {
