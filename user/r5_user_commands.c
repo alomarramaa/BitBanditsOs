@@ -25,7 +25,7 @@ void allocateMemory(struct HeapManager *heap_manager, size_t size)
     if (allocated_block != NULL)
     {
         // Print the address of the allocated block in hexadecimal format
-        char *address;
+        char address [100];
         sys_req(WRITE, COM1, "Allocated memory at address: ", 30);
         itoa((int)allocated_block, address);
         sys_req(WRITE, COM1, address, strlen(address));
@@ -83,7 +83,7 @@ void showAllocatedMemory(struct HeapManager *heap_manager)
     MCB *current_block = heap_manager->allocated_list; // Start from the head of the allocated list
 
     int i = 1; // Index to separate various blocks
-    char* buffer;
+    char buffer [100];
     while (current_block != NULL)
     {
         // Print relevant information of current block
@@ -120,7 +120,7 @@ void showFreeMemory(struct HeapManager *heap_manager)
     MCB *current_block = heap_manager->free_list; // Start from the head of the allocated list
 
     int i = 1; // Index to separate various blocks
-    char* buffer;
+    char buffer [100];
     while (current_block != NULL)
     {
         // Print relevant information of current block
