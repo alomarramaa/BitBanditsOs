@@ -12,4 +12,6 @@ void showAllocatedMemory(struct HeapManager *heap_manager);
 
 void showFreeMemory(struct HeapManager *heap_manager);
 
+void showAllMemory(struct HeapManager *heap_manager);
+
 #endif

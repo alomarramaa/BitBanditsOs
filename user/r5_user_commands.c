@@ -143,7 +143,7 @@ void showFreeMemory(struct HeapManager *heap_manager)
     return;
 }
 
-void showAll(struct HeapManager *heap_manager)
+void showAllMemory(struct HeapManager *heap_manager)
 {
     if (heap_manager->free_list == NULL && heap_manager->allocated_list == NULL)
     {
