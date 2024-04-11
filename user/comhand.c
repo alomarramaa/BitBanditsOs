@@ -314,6 +314,7 @@ void comhand(void)
         sys_req(WRITE, COM1, "> ", 3); // Display prompt
         sys_req(WRITE, COM1, buf, nread);
 
+        // Add spacing for the user functions to run
         writeNewLine();
         writeNewLine();
 
