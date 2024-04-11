@@ -95,7 +95,7 @@ void showAllocatedMemory(struct HeapManager *heap_manager)
         itoa(current_block->size, buffer);
         sys_req(WRITE, COM1, buffer, strlen(buffer));
         sys_req(WRITE, COM1, " bytes\n", 8);
-        sys_req(WRITE, COM1, "-------------\n", 15);
+        sys_req(WRITE, COM1, "-----------------------\n", 25);
 
         // Increment through the list
         i++;
@@ -132,13 +132,71 @@ void showFreeMemory(struct HeapManager *heap_manager)
         itoa(current_block->size, buffer);
         sys_req(WRITE, COM1, buffer, strlen(buffer));
         sys_req(WRITE, COM1, " bytes\n", 8);
-        sys_req(WRITE, COM1, "-------------\n", 15);
+        sys_req(WRITE, COM1, "-----------------------\n", 25);
 
         // Increment through the list
         i++;
         current_block = current_block->rel_next;
     }
     sys_req(WRITE, COM1, "End of Free List\n", 18);
+
+    return;
+}
+
+void showAll(struct HeapManager *heap_manager)
+{
+    if (heap_manager->free_list == NULL && heap_manager->allocated_list == NULL)
+    {
+        char *err_message = "ERROR: Memory not initialized properly. No memory.\n";
+        sys_req(WRITE, COM1, err_message, strlen(err_message));
+        return;
+    }
+
+    MCB* index;
+    if (heap_manager->free_list == NULL)
+    {
+        index = heap_manager->allocated_list;
+    }
+    else if (heap_manager->allocated_list == NULL)
+    {
+        index = heap_manager->free_list;
+    }
+    else
+    {
+        // Set index to the first address in the list
+        index = heap_manager->free_list->start_address < heap_manager->allocated_list->start_address ? heap_manager->free_list : heap_manager->allocated_list;
+    }
+
+    int i = 1; // Index to separate various blocks
+    char buffer [100];
+    while (index != NULL)
+    {
+        // Print relevant information of current block
+        sys_req(WRITE, COM1, "Memory Block ", 14);
+        itoa(i, buffer);
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+        if (index->is_free == 1)
+        {
+            sys_req(WRITE, COM1, "\nFree Memory Block", 19);
+        }
+        else
+        {
+            sys_req(WRITE, COM1, "\nAllocated Memory Block", 24);
+        }
+        sys_req(WRITE, COM1, "\nStart Address: ", 17);
+        itoa((int)index->start_address, buffer);
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+        sys_req(WRITE, COM1, "\nSize: ", 8);
+        itoa(index->size, buffer);
+        sys_req(WRITE, COM1, buffer, strlen(buffer));
+        sys_req(WRITE, COM1, " bytes\n", 8);
+        sys_req(WRITE, COM1, "-----------------------\n", 25);
+
+        // Increment through the list
+        i++;
+        index = index->next;
+    }
+    sys_req(WRITE, COM1, "End of Memory List\n", 20);
 
     return;
 }
