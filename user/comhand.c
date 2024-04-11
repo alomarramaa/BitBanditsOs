@@ -484,7 +484,7 @@ void comhand(void)
         {
             char tempBuf[100];
             
-            sys_req(WRITE, COM1, "Enter the memory address you wish to free: \n", 54);
+            sys_req(WRITE, COM1, "Enter the memory address you wish to free: \n", 45);
             int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             void *address_to_free = (void *)atoi(tempBuf);
