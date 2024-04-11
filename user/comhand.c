@@ -306,12 +306,13 @@ void comhand(void)
     // Begin loop for command handler
     for (;;)
     {
-        sys_req(WRITE, COM1, "> ", 1); // Display prompt
+        
 
         char buf[100] = {0};
 
         sys_req(IDLE); // yield CPU before prompting for user input
-
+        
+        sys_req(WRITE, COM1, "> ", 1); // Display prompt
         int nread = sys_req(READ, COM1, buf, sizeof(buf));
         sys_req(WRITE, COM1, buf, nread);
 

@@ -278,7 +278,7 @@ int serial_poll(device dev, char *buffer, size_t len)
 			{
 				break;
 			}
-			serial_out(dev, "\x1b[2k\r", 5);
+			serial_out(dev, "\x1b[2k\r> ", 8);
 			serial_out(dev, buffer, bufferCount); // Display current buffer
 			index = tempIndex;					  // Restore index
 			while(tempIndex < bufferCount)
