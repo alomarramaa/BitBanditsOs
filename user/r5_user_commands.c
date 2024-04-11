@@ -13,7 +13,7 @@ void allocateMemory(size_t size)
     if (size > MAX_MEMORY || size <= 0)
     {
         // Print an error message if size input is invalid
-        const char *message = "Error: Allocation failed. Size entered must be between 0 and max memory (not inclusive).\n";
+        const char *message = "Error: Allocation failed. Size entered must be between 0 and max memory.\n";
         sys_req(WRITE, COM1, message, strlen(message));
         return;
     }
