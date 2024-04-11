@@ -306,16 +306,15 @@ void comhand(void)
     // Begin loop for command handler
     for (;;)
     {
-        
-
         char buf[100] = {0};
 
         sys_req(IDLE); // yield CPU before prompting for user input
-        
-        sys_req(WRITE, COM1, "> ", 1); // Display prompt
+        sys_req(WRITE, COM1, "> ", 3); // Display prompt
         int nread = sys_req(READ, COM1, buf, sizeof(buf));
+        sys_req(WRITE, COM1, "> ", 3); // Display prompt
         sys_req(WRITE, COM1, buf, nread);
 
+        writeNewLine();
         writeNewLine();
 
         if (strcmp(buf, "shutdown") == 0) // Shutdown Command
