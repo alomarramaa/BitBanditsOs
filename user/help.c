@@ -46,7 +46,8 @@ void help(void) // Prints all available commands
                            "--R5 Commands--\n\n"
                            "Allocate Memory - Allocates heap memory and prints (in hexadecimal) the address of the newly allocated block or an error message if allocation fails\n"
                            "Free Memory - Frees heap memory or prints an error message if freeing fails\n"
-                           "Show Allocated Memory & Show Free Memory - Walks through the corresponding list, printing information for each block of memory such as start address of the block in hexadecimal and the size of the block (in decimal)\n";
+                           "Show Allocated Memory & Show Free Memory - Walks through the corresponding list, printing information for each block of memory such as start address of the block in hexadecimal and the size of the block (in decimal)\n"
+                           "Show All Memory - Walks through the list of all memory blocks, regardless of allocation status, printing informtion for each block as well as if it is free or allocated.\n";
 
     sys_req(WRITE, COM1, helpText, strlen(helpText));
     //  sys_req(WRITE, COM1, pcbHelp, strlen(pcbHelp));

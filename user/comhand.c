@@ -298,7 +298,7 @@ void comhand(void)
                                       "\n\t"
                                       "-- r5 commands --\n\t"
                                       "\n\t"
-                                      "allocate memory\n\tfree memory\n\tshow allocated memory\n\tshow free memory\n\n";
+                                      "allocate memory\n\tfree memory\n\tshow allocated memory\n\tshow free memory\n\tshow all memory\n\n";
 
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
@@ -498,6 +498,10 @@ void comhand(void)
         else if (strcmp(buf, "show free memory") == 0)
         {
             showFreeMemory(&hm);
+        }
+        else if (strcmp(buf, "show all memory") == 0)
+        {
+            showAllMemory(&hm);
         }
 
         else // Unrecognised command
