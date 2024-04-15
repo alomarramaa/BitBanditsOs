@@ -1,9 +1,10 @@
 #include <mpx/r6.h>
-#include <device.h>
+#include <mpx/device.h>
 #include <mpx/io.h>
+#include <stddef.h>
 
 
-serial_open(COM1, int speed){
+int serial_open(device dev, int speed){
 
     /* Ensure that the parameters are valid, and that the device is not currently open.
 2. Initialize the DCB. In particular, this should include indicating that the device is open, setting the event flag to 0, and setting the initial device status to idle. In addition, the ring buffer parameters must be initialized.
@@ -18,18 +19,18 @@ serial_open(COM1, int speed){
 10. Enable input ready interrupts only by storing the value 0x01 in the Interrupt Enable register*/
 }
 
-serial_close(COM1){
+int serial_close(device dev){
     /*Ensure that the port is currently open.
 2. Clear the open indicator in the DCB.
 3. Disable the appropriate level in the PIC mask register.
 4. Disable all interrupts in the ACC by loading zero values to the Modem Status register and the Interrupt Enable register.*/
 }
 
-serial_read(COM1, char* buf, size_t len){
+int serial_read(device dev, char* buf, size_t len){
 
 }
 
-serial_write(COM1, char* buf, size_t len){
+int serial_write(device dev, char* buf, size_t len){
 
 }
 
@@ -42,5 +43,5 @@ void serial_input_interrupt(struct dcb *dcb){
 }
 
 void serial_output_interrupt(struct dcb *dcb){
-    
+
 }
