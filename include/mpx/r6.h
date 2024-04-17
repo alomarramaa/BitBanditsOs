@@ -9,6 +9,8 @@
 #include <string.h>
 #include <mpx/library.h>
 #include <mpx/device.h>
+#include <sys_req.h>
+#include <mpx/interrupts.h>
 
 struct dcb
 {

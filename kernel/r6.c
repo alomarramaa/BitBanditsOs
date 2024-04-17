@@ -2,6 +2,7 @@
 #include <mpx/device.h>
 #include <mpx/io.h>
 #include <stddef.h>
+#include <mpx/serial.h>
 
 // Defining register addresses
 
@@ -19,17 +20,27 @@ int serial_open(device dev, int speed)
     {
         return -1; // invalid device parameter
     }
+    else
+    {
+        serial_init(dev);
+    }
 
     if (speed <= 0)
     {
         return -2; // Invalid speed parameter
     }
+    
+    //Ensure that the parameters are valid, and that the device is not currently open.
+
+    //2. Initialize the DCB. In particular, this should include indicating that the device is open, setting the event flag to 0, and setting the initial device status to idle. In addition, the ring buffer parameters must be initialized.
+    //enum sys_req.h
+    op_code code = IDLE;
+    struct dcb dcb = {1, 0, code};
+
+    //3. Install the new handler in the interrupt vector. 
+    //idt_install(0x23, handler);
 
 
-    /* Ensure that the parameters are valid, and that the device is not currently open.
-    2. Initialize the DCB. In particular, this should include indicating that the device is open, setting the event flag to 0, and setting the initial device status to idle. In addition, the ring buffer parameters must be initialized.
-    13
-    3. Install the new handler in the interrupt vector. */
 
     // Compute the required baud rate divisor.
     int baud_divisor = (int)(115200 / speed);
@@ -41,7 +52,7 @@ int serial_open(device dev, int speed)
      9. Enable overall serial port interrupts by storing the value 0x08 in the Modem Control register.
      10. Enable input ready interrupts only by storing the value 0x01 in the Interrupt Enable register*/
 }
-* /
+
 
     int serial_close(device dev)
 {
