@@ -35,6 +35,7 @@
         "memory.h": "c",
         "r5_user_commands.h": "c",
         "library.h": "c",
-        "shutdown.h": "c"
+        "shutdown.h": "c",
+        "r6": "c"
     }
 }

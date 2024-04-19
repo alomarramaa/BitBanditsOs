@@ -366,14 +366,14 @@ void comhand(void)
         {
             delete_pcb();
         }
-        else if (strcmp(buf, "block pcb") == 0) // Block PCB
-        {
-            block_pcb();
-        }
-        else if (strcmp(buf, "unblock pcb") == 0) // Unblock PCB
-        {
-            unblock_pcb();
-        }
+        // else if (strcmp(buf, "block pcb") == 0) // Block PCB
+        // {
+        //     block_pcb();
+        // }
+        // else if (strcmp(buf, "unblock pcb") == 0) // Unblock PCB
+        // {
+        //     unblock_pcb();
+        // }
         else if (strcmp(buf, "suspend pcb") == 0) // Suspend PCB
         {
             suspend_pcb();
