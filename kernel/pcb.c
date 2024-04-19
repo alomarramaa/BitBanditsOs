@@ -246,12 +246,6 @@ struct pcb* pcb_allocate(void)
         return NULL;
     }
 
-    // Initialize PCB
-    // new_pcbPtr->process_name = NULL;
-    // new_pcbPtr->process_class = USER;
-    // new_pcbPtr->process_priority = -1;
-    // new_pcbPtr->exe_state = BLOCKED;
-    // new_pcbPtr->disp_state = SUSPENDED;
     memset(new_pcbPtr->pcb_stack, 0, sizeof(new_pcbPtr->pcb_stack));
     new_pcbPtr->stackPtr = new_pcbPtr->pcb_stack+PCB_STACK_SIZE-sizeof(struct context);
     new_pcbPtr->next_pcbPtr = NULL;
@@ -267,13 +261,6 @@ int pcb_free(struct pcb* to_freePtr)
 
 struct pcb* pcb_setup(char* new_process_name, class_type new_process_class, int new_process_priority)
 {
-    // Ensure a legal priority input
-    // if ((process_priority < 0 || process_priority > 9) ||
-    //     (process_priority == 0 && process_class == SYSTEM))
-    // {
-    //     return NULL;
-    // }
-
     // Allocate memory for the pcb and ensure proper allocation
     pcb* new_pcbPtr = pcb_allocate();
     if (new_pcbPtr == NULL)
@@ -282,12 +269,12 @@ struct pcb* pcb_setup(char* new_process_name, class_type new_process_class, int 
     }
 
     // Allocate memory for the process name
-    new_pcbPtr->process_name = (char*)sys_alloc_mem(strlen(new_process_name) + 1);
-    if (new_pcbPtr->process_name == NULL)
-    {
-        sys_free_mem(new_pcbPtr);
-        return NULL;
-    }
+    // new_pcbPtr->process_name = (char*)sys_alloc_mem(strlen(new_process_name) + 1);
+    // if (new_pcbPtr->process_name == NULL)
+    // {
+    //     sys_free_mem(new_pcbPtr);
+    //     return NULL;
+    // }
 
     // Copy the process name into the allocated memory
     int i = 0;
