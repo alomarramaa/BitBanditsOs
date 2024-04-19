@@ -256,6 +256,11 @@ struct pcb* pcb_allocate(void)
 
 int pcb_free(struct pcb* to_freePtr)
 {
+    int frees_name = sys_free_mem(to_freePtr->process_name);
+    if (frees_name != 0)
+    {
+        return frees_name;
+    }
     return sys_free_mem(to_freePtr);
 }
 
