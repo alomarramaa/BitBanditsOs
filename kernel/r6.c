@@ -23,7 +23,7 @@ int serial_open(device dev, int speed)
     }
     // Initialize the DCB and ring buffer parameters
     DCB *dcb;
-    dcb->is_open = 0;        // Port is closed initially
+    dcb->is_open = 1;        // Port is open initially
     dcb->event_flag = 0;     // Event flag set to 0 initially
     dcb->status_code = IDLE; // Status code set to idle initially
     dcb->inputBufferAddr = NULL;
@@ -35,27 +35,53 @@ int serial_open(device dev, int speed)
     dcb->ringBufferCounter = 0;
 
     //  Install the new handler in the interrupt vector.
-    // idt_install(0x23, handler);
+    idt_install(0x23, handler);
 
     // Compute the required baud rate divisor.
     int baud_divisor = (int)(115200 / speed);
 
-    /*
-     7. Store the value 0x03 in the Line Control Register. This sets the line characteristics to 8 data bits, 1 stop bit, and no parity. It also restores normal functioning of the first two ports.
-     8. Enable the appropriate level in the PIC mask register.
-     9. Enable overall serial port interrupts by storing the value 0x08 in the Modem Control register.
-     10. Enable input ready interrupts only by storing the value 0x01 in the Interrupt Enable register*/
+    // Store 0x80 in the Line Control Register
+    *((volatile int *)0x3FB) = 0x80;
+
+    // Store the high order and low order bytes of the baud rate divisor into the MSB and LSB registers
+
+    //  Store the value 0x03 in the Line Control Register.
+    *((volatile int *)0x3FB) = 0x03;
+
+    // Enable the appropriate level in the PIC mask register. Not sure if this is right, from the doc
+    int mask = inb(0x21); 
+    mask &= ~(1 << 3);  // (enable level 3)
+    outb(0x21, mask);   
+
+
+    // Enable overall serial port interrupts by storing the value 0x08 in the Modem Control register
+    *((volatile int *)0x3FC) |= 0x08;
+
+    // Enable input ready interrupts only by storing the value 0x01 in the Interrupt Enable register
+    *((volatile int *)0x3FA) |= 0x01;
 }
 
-
-
-    int serial_close(device dev)
+int serial_close(device dev) // Not sure if this is right!
 {
+    DCB *dcb;
+    if (dcb->is_open = 1) // Ensure that the port is currently open.
+    {
+        // Clear the open indicator in the DCB.
+        dcb->is_open = 0;
 
-    /*Ensure that the port is currently open.
-2. Clear the open indicator in the DCB.
-3. Disable the appropriate level in the PIC mask register.
-4. Disable all interrupts in the ACC by loading zero values to the Modem Status register and the Interrupt Enable register.*/
+        // Disable the appropriate level in the PIC mask register
+        cli();
+        int mask = inb(0x21);
+        mask |= (1 << 3); // Mask (disable) IRQ level 3
+        outb(0x21, mask);
+        sti();
+        // Disable all interrupts in the ACC by loading zero values to the Modem Status register and the Interrupt Enable register.*/
+        *((volatile int *)0x3FC) = 0x00; // Modem Status register
+        *((volatile int *)0x3FA) = 0x00; // Interrupt Enable register
+
+        return 0; // Success
+    }
+    return -201; // Serial port not open
 }
 
 int serial_read(device dev, char *buf, size_t len)
