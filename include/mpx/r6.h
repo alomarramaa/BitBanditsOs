@@ -19,7 +19,7 @@ typedef struct ring_buffer
     void *buffer_end; // end of data buffer
     size_t capacity;  // maximum number of items in the buffer
     size_t count;     // number of items in the buffer
-    size_t sz;        // size of each item in the buffer
+    size_t size;        // size of each item in the buffer
     void *head;       // pointer to head
     void *tail;       // pointer to tail
 } ring_buffer;
@@ -44,7 +44,7 @@ typedef struct
     uint32_t outputBufferCounter;
    
    // Input ring buffer and associated indices/counters
-    uint8_t inputRingBuffer[500];  // Assuming a buffer size of 256 bytes
+    uint8_t inputRingBuffer[500];  // Assuming a buffer size of 500 bytes
     uint32_t inputIndex;
     uint32_t outputIndex;
     uint32_t ringBufferCounter;
@@ -63,8 +63,8 @@ int serial_write(device deb, char *buf, size_t len);
 
 void serial_interrupt(void);
 
-void serial_input_interrupt(struct dcb *dcb);
+void serial_input_interrupt(struct DCB *dcb);
 
-void serial_output_interrupt(struct dcb *dcb);
+void serial_output_interrupt(struct DCB *dcb);
 
 #endif
