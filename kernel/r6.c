@@ -6,12 +6,12 @@
 
 // Defining register addresses
 
-#define line_control_register 0x3F8;
-#define baud_rate_devisor_lsb 0x3F8;
-#define baud_rate_devisor_msb ;
-#define modem_control_register ;
-#define interrupt_enable_register ;
-#define pic_mask_register 0x21;
+#define line_control_register 0x3F8
+#define baud_rate_devisor_lsb 0x3F8
+#define baud_rate_devisor_msb  0x3F9
+#define modem_control_register 0x3FC
+#define interrupt_enable_register 0x3FA
+#define pic_mask_register 0x21
 
 int serial_open(device dev, int speed)
 {
