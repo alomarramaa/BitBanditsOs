@@ -12,6 +12,9 @@
 #include <mpx/device.h>
 #include <sys_req.h>
 #include <mpx/interrupts.h>
+#include <stdint.h>
+#include <mpx/io.h>
+#include <mpx/serial.h>
 
 typedef struct ring_buffer
 {
@@ -24,7 +27,7 @@ typedef struct ring_buffer
     void *tail;       // pointer to tail
 } ring_buffer;
 
-typedef enum
+typedef enum status
 {
     IDLE,
     READING,
@@ -49,6 +52,8 @@ typedef struct
     uint32_t outputIndex;
     uint32_t ringBufferCounter;
 
+    device dev;
+
 } DCB;
 
 
@@ -63,8 +68,8 @@ int serial_write(device deb, char *buf, size_t len);
 
 void serial_interrupt(void);
 
-void serial_input_interrupt(struct DCB *dcb);
+void serial_input_interrupt(DCB *dcb);
 
-void serial_output_interrupt(struct DCB *dcb);
+void serial_output_interrupt(DCB *dcb);
 
 #endif

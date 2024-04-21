@@ -6,22 +6,6 @@
 // // Maximum buffer list size
 #define BUFFER_LIST_MAX 5
 
-enum uart_registers
-{
-	RBR = 0, // Receive Buffer
-	THR = 0, // Transmitter Holding
-	DLL = 0, // Divisor Latch LSB
-	IER = 1, // Interrupt Enable
-	DLM = 1, // Divisor Latch MSB
-	IIR = 2, // Interrupt Identification
-	FCR = 2, // FIFO Control
-	LCR = 3, // Line Control
-	MCR = 4, // Modem Control
-	LSR = 5, // Line Status
-	MSR = 6, // Modem Status
-	SCR = 7, // Scratch
-};
-
 /*
  * @brief A struct to store the previous entered commands, acts as a node in a linked list
  */

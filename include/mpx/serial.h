@@ -4,6 +4,23 @@
 #include <stddef.h>
 #include <mpx/device.h>
 
+
+enum uart_registers
+{
+	RBR = 0, // Receive Buffer
+	THR = 0, // Transmitter Holding
+	DLL = 0, // Divisor Latch LSB
+	IER = 1, // Interrupt Enable
+	DLM = 1, // Divisor Latch MSB
+	IIR = 2, // Interrupt Identification
+	FCR = 2, // FIFO Control
+	LCR = 3, // Line Control
+	MCR = 4, // Modem Control
+	LSR = 5, // Line Status
+	MSR = 6, // Modem Status
+	SCR = 7, // Scratch
+};
+
 /**
  @file mpx/serial.h
  @brief Kernel functions and constants for handling serial I/O

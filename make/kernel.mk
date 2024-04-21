@@ -28,5 +28,6 @@ KERNEL_OBJECTS=\
 	kernel/kmain.o\
 	kernel/core-c.o\
   kernel/library.o\
-  kernel/r6.o
+  kernel/r6.o\
+  kernel/serial_isr.o
 

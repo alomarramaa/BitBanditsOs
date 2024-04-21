@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <mpx/serial.h>
 
+extern void serial_isr(void*);
+
 // Defining register addresses
 
 #define line_control_register 0x3F8
@@ -35,7 +37,7 @@ int serial_open(device dev, int speed)
     dcb->ringBufferCounter = 0;
 
     //  Install the new handler in the interrupt vector.
-    idt_install(0x23, handler);
+    idt_install(0x23, serial_isr);
 
     // Compute the required baud rate divisor.
     int baud_divisor = (int)(115200 / speed);
@@ -165,12 +167,60 @@ int serial_write(device dev, char *buf, size_t len)
 
 void serial_interrupt(void)
 {
+    device i = COM1;
+    if((inb(COM1+IIR)&1) == 0) i = COM1;
+    else if((inb(COM2+IIR)&1) == 0) i = COM2;
+    else if((inb(COM3+IIR)&1) == 0) i = COM3;
+    else if((inb(COM4+IIR)&1) == 0) i = COM4;
+
+   DCB* dcb;
+
+        if(dcb->event_flag ==1){
+            return;
+        }
+
+    char stat = (inb(i+IIR)&6);
+    switch (stat){
+    case 0:
+    case 2:
+        serial_output_interrupt(dcb);
+        break;
+    case 4:
+        serial_input_interrupt(dcb);
+        break;
+    case 6:
+    default:
+        break;
+    }
+    outb(0x20,0x20);
+
 }
 
-void serial_input_interrupt(struct dcb *dcb)
+void serial_input_interrupt(DCB *dcb)
 {
+    char character = inb(dcb->dev);
+    if(dcb->status_code != READING){
+        if((dcb->inputIndex== dcb->outputIndex)) {
+            return;
+        }
+        dcb->inputRingBuffer[dcb->inputIndex] = character;
+        dcb->inputIndex = (dcb->outputIndex +1 )%128;
+    }else{
+
+        switch(character){
+            
+            case '\n':
+                outb(dcb->dev,'\n');
+                dcb-> inputBufferAddr[dcb->inputBufferCounter] = '\0';
+                dcb->event_flag = 1;
+                dcb->status_code = IDLE;
+                return;
+
+        }
+    }
+
 }
 
-void serial_output_interrupt(struct dcb *dcb)
+void serial_output_interrupt( DCB *dcb)
 {
 }
