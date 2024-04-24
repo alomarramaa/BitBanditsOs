@@ -15,16 +15,17 @@ extern void serial_isr(void*);
 #define interrupt_enable_register 0x3FA
 #define pic_mask_register 0x21
 
-int serial_open(device dev, int speed)
+int serial_open(device *dev, int speed)
+
 {
     // Ensure that the parameters are valid, and that the device is not currently open
 
-    if (dev == NULL || speed <= 0)
+    if (dev == NULL|| speed <= 0)
     {
         return -1; // Invalid parameters
     }
     // Initialize the DCB and ring buffer parameters
-    DCB *dcb;
+    DCB *dcb = {0};
     dcb->is_open = 1;        // Port is open initially
     dcb->event_flag = 0;     // Event flag set to 0 initially
     dcb->status_code = IDLE; // Status code set to idle initially
@@ -40,7 +41,7 @@ int serial_open(device dev, int speed)
     idt_install(0x23, serial_isr);
 
     // Compute the required baud rate divisor.
-    int baud_divisor = (int)(115200 / speed);
+    //int baud_divisor = (int)(115200 / speed);
 
     // Store 0x80 in the Line Control Register
     *((volatile uint16_t *)0x3FB) = 0x80;
@@ -60,12 +61,13 @@ int serial_open(device dev, int speed)
 
     // Enable input ready interrupts only by storing the value 0x01 in the Interrupt Enable register
     *((volatile uint16_t *)0x3FA) |= 0x01;
+    return 0;
 }
 
-int serial_close(device dev) // Not sure if this is right!
+int serial_close(device *dev) // Not sure if this is right!
 {
-    DCB *dcb;
-    if (dcb->is_open = 1) // Ensure that the port is currently open.
+    DCB *dcb = {0};
+    if (dcb->is_open == 1) // Ensure that the port is currently open.
     {
         // Clear the open indicator in the DCB.
         dcb->is_open = 0;
@@ -85,21 +87,21 @@ int serial_close(device dev) // Not sure if this is right!
     return -201; // Serial port not open
 }
 
-int serial_read(device dev, char *buf, size_t len)
+int serial_read(device *dev, char *buf, size_t len)
 {
 
-    DCB *dcb;
+    DCB *dcb = NULL;
     if (dev == NULL || buf == NULL || len <= 0)
     {
         return -1; // Invalid parameters
     }
 
-    if (dcb->event_flag = 1 && dcb->status_code == IDLE) // Ensure that the port is open, and the status is idle
+    if (dcb->event_flag == 1 && dcb->status_code == IDLE) // Ensure that the port is open, and the status is idle
     {
 
         // Initialize the input buffer variables (not the ring buffer!)
 
-        dcb->status_code == READING; // Set the status to reading
+        dcb->status_code = READ; // Set the status to reading
 
         dcb->event_flag = 0; // Clear the caller’s event flag.
 
@@ -109,23 +111,24 @@ int serial_read(device dev, char *buf, size_t len)
 
         // If more characters are needed, return. If the block is complete, continue with step 7.
 
-        dcb->status_code == IDLE; // Reset the DCB status to idle,
+        dcb->status_code = IDLE; // Reset the DCB status to idle,
         dcb->event_flag = 1;      // Set the event flag
 
         // return the actual count to the requestor’s variable.
     }
+    return 0; //subject to change
 }
 
-int serial_write(device dev, char *buf, size_t len)
+int serial_write(device *dev, char *buf, size_t len)
 {
-    DCB *dcb;
+    DCB *dcb = NULL;
 
     if (dev == NULL)
     {
         return -1; // Invalid parameters
     }
 
-    if (dcb->is_open = 0)
+    if (dcb->is_open == 0)
     {
         return -401; // Serial port is not open
     }
@@ -145,13 +148,13 @@ int serial_write(device dev, char *buf, size_t len)
         return -404; // Device is busy
     }
 
-    if (dcb->is_open = 1 || dcb->status_code == IDLE) // Ensure that the port is currently open and idle.
+    if (dcb->is_open == 1 || dcb->status_code == IDLE) // Ensure that the port is currently open and idle.
     {
         // Install the buffer pointer and counters in the DCB
         dcb->outputBufferAddr = (uint8_t *)buf;
         dcb->outputBufferCounter = len;
 
-        dcb->status_code == WRITING; // Set the current status to writing.
+        dcb->status_code = WRITE; // Set the current status to writing.
         dcb->event_flag = 0;         // Clear the caller’s event flag
 
         // Get the first character from the requestor’s buffer and store it in the output register.
@@ -163,6 +166,7 @@ int serial_write(device dev, char *buf, size_t len)
 
         return 0; // Success
     }
+    return -1; //subject to change
 }
 
 void serial_interrupt(void)
@@ -173,9 +177,9 @@ void serial_interrupt(void)
     else if((inb(COM3+IIR)&1) == 0) i = COM3;
     else if((inb(COM4+IIR)&1) == 0) i = COM4;
 
-   DCB* dcb;
+   DCB* dcb = NULL;
 
-        if(dcb->event_flag ==1){
+        if(dcb->event_flag == 1){
             return;
         }
 
@@ -199,8 +203,8 @@ void serial_interrupt(void)
 void serial_input_interrupt(DCB *dcb)
 {
     char character = inb(dcb->dev);
-    if(dcb->status_code != READING){
-        if((dcb->inputIndex== dcb->outputIndex)) {
+    if(dcb->status_code != READ){
+        if(dcb->inputIndex == dcb->outputIndex) {
             return;
         }
         dcb->inputRingBuffer[dcb->inputIndex] = character;
@@ -208,19 +212,60 @@ void serial_input_interrupt(DCB *dcb)
     }else{
 
         switch(character){
+
+            case '\r':   //Carriage returns 
+                outb(dcb->dev,'\n');
+                dcb-> inputBufferAddr[dcb->inputBufferCounter] = '\0';
+                dcb->event_flag = 1;
+                dcb->status_code = IDLE;
+                return;
             
-            case '\n':
+            case '\n':  //newline
                 outb(dcb->dev,'\n');
                 dcb-> inputBufferAddr[dcb->inputBufferCounter] = '\0';
                 dcb->event_flag = 1;
                 dcb->status_code = IDLE;
                 return;
 
-        }
+			case 127:  //backspace
+                outb(COM1, "\b");
+                if(dcb->inputIndex> 0){
+                    for(uint32_t i = dcb->inputIndex; i< dcb->inputBufferCounter; i++){
+                        dcb->inputBufferAddr[i-1] = dcb->inputBufferAddr[i];
+                        outb(COM1, dcb->inputBufferAddr[i]);
+                    }
+                    outb(COM1, " \b");    //do not stack with for loop, clears trailing char from terminal
+                    for(uint32_t i = dcb->inputIndex ; i< dcb->inputBufferCounter; i++) outb(COM1, "\b");
+                    dcb->inputBufferCounter--;
+                    dcb->inputIndex--;
+                    dcb->inputBufferAddr[dcb->inputBufferCounter] = '\0';
+                }
+                break;
+
+            default:
+                dcb->inputBufferAddr[dcb->inputIndex] = character;
+                if(dcb->inputIndex == dcb->inputBufferCounter)dcb->inputBufferCounter++;
+                dcb->inputIndex++;
+                outb(COM1, character);
+                break;
+            }
     }
 
 }
 
 void serial_output_interrupt( DCB *dcb)
 {
+    if(dcb->status_code != WRITE)return;
+    if(dcb->outputBufferCounter >= dcb->outputBufferLen){
+        dcb->event_flag = 1;
+        dcb->status_code = IDLE;
+        
+        char inten =  inb(dcb->dev+IER);
+        outb(dcb->dev+IER,inten & ~0x02);
+        
+        return;
+    }
+    outb(dcb->dev,dcb->outputBufferAddr[dcb->outputBufferCounter]);
+    dcb->outputBufferCounter++;
+
 }
