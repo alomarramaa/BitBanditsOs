@@ -298,7 +298,7 @@ void comhand(void)
                                       "\n\t"
                                       "-- r5 commands --\n\t"
                                       "\n\t"
-                                      "allocate memory\n\tfree memory\n\tshow allocated memory\n\tshow free memory\n\n";
+                                      "allocate memory\n\tfree memory\n\tshow allocated memory\n\tshow free memory\n\tshow all memory\n\n";
 
     sys_req(WRITE, COM1, comhandInitializeStr, strlen(comhandInitializeStr));
     sys_req(WRITE, COM1, avaliableCommandStr, strlen(avaliableCommandStr));
@@ -306,15 +306,16 @@ void comhand(void)
     // Begin loop for command handler
     for (;;)
     {
-        sys_req(WRITE, COM1, "> ", 1); // Display prompt
-
         char buf[100] = {0};
 
         sys_req(IDLE); // yield CPU before prompting for user input
-
+        sys_req(WRITE, COM1, "> ", 3); // Display prompt
         int nread = sys_req(READ, COM1, buf, sizeof(buf));
+        sys_req(WRITE, COM1, "> ", 3); // Display prompt
         sys_req(WRITE, COM1, buf, nread);
 
+        // Add spacing for the user functions to run
+        writeNewLine();
         writeNewLine();
 
         if (strcmp(buf, "shutdown") == 0) // Shutdown Command
@@ -365,14 +366,14 @@ void comhand(void)
         {
             delete_pcb();
         }
-        /*else if (strcmp(buf, "block pcb") == 0) // Block PCB
-        {
-            block_pcb();
-        }
-        else if (strcmp(buf, "unblock pcb") == 0) // Unblock PCB
-        {
-            unblock_pcb();
-        */}
+        // else if (strcmp(buf, "block pcb") == 0) // Block PCB
+        // {
+        //     block_pcb();
+        // }
+        // else if (strcmp(buf, "unblock pcb") == 0) // Unblock PCB
+        // {
+        //     unblock_pcb();
+        // }
         else if (strcmp(buf, "suspend pcb") == 0) // Suspend PCB
         {
             suspend_pcb();
@@ -413,7 +414,6 @@ void comhand(void)
         }
         else if (strcmp(buf, "set alarm") == 0)
         {
-
             int hour, minute, seconds;
             char message[100];
             char tempBuf[100];
@@ -437,12 +437,11 @@ void comhand(void)
             nread = sys_req(READ, COM1, message, sizeof(message));
             message[nread] = '\0';
 
-            addAlarm(hour, minute, seconds, message);
+            createAlarm(hour, minute, seconds, message);
             sys_req(WRITE, COM1, "\nAlarm set.\n", 13);
         }
         else if (strcmp(buf, "remove alarm") == 0)
         {
-
             int hour, minute, seconds;
             char tempBuf[100];
 
@@ -461,31 +460,37 @@ void comhand(void)
             tempBuf[nread] = '\0';
             seconds = atoi(tempBuf);
 
-            removeAlarm(hour, minute, seconds);
-            sys_req(WRITE, COM1, "\nAlarm removed.\n", 17);
+            // Find the index of the alarm based on the time
+            int index = findAlarmIndex(hour, minute, seconds);
+            if (index != -1) {
+                removeAlarm(index);
+                sys_req(WRITE, COM1, "\nAlarm removed.\n", 17);
+            } else {
+                sys_req(WRITE, COM1, "\nAlarm not found.\n", 18);
+            }
         }
-
         else if (strcmp(buf, "allocate memory") == 0)
         {
+            size_t new_block_size;
             char tempBuf[100];
 
             sys_req(WRITE, COM1, "Enter the size of the block you wish to allocate (in bytes): \n", 63);
             int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
-            size_t new_block_size = atoi(tempBuf);
+            new_block_size = atoi(tempBuf);
 
-            allocateMemory(&hm, new_block_size);
+            allocateMemory(new_block_size);
         }
         else if (strcmp(buf, "free memory") == 0)
         {
             char tempBuf[100];
-
+            
             sys_req(WRITE, COM1, "Enter the memory address you wish to free: \n", 45);
             int nread = sys_req(READ, COM1, tempBuf, sizeof(tempBuf));
             tempBuf[nread] = '\0';
             void *address_to_free = (void *)atoi(tempBuf);
     
-            freeMemory(&hm, address_to_free);
+            freeMemory(address_to_free);
         }
         else if (strcmp(buf, "show allocated memory") == 0)
         {
@@ -494,6 +499,10 @@ void comhand(void)
         else if (strcmp(buf, "show free memory") == 0)
         {
             showFreeMemory(&hm);
+        }
+        else if (strcmp(buf, "show all memory") == 0)
+        {
+            showAllMemory(&hm);
         }
 
         else // Unrecognised command
