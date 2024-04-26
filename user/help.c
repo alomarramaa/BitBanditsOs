@@ -25,8 +25,6 @@ void help(void) // Prints all available commands
                            "\n"
                            "---PCB Commands---\n\n"
                            "Delete PCB - Removes the requested process from queue\n"
-                           "Block PCB - Puts the process in blocked state\n"
-                           "Unblock PCB - Puts the process in the unblocked state\n"
                            "Suspend PCB - Puts the process in the suspend state\n"
                            "Resume PCB - Puts the process in the not suspended state\n"
                            "Set PCB Priority - Changes a processes priority\n"
