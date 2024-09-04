@@ -1,9 +1,8 @@
 # Bit Bandits 
-# BitBandits
 
 ## Description
 
-BitBandits is an operating system built with C, in collaboration with the following team:
+Bit Bandits' OS is an operating system built with C, in collaboration with the following team:
 
 - Garrett Butler: https://github.com/garrettpbutler
 - Connor Boyd: https://github.com/connorgboyd
