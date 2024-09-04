@@ -23,6 +23,7 @@ static void klogv(device dev, const char *msg)
 	serial_out(dev, "\r\n", 2);
 }
 
+//Loads processes for R3
 void load_proc(void (*proc_function)(void), char *proc_name, int proc_priority)
 {
 
@@ -31,6 +32,7 @@ void load_proc(void (*proc_function)(void), char *proc_name, int proc_priority)
 
 	// Sets registers of stack
 	struct context *c = (struct context *)new_process->stackPtr;
+
 	// Segment registers
 	c->CS = 0x08;
 	c->SS = 0x10;
@@ -58,12 +60,14 @@ void load_proc(void (*proc_function)(void), char *proc_name, int proc_priority)
 	pcb_insert(new_process);
 }
 
+//Creates a system idle process with the lowest priority
 void create_system_idle_proc(void)
 {
 
 	load_proc(sys_idle_process, "idle", 9);
 }
 
+//Creates a comhand process with the highest priority
 void create_comhand_proc(void)
 {
 
@@ -119,7 +123,7 @@ void kmain(void)
 	// Now that interrupt routines are set up, allow interrupts to happen
 	// again.
 	klogv(COM1, "Enabling Interrupts...");
-	sti();
+	sti(); //Enables interrupts
 
 	// 7) Virtual Memory (VM) -- <mpx/vm.h>
 	// Virtual Memory (VM) allows the CPU to map logical addresses used by

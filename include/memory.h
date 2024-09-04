@@ -9,7 +9,7 @@
 */
 
 /**
- Allocate dynamic memory.
+ Allocate dynamic memory 
  @param size The amount of memory, in bytes, to allocate
  @return NULL on error, otherwise the address of the newly allocated memory
 */

@@ -309,6 +309,9 @@ void comhand(void)
         char buf[100] = {0};
 
         sys_req(IDLE); // yield CPU before prompting for user input
+
+        /*
+        When processes call sys_req(IDLE) to give up control which generated an interrupt so our interrupt handler will perform the context switch*/
         sys_req(WRITE, COM1, "> ", 3); // Display prompt
         int nread = sys_req(READ, COM1, buf, sizeof(buf));
         sys_req(WRITE, COM1, "> ", 3); // Display prompt

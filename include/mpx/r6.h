@@ -7,6 +7,11 @@
  @brief Functions for R6
 */
 
+/*
+- Implement an interrupt-driven serial port driver to enable communication between our computer and console
+- Sse COM1 port
+*/
+
 #include <string.h>
 #include <mpx/library.h>
 #include <mpx/device.h>
@@ -27,14 +32,12 @@ typedef struct ring_buffer
     void *tail;       // pointer to tail
 } ring_buffer;
 
-/*typedef enum status
-{
-    IDLE,
-    READING,
-    WRITING
-} Status;
+/*
+IOCB
+- Allows higher level software to access the device driver
+- Represents active or pending IO requests
+- Event flag must be provided
 */
-
 typedef struct
 {
 
@@ -49,6 +52,10 @@ typedef struct
     uint32_t outputBufferLen;
    
    // Input ring buffer and associated indices/counters
+   /*
+ - Handle input devices that may deliver characters before a program is ready to receive them
+ - it is a fixed size array, managed as a circular list
+   */
     uint8_t inputRingBuffer[500];  // Assuming a buffer size of 500 bytes
     uint32_t inputIndex;
     uint32_t outputIndex;

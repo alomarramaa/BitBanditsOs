@@ -33,7 +33,7 @@ int bcd_to_binary(int bcd) {
     return thousands * 1000 + hundreds * 100 + tens * 10 + ones;
 }
 
-// Function to convert Binary to BCD
+// Function to convert Binary to BCD (Binary Coded Decimal)
 int binary_to_bcd(int binary) {
     int thousands = binary / 1000;
     int hundreds = (binary / 100) % 10;
@@ -53,6 +53,10 @@ int readDateReg(char sect){
 }
 
 // Function to get and display the current date
+/*
+Writes the appropriate value to the RTC index register (0x70) using outb()
++ read the result from 0x71 using inb()
+*/
 void get_date(void) {
     char mbuffer[20];
     char dbuffer[20];
@@ -94,6 +98,11 @@ int days_in_month(int month, int year) {
 }
 
 // Function to set the date in RTC with data validation
+/*
+Disable interrupts (sti())
+  + write the appropriate value to the RTC index register using outb
+  + write a new value to 0x71 using outb, enable interrupts (cli())
+*/
 void set_date(int month, int day, int year) {
     // Validate month
     if (month < 1 || month > 12) {

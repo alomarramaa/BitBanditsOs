@@ -6,7 +6,9 @@
 #include "date.h"
 #include "time.h"
 
-//struct HeapManager hm;
+/*
+Always have the highest priority and all loaded processes are initially suspended
+*/
 
 void yield(void);
 

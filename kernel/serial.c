@@ -92,6 +92,7 @@ int serial_out(device dev, const char *buffer, size_t len)
 	return (int)len;
 }
 
+//Checks status register of serial port, collects character and adds to buffer
 int serial_poll(device dev, char *buffer, size_t len)
 {
 	int bufferCount = 0; // Size of the buffer to be returned
@@ -103,9 +104,11 @@ int serial_poll(device dev, char *buffer, size_t len)
 	int stop = 0;
 	while (bufferCount < ((int)len - 1) && !stop)
 	{
-		if (inb(dev + LSR) & 1)
+		/* Checks the status register of the serial port (inb(dev + LSR) & 1) to see if there are incoming characters
+*/
+		if (inb(dev + LSR) & 1) //device + line status register
 		{
-			char charIn = inb(dev); // Read one byte			
+			char charIn = inb(dev); // If a character is available, it reads one byte using inb			
 			switch ( (int) charIn)
 			{
 				case 13:

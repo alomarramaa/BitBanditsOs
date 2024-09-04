@@ -4,6 +4,8 @@
 #include <sys_req.h>
 #include <mpx/io.h>
 
+
+
 #define MAX_MEMORY (50000 - sizeof(MCB))
 
 /*Allocates heap memory and prints (in hexadecimal) the address of the newly allocated block, or an error message if allocation fails

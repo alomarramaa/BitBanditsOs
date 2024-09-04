@@ -31,7 +31,7 @@ void log_info(char *message)
 
 int create_pcb(void)
 {
-    // Prompt user for a name between 8 and 20 characters
+    // Prompt user for a name between 8 and 20 characters 
     const char *namePrompt = "Please enter a name (8 - 20 characters) for your PCB: \n";
     sys_req(WRITE, COM1, namePrompt, strlen(namePrompt));
     char inputName[50];
@@ -71,12 +71,6 @@ int create_pcb(void)
     nread = sys_req(READ, COM1, priorityBuffer, sizeof(priorityBuffer));
     sys_req(WRITE, COM1, priorityBuffer, nread);
     int inputPriority = atoi(priorityBuffer);
-
-    // if (strlen(priorityBuffer) < 1)
-    // {
-    //     log_info("\nError: Invalid priority. Priority must be between 0 and 9.\n");
-    //     return -3; // Error code for invalid parameters
-    // }
 
     if (inputPriority < 0 || inputPriority > 9)
     {

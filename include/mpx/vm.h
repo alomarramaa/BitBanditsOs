@@ -9,7 +9,7 @@
 #include <stddef.h>
 
 /**
- Allocates memory from a primitive heap.
+ Allocates memory from a primitive/low-level heap.
  @param size The size of memory to allocate
  @param align If non-zero, align the allocation to a page boundary
  @param phys_addr If non-NULL, a pointer to a pointer that will

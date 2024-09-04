@@ -89,7 +89,7 @@ void enqueue(pcb* to_add, enum queue_tag queue_sel)
         return;
     }
 
-    // A Ready Queue (Priority Matters)
+    // A Ready Queue (Priority Matters), Highest priority first, where processes of the same priority were FIFO
     if (queue_sel == SUS_READY_QUEUE_TAG || queue_sel == READY_QUEUE_TAG)
     {
         // Queue is empty
@@ -145,7 +145,7 @@ void enqueue(pcb* to_add, enum queue_tag queue_sel)
         to_add->prev_pcbPtr = index;
         return;
     }
-    // A Blocked Queue
+    // A Blocked Queue // FIFO
     else
     {
         if (selected_queue->queue_head == NULL)

@@ -3,6 +3,12 @@
 @brief File used for alarm related functions
 */
 
+/*
+- Contains a message and a time
+- Process idles when a time has not yet occurred
+- At time, prints message and exits
+*/
+
 struct alarm {
 int hour;
 int minute;

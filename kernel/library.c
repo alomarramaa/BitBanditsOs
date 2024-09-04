@@ -10,12 +10,9 @@ struct HeapManager* heap_manager = &hm;
 void initialize_heap(size_t heap_size) 
 {
     // Allocate memory for the heap using kmalloc()
-    void *heap_memory = kmalloc(heap_size, 0, NULL);
+    void *heap_memory = kmalloc(heap_size, 0, NULL); 
     if (heap_memory == NULL)
     {
-        // Handle error: unable to allocate memory for the heap
-        //char *message = "Error: Unable to allocate memory for the heap.\n";
-        //sys_req(WRITE, COM1, message, strlen(message));
         return;
     }
 
@@ -155,12 +152,14 @@ void *allocate_memory(size_t size)
         curr_block = curr_block->next;
     }
 
-    // If no suitable block found, return NULL
-    //char *message = "Error: No suitable block found.\n";
-    //sys_req(WRITE, COM1, message, strlen(message));
     return NULL;
 }
-
+/*
+ Steps: 
+1. Remove it from allocated list
+2. Set it to free
+3. Insert into free list
+4. Merge contiguous free blocks of memory*/
 int free_memory(void *ptr)
 {
     // Find the MCB associated with the provided memory address
@@ -187,11 +186,6 @@ int free_memory(void *ptr)
 
             // Set block as free
             curr_block->is_free = 1;
-
-            // // Add the freed block to the free list
-            // curr_block->next = heap_manager->free_list;
-            // curr_block->prev = NULL;
-            // heap_manager->free_list = curr_block;
 
             // Add to free list
             MCB* index = heap_manager->free_list;
@@ -280,9 +274,5 @@ int free_memory(void *ptr)
         }
         curr_block = curr_block->next;
     }
-
-    // If the provided memory address is not found in the allocated list, return error
-    //char *message = "Error: Provided memory address is not found.\n";
-    //sys_req(WRITE, COM1, message, strlen(message));
     return -1;
 }
