@@ -10,7 +10,7 @@ Bit Bandits' OS is an operating system built with C, in collaboration with the f
   
 ## Technologies Used
 
-- C, Assembley
+- C, Assembly
 
 
 ## Installation
